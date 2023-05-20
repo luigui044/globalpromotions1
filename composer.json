@@ -13,6 +13,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laraveles/spanish": "^1.5",
+        "realrashid/sweet-alert": "^7.0",
         "reliese/laravel": "^1.1",
         "tightenco/ziggy": "^1.5"
     },

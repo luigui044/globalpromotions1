@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\TAsigLocalidade;
 use App\Models\VwAsiLocalidade;
 use App\Models\TLocalidade;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
 {
@@ -21,12 +22,19 @@ class AdminController extends Controller
     }
     // se crea el evento a registrar 
     function crearEvento(Request $req){
+        $req->validate([
+            'nombreEvento' => 'required|string|min:2',
+            'fecha' => 'required',
+            'hora' => 'required',
+            'artista' => 'required',
+            'lugar' => 'required',
+            'copy' => 'required'
+        ]);
+
         $porta = $req->file('fotoPortada')->store('public/eventos');
         $urlPorta = Storage::url($porta);
-
         $banner = $req->file('fotoBanner')->store('public/eventos'); 
         $urlBanner = Storage::url($banner);
-
         $lugar = $req->file('fotoLugar')->store('public/eventos'); 
         $urlLugar = Storage::url($lugar);
 
@@ -42,9 +50,8 @@ class AdminController extends Controller
         $nEvento->estado_evento = 1;
         $nEvento->lugar = $req->lugar;
         $nEvento->save();
-
+        Alert::success('Información', "El evento <b>$nEvento->titulo_evento</b> ha sido agregado exitosamente.");
         return back();
-    
     }
 
      // muestra la lista de eventos registrados
