@@ -30,15 +30,7 @@ Route::post('/agregarLocalidad',[AdminController::class, 'agregarLocalidad'] )->
 Route::post('/removerLocalidad',[AdminController::class, 'removerLocalidad'] )->name('removerLocalidad');
 Route::post('/desLocalidad',[AdminController::class, 'agregarDescuento'] )->name('desLocalidad');
 Route::post('/updateLocal',[AdminController::class, 'editarLocalidad'] )->name('updateLocal');
-
 Route::post('/listLocal',[AdminController::class, 'listLocal'] )->name('listLocal');
-
-
-
-
-
-
-
 
 
 
@@ -51,19 +43,17 @@ Route::get('/galery/{idArtista}',[HomeController::class, 'subGalery'])->name('su
 Route::post('/galery/guardar-datos', [HomeController::class, 'guardarUsuario'])->name('usuario.guardar');
 Route::get('/existe-ip/{ip}', [HomeController::class, 'existeIpCliente']);
 Route::post('/clic-evento', [TrackingController::class, 'clicEvento'])->name('clic-evento');
+
+
+
+Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas');
+Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->name('concierto');
-
-Route::get('/mesas', function () {
-    return view('desplegarmesas');
-})->name('mesas');
-
-Route::get('/sillas', function () {
-    return view('desplegarsillas');
-});
-
 Route::post('/comprar', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/reserva-temporal', [VentaController::class, 'reservaTemporalEntradas'])->name('reserva-tmp');
 Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
 Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
+Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
+
 Route::get('/prueba', [VentaController::class, 'prueba']);

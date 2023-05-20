@@ -30,9 +30,9 @@
                             <h1>{{ $item->titulo_evento }}</h1>
                             <p>{{ $item->copy_evento }}</p>
                             <div class="buttons">
-                                <button type="button" class="btn btn-default" onclick="guardarClic(1, '{{ $item->ruta_compra }}')">
+                                <a href="{{  route('concierto',['id'=>$item->id_evento]) }}" class="btn btn-default" >
                                     <span>Comprar boletos</span>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

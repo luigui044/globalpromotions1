@@ -19,40 +19,29 @@
                             </div>
                             <div class="card-body">
                                 <div id="comprar-boletos">
-                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona
-                                        y 8
-                                        tickets por compra.</span>
+                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona y 8 tickets por compra.</span>
                                     <hr>
                                     <div class="form-group">
                                         <label class="mdb-main-label" for="localidad">Localidad</label>
                                         <select class="mdb-select md-form colorful-select dropdown-primary" id="localidad"
                                             name="localidad">
                                             <option value="" disabled selected>Seleccionar</option>
-                                            <option value="1">Mesa Black</option>
-                                            <option value="2">Palco</option>
-                                            <option value="3">Silla VIP</option>
-                                            <option value="4">Dance Floor</option>
+                                            @foreach ($localidades as $item)
+                                                <option value="{{ $item->id_asignacion }}">{{ $item->nombre_localidad }}</option>
+                                            @endforeach
                                         </select>
                                         <div class="error" id="error-localidad">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="mdb-main-label" for="cantidad">Cantidad</label>
-                                        <select class="mdb-select md-form colorful-select dropdown-primary" id="cantidad"
-                                            name="cantidad">
-                                            <option value="" disabled selected>Seleccionar</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                        <div class="error" id="error-cantidad"></div>
+                                    <div id="filtrarCantidad">
+                                        <div class="form-group">
+                                            <label class="mdb-main-label" for="cantidad" >Cantidad</label>
+                                            <select disabled class="mdb-select md-form colorful-select dropdown-primary" id="cantidad"
+                                                name="cantidad">
+                                                <option value="" disabled selected>Seleccionar</option> 
+                                            </select>
+                                            <div class="error" id="error-cantidad"></div>
+                                        </div>
                                     </div>
                                     <button type="button" id="btn-boletos" class="btn btn-info btn-sm btn-block">
                                         Continuar
@@ -113,4 +102,43 @@
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
+    <script>
+        
+        $('#localidad').change(function () {
+
+            var id= $('#localidad option:selected').val()
+        
+            filtrarDisLocalidad(id)  
+        })
+
+        
+
+        function filtrarDisLocalidad(id){
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.post( '/filDisLocalidad', { id: id})
+                .done(function( data ) {
+                   
+                    $('#filtrarCantidad').html(data)
+                    $("#cantidad").materialSelect();
+                   
+                }).fail(function(e){
+                    console.log(e)
+                    Swal.fire({
+                        title: 'Alerta',
+                        text: 'A ocurrido un error inesperado',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                        })
+                })
+                ;
+
+
+
+        }
+    </script>
 @endsection

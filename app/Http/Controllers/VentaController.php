@@ -8,6 +8,7 @@ use App\Models\TmpDetalleVenta;
 use App\Models\TmpVenta;
 use App\Models\TPrueba;
 use App\Models\TEvento;
+use App\Models\VwAsiLocalidade;
 use Carbon\Carbon;
 
 use Exception;
@@ -18,11 +19,11 @@ class VentaController extends Controller
     function concierto($id){
 
         $evento = TEvento::where('id_evento', $id)->first();
-    
+        $localidades = VwAsiLocalidade::where('evento',$id)->get();
         $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
-       $fecha2= $fecha->format('j F Y');
-       $dia = $fecha->format('l');
-        return view('tiquetera.venta-concierto',compact('evento','fecha2','dia'));
+        $fecha2= $fecha->format('j F Y');
+        $dia = $fecha->format('l');
+        return view('tiquetera.venta-concierto',compact('evento','localidades','fecha2','dia'));
 
     }
 
@@ -122,9 +123,19 @@ class VentaController extends Controller
         return response()->json(['mensaje' => 'No se encontró el evento indicado.'], 404);
     }
 
-    function prueba() {
-        return view('prueba');
+
+
+    function filtrarDisLocalidad(Request $req){
+        $localDis = VwAsiLocalidade::where('id_asignacion',$req->id)->first();
+        return view('tiquetera.partials.localidad-disponible',compact('localDis'));
     }
 
+     function desplegarMesas(){
+        return view('desplegarmesas');
+     }
+
+     function desplegarsillas(){
+        return view('desplegarsillas');
+     }
 
 }
