@@ -50,7 +50,7 @@ class AdminController extends Controller
         $nEvento->estado_evento = 1;
         $nEvento->lugar = $req->lugar;
         $nEvento->save();
-        Alert::success('Información', "El evento <b>$nEvento->titulo_evento</b> ha sido agregado exitosamente.");
+        Alert::success('Información', "El evento $nEvento->titulo_evento ha sido agregado exitosamente.");
         return back();
     }
 

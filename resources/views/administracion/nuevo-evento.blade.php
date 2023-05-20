@@ -35,55 +35,74 @@
 
                     <!-- Card content -->
                     <div class="card-body card-body-cascade ">
-                        <form action="{{ route('crearEvento') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('crearEvento') }}" method="POST" id="frm-evento"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <label for="nombreEvento">Nombre de evento:</label>
-                                    <input class="form-control @error('nombreEvento') is-invalid @enderror" 
-                                        id="nombreEvento" name="nombreEvento" type="text" value="{{ old('nombreEvento') }}">
+                                    <input class="form-control @error('nombreEvento') is-invalid @enderror"
+                                        id="nombreEvento" name="nombreEvento" type="text"
+                                        value="{{ old('nombreEvento') }}">
                                     <div class="invalid-feedback">
-                                        @error('nombreEvento') {{ $message }} @enderror
-                                    </div> 
+                                        @error('nombreEvento')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <label for="fecha">Fecha de presentación:</label>
-                                    <input class="form-control @error('fecha') is-invalid @enderror" id="fecha" name="fecha" type="date" value="{{ old('fecha') }}">
+                                    <input class="form-control @error('fecha') is-invalid @enderror" id="fecha"
+                                        name="fecha" type="date" min="{{ date('Y-m-d') }}" value="{{ old('fecha') }}">
                                     <div class="invalid-feedback">
-                                        @error('fecha') {{ $message }} @enderror
-                                    </div> 
+                                        @error('fecha')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <label for="hora">Hora de presentación:</label>
-                                    <input class="form-control @error('hora') is-invalid @enderror" id="hora" name="hora" type="text" value="{{ old('hora') }}">
+                                    <input class="form-control @error('hora') is-invalid @enderror" id="hora"
+                                        name="hora" type="time" value="{{ old('hora') }}">
                                     <div class="invalid-feedback">
-                                        @error('hora') {{ $message }} @enderror
-                                    </div> 
+                                        @error('hora')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-6 mt-3">
                                     <label for="artista">Artista o Ponente:</label>
-                                    <select class="browser-default custom-select @error('artista') is-invalid @enderror" name="artista" id="artista1">
+                                    <select class="browser-default custom-select @error('artista') is-invalid @enderror"
+                                        name="artista" id="artista1">
                                         <option value="" selected>Seleccione un artista</option>
                                         @foreach ($artistas as $item)
-                                            <option value="{{ $item->id_artista }}" @if(old('artista') == $item->id_artista ) selected @endif>{{ $item->nombre }}</option>
+                                            <option value="{{ $item->id_artista }}"
+                                                @if (old('artista') == $item->id_artista) selected @endif>{{ $item->nombre }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     <div class="invalid-feedback">
-                                        @error('artista') {{ $message }} @enderror
-                                    </div> 
+                                        @error('artista')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
                                     <div class="custom-control custom-checkbox mt-3">
                                         <input type="checkbox" class="custom-control-input" id="nartista"
                                             onclick="nuevoArtista()" value="1">
                                         <label class="custom-control-label" for="nartista">Nuevo Artista</label>
                                     </div>
                                     <input type="text" class="form-control" name="artista" id="artista2" disabled>
+                                    <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="col-12 col-md-6 mt-3">
                                     <label for="artista">Lugar:</label>
-                                    <input type="text" class="form-control @error('lugar') is-invalid @enderror" name="lugar" id="lugar" value="{{ old('lugar') }}">
+                                    <input type="text" class="form-control @error('lugar') is-invalid @enderror"
+                                        name="lugar" id="lugar" value="{{ old('lugar') }}">
                                     <div class="invalid-feedback">
-                                        @error('lugar') {{ $message }} @enderror
-                                    </div> 
+                                        @error('lugar')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <div class="form-group">
@@ -91,7 +110,9 @@
                                         <textarea class="form-control rounded-0 @error('copy') is-invalid @enderror" id="copy" name="copy"
                                             rows="3">{{ old('copy') }}</textarea>
                                         <div class="invalid-feedback">
-                                            @error('copy') {{ $message }} @enderror
+                                            @error('copy')
+                                                {{ $message }}
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -109,6 +130,8 @@
                                                 <input type="file" name="fotoLugar" id="fotoLugar">
                                             </div>
                                         </div>
+                                        <div class="mi-error" id="error-img-lugar">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -124,6 +147,8 @@
                                                 <input type="file" name="fotoBanner" id="fotoBanner">
                                             </div>
                                         </div>
+                                        <div class="mi-error" id="error-img-banner">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-5 mt-3">
@@ -138,6 +163,8 @@
                                                 <span>Choose file</span>
                                                 <input type="file" name="fotoPortada" id="fotoPortada">
                                             </div>
+                                        </div>
+                                        <div class="mi-error" id="error-img-portada">
                                         </div>
                                     </div>
                                 </div>
@@ -160,5 +187,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/nuevo-evento.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/nuevo-evento.js') }}"></script>
 @endsection
