@@ -1,12 +1,12 @@
 const localidad = document.querySelector('#localidad');
 const btnBoletos = document.querySelector('#btn-boletos');
-const cantidad = document.querySelector('#cantidad');
 const mesas = document.querySelector('.mesas');
 const resumen = document.querySelector('#resumen-compra');
 
 const validandoCamposEntrada = () => {
     const errorLocalidad = document.querySelector('#error-localidad');
     const errorCantidad = document.querySelector('#error-cantidad');
+    const cantidad = document.querySelector('#cantidad');
     let errores = 0;
 
     if(estaVacio(localidad.value)) {
@@ -75,11 +75,11 @@ btnBoletos.addEventListener('click', (e) => {
 
     if (errores == 0) {
         // Ocultando las demas localidades
-        mapaCompleto.style.display = 'none';
-        ocultarLocalidades();
+        //mapaCompleto.style.display = 'none';
+        //ocultarLocalidades();
         // Mostrando solo localidad seleccionada
-        document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
-        resumenCompra();
+        //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
+        //resumenCompra();
     }
 });
 
