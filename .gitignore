@@ -3,10 +3,10 @@
 /public/storage
 /storage
 /public/img
-/public/assets/*.jpg
-/public/assets/reelsb
-/public/assets/*.png
-/public/assets/*.mp4
+/public/assets**/*.jpg
+/public/assets**/*.jpeg
+/public/assets**/*.png
+/public/assets**/*.mp4
 /vendor
 .env
 .env.backup
