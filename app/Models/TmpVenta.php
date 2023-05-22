@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class TmpVentum extends Model
+class TmpVenta extends Model
 {
 	protected $table = 'tmp_venta';
 	protected $primaryKey = 'id_venta';
