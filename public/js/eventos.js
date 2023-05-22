@@ -3,9 +3,6 @@ $(document).ready(function () {
     $('.dataTables_length').addClass('bs-select');
 });
 
-
-
-
 function detaEvento(id){
     $.ajaxSetup({
         headers: {
@@ -18,12 +15,6 @@ function detaEvento(id){
         $('#centralModalSm').modal('toggle');
     });
 }
-
-
-
-
-
-
 
 setTimeout(() => {
     $('#temp').fadeOut();
