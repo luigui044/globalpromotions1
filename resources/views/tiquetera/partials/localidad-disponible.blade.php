@@ -6,13 +6,13 @@
     
         @if($localDis->disponibles >= 8)
             @for ($i = 1; $i <=8; $i++)
-                <option value="{{$i  }}">{{ $i }}</option>
+                <option value="{{$i }}">{{ $i }}</option>
             @endfor
         
             
         @else
             @for ($i = 1; $i <= $localDis->disponibles; $i++)
-                <option value="{{$i  }}">{{ $i }}</option>
+                <option value="{{$i }}">{{ $i }}</option>
             @endfor
 
         @endif

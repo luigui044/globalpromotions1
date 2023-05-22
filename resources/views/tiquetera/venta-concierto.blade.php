@@ -36,8 +36,7 @@
                                     <div id="filtrarCantidad">
                                         <div class="form-group">
                                             <label class="mdb-main-label" for="cantidad" >Cantidad</label>
-                                            <select disabled class="mdb-select md-form colorful-select dropdown-primary" id="cantidad"
-                                                name="cantidad">
+                                            <select disabled class="mdb-select md-form colorful-select dropdown-primary" id="cantidad"  name="cantidad">
                                                 <option value="" disabled selected>Seleccionar</option> 
                                             </select>
                                             <div class="error" id="error-cantidad"></div>

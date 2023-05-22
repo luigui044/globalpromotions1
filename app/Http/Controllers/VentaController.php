@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Jenssegers\Date\Date;
 
 use Illuminate\Http\Request;
-use App\Models\TmpDetalleVenta;
+use App\Models\TmpDetallesVenta;
 use App\Models\TmpVenta;
 use App\Models\TPrueba;
 use App\Models\TEvento;
@@ -64,7 +64,7 @@ class VentaController extends Controller
                 $partes = $this->obtenerDetalleUbicacion($ubicacion);
                 $mesa = $partes['mesa'];
                 $asiento = $partes['asiento'];
-                $detalle = new TmpDetalleVenta();
+                $detalle = new TmpDetallesVenta();
                 $detalle->id_venta = $reserva->id_venta;
                 $detalle->mesa = $mesa;
                 $detalle->asiento = $asiento;
@@ -86,12 +86,12 @@ class VentaController extends Controller
         $asiento = $partes['asiento'];
 
         // Se verifica que exista el registro primero
-        $resultado = TmpDetalleVenta::where('mesa', $mesa)
+        $resultado = TmpDetallesVenta::where('mesa', $mesa)
             ->where('asiento', $asiento)
             ->first();
         
         if (!is_null($resultado)) {
-            $registro = TmpDetalleVenta::where('mesa', $mesa)
+            $registro = TmpDetallesVenta::where('mesa', $mesa)
                 ->where('asiento', $asiento)
                 ->delete();
 
@@ -106,7 +106,7 @@ class VentaController extends Controller
         $mesa = $partes['mesa'];
         $asiento = $partes['asiento'];
 
-        $resultado = TmpDetalleVenta::where('mesa', $mesa)
+        $resultado = TmpDetallesVenta::where('mesa', $mesa)
             ->where('asiento', $asiento)
             ->first();
 
@@ -116,7 +116,7 @@ class VentaController extends Controller
     }
 
     function listarUbicacionesUsadas($idEvento) {
-        $ubicaciones = TmpDetalleVenta::where('id_evento', $idEvento)->get();
+        $ubicaciones = TmpDetallesVenta::where('id_evento', $idEvento)->get();
 
         if ($ubicaciones->count() > 0)
             return $ubicaciones;
