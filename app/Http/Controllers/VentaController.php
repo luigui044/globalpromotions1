@@ -27,9 +27,6 @@ class VentaController extends Controller
 
     }
 
-
-
-
     function vender(Request $request){
         $venta = new TPrueba();
         $venta->selectseats = '['.$request->selectSeats2.']';

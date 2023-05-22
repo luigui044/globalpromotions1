@@ -1,0 +1,43 @@
+.navbar {
+    z-index: 1040;
+}
+
+.side-nav {
+    margin-top: 57px !important;
+}
+
+.button-collapse {
+    display: none !important;
+}
+
+.mi-error {
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.btn.btn-default {
+    color: white !important;
+}
+
+@media (min-width: 1200px) {
+    .fixed-sn main {
+        margin-left: 20% !important;
+        margin-right: 10% !important;
+    }
+
+
+}
+
+@media(max-width: 1200px) {
+    .button-collapse {
+        display: block !important;
+    }
+}
+
+/* Responsive */
+
+@media screen and (max-width: 600px) {
+    .card-header-title {
+        font-size: 1.2rem !important;
+    }
+}
