@@ -32,19 +32,11 @@ Route::post('/desLocalidad',[AdminController::class, 'agregarDescuento'] )->name
 Route::post('/updateLocal',[AdminController::class, 'editarLocalidad'] )->name('updateLocal');
 Route::post('/listLocal',[AdminController::class, 'listLocal'] )->name('listLocal');
 
-
-
-
-
-
-
 Route::get('/galery',[HomeController::class, 'galeria'])->name('galeria');
 Route::get('/galery/{idArtista}',[HomeController::class, 'subGalery'])->name('subgaleria');
 Route::post('/galery/guardar-datos', [HomeController::class, 'guardarUsuario'])->name('usuario.guardar');
 Route::get('/existe-ip/{ip}', [HomeController::class, 'existeIpCliente']);
 Route::post('/clic-evento', [TrackingController::class, 'clicEvento'])->name('clic-evento');
-
-
 
 Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas');
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');

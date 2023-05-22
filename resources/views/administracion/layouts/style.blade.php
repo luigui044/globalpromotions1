@@ -12,30 +12,6 @@
  <!-- Your custom styles (optional) -->
  <link rel="stylesheet" href="{{ asset('mdb/css/style.css') }}">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
- <style>
- .navbar {
-  z-index: 1040;
-}
-.side-nav {
-  margin-top: 57px !important;
-}
-.button-collapse{
-    display: none !important;
-}
-
-@media (min-width: 1200px){
-.fixed-sn main {
-    margin-left: 20% !important;
-    margin-right: 10% !important;
-  }
-
- 
-}
-@media(max-width: 1200px){
-    .button-collapse{ 
-    display: block !important;
-  }
-}
- </style>
-
+ <!-- Estilos personalizados para las vistas de administración  -->
+ <link rel="stylesheet" href="{{ asset('css/administracion/style.css') }}">
  @yield('styles')

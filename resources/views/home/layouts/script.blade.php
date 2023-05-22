@@ -24,5 +24,5 @@
             $('#modal-mensaje').modal('show');
     </script>
 @endif
-
+@include('sweetalert::alert')
 @yield('scripts')

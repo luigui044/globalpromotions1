@@ -23,5 +23,5 @@
         $('[data-toggle="popover"]').popover()
     });
 </script>
-
+@include('sweetalert::alert')
 @yield('scripts')
