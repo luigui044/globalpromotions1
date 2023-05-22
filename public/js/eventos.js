@@ -19,6 +19,12 @@ function detaEvento(id){
     });
 }
 
+
+
+
+
+
+
 setTimeout(() => {
     $('#temp').fadeOut();
 }, '2000');

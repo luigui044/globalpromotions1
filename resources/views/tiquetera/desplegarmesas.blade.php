@@ -1,7 +1,5 @@
 <section class="contenedor-ubicaciones">
-    <div class="completo" id="completo">
-        <img src="{{ $evento->imagen_lugar }}" alt="Complejo Hacienda" title="Complejo Hacienda" style="width:100%; height: 100vh">
-    </div>
+   
     <div id="localidad-1">
         <div class="zoom">
             <button type="button" class="aumentar mb-2" id="aumentar">
@@ -75,13 +73,5 @@
         <input type="hidden" name="selectSeats" id="selectSeats">
         <input type="hidden" id="asiento-actual">
     </div>
-    <div id="localidad-2">
-        localidad 2
-    </div>
-    <div id="localidad-3">
-        localidad 3
-    </div>
-    <div id="localidad-4">
-        localidad 4
-    </div>
+
 </section>

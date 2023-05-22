@@ -69,19 +69,32 @@ ocultarLocalidades();
 resumen.style.display = 'none';
 
 // Boton de seleccion de localidad y cantidad de entradas.
-btnBoletos.addEventListener('click', (e) => {
-    const mapaCompleto = document.querySelector('#completo');
-    const errores = validandoCamposEntrada();
+// btnBoletos.addEventListener('click', (e) => {
+//     const mapaCompleto = document.querySelector('#completo');
+//     const errores = validandoCamposEntrada();
 
-    if (errores == 0) {
-        // Ocultando las demas localidades
-        //mapaCompleto.style.display = 'none';
-        //ocultarLocalidades();
-        // Mostrando solo localidad seleccionada
-        //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
-        //resumenCompra();
-    }
-});
+//     if (errores == 0) {
+
+//         $.ajaxSetup({
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             }
+//         });
+//         $.post( '/filtrar', { id: id})
+//         .done(function( data ) {
+//             $('.modal-body').html(data);
+//             $('#centralModalSm').modal('toggle');
+//         });
+
+
+//         // Ocultando las demas localidades
+//         //mapaCompleto.style.display = 'none';
+//         //ocultarLocalidades();
+//         // Mostrando solo localidad seleccionada
+//         //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
+//         //resumenCompra();
+//     }
+// });
 
 
 const cantidadAsientosSeleccionada = () => {

@@ -1,8 +1,4 @@
-@extends('tiquetera.layouts.layoutsvg')
 
-@section('titulo', 'Sillas selección')
-
-@section('content')
     <div class="card mt-3 mb-3">
         <div class="card-body">
             <div class="zoom">
@@ -57,9 +53,5 @@
         </div>
     </div>
 
-@endsection
 
-@section('scripts')
-    <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
-@endsection
+

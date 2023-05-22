@@ -47,5 +47,4 @@ Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eli
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
 Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
-
-Route::get('/prueba', [VentaController::class, 'prueba']);
+Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');

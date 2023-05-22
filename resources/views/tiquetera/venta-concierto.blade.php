@@ -42,9 +42,9 @@
                                             <div class="error" id="error-cantidad"></div>
                                         </div>
                                     </div>
-                                    <button type="button" id="btn-boletos" class="btn btn-info btn-sm btn-block">
+                                    <a onclick="selectAsientos()"  class="btn btn-info btn-sm btn-block">
                                         Continuar
-                                    </button>
+                                    </a>
                                 </div>
                                 <div id="resumen-compra">
                                     <div class="d-flex justify-content-between mb-2">
@@ -64,10 +64,7 @@
                                         <span class="text-info">Descuento</span>
                                         <span class="text-info" id="descuento">$0.00</span>
                                     </div>
-                                    {{-- <div class="d-flex justify-content-between mb-2">
-                                        <span>Recargos</span>
-                                        <span id="recargos">$24.00</span>
-                                    </div> --}}
+                                 
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
@@ -85,8 +82,11 @@
                             <div class="card-header text-center">
                                 <strong>{{ $evento->lugar }}</strong>
                             </div>
-                            <div class="card-body scrollable">
-                                @include('tiquetera.desplegarmesas')
+                            <div class="card-body scrollable text-center">
+                                {{-- @include('tiquetera.desplegarmesas') --}}
+                                <div id="vistaLocalidad">
+                                        <img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%" >
+                                </div>
                                 <input type="hidden" name="selectSeats2" id="selectSeats2" value="">
                             </div>
                         </div>
@@ -101,6 +101,9 @@
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
+    
     <script>
         
         $('#localidad').change(function () {
@@ -138,6 +141,40 @@
 
 
 
+        }
+
+
+
+
+        function selectAsientos() {
+            
+            const localidad = $('#localidad option:selected').val()
+            const errores = validandoCamposEntrada();
+
+            if (errores == 0) {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.post( '/selectAsientos', { id: localidad})
+            .done(function( data ) {
+                $('#vistaLocalidad').html(data)
+            });
+
+                // Ocultando las demas localidades
+                //mapaCompleto.style.display = 'none';
+                //ocultarLocalidades();
+                // Mostrando solo localidad seleccionada
+                //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
+                //resumenCompra();
+
+            }
+
+
+
+           
         }
     </script>
 @endsection

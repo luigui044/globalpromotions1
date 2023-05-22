@@ -127,12 +127,30 @@ class VentaController extends Controller
         return view('tiquetera.partials.localidad-disponible',compact('localDis'));
     }
 
-     function desplegarMesas(){
+    function desplegarMesas(){
         return view('desplegarmesas');
-     }
+    }
 
-     function desplegarsillas(){
+    function desplegarsillas(){
         return view('desplegarsillas');
-     }
+    }
+
+    function selectAsientos(Request $req){
+        $asignacion = VwAsiLocalidade::where('id_asignacion', $req->id)->first();
+        $tipoLocal = $asignacion->tipo_localidad;     
+        $cantidad = $asignacion->cantidad;
+        switch ($tipoLocal) {
+            case   'Mesa':
+                    return view('tiquetera.desplegarmesas',compact('cantidad'));
+                break;
+            case   'Silla':
+                    return view('tiquetera.desplegarsillas',compact('cantidad'));
+                break;
+            default:
+                    return 'imagen default';
+                break;
+        }
+
+    }
 
 }
