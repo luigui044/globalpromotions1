@@ -50,23 +50,24 @@
                                     </a>
                                 </div>
                                 <div id="resumen-compra">
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <a class="btn btn-sm btn-block btn-rounded btn-outline-secondary waves-effect"><i class="fas fa-arrow-circle-left"></i> Volver</a>
+                                    <div class="d-flex justify-content-between mb-2 mt-4">
                                         <div>
                                             <span id="cantidad-boletos"></span>
-                                            <span>Mesa Black</span>
+                                            <span id="localidad-boletos"></span>
                                         </div>
                                         <div>
-                                            <span id="precio">$150.00</span>
+                                            <span id="precioUnit"></span>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Subtotal</span>
                                         <span id="subtotal"></span>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
+                                    {{-- <div class="d-flex justify-content-between mb-2">
                                         <span class="text-info">Descuento</span>
                                         <span class="text-info" id="descuento">$0.00</span>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
@@ -105,11 +106,12 @@
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
 
     <script>
+        /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
         $('#localidad').change(function() {
             var id = $('#localidad option:selected').val()
             filtrarDisLocalidad(id)
         })
-
+        //// funcion que filtra la cantidad disponible por lo calidad, si tiene disponible igual o mas de 8, el select devolvera de 1 a 8 opciones y si es menor a 8 solo devolvera la cantidad disponible
         function filtrarDisLocalidad(id) {
             $.ajaxSetup({
                 headers: {
@@ -133,10 +135,22 @@
                 });
         }
 
+        //////funcion para filtrar mapa de localidad si es que la tiene
+
         function selectAsientos() {
             const localidad = $('#localidad option:selected').val()
-            const errores = validandoCamposEntrada();
+            const localidadText = $('#localidad option:selected').text()
+            const localidadIndex = $('#localidad ').index()-1;
+            const cantidad = $('#cantidad option:selected').val()
+            const precioUnit  =$('#precioUnit');
+            
+        
 
+
+            
+           
+   
+            const errores = validandoCamposEntrada();
             if (errores == 0) {
                 $.ajaxSetup({
                     headers: {
@@ -147,11 +161,20 @@
                         id: localidad
                     })
                     .done(function(data) {
+                        ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                         $('#vistaLocalidad').html(data)
+                   
+
                         const scrollable = document.querySelector('.scrollable');
                         const contenedorUbicaciones = document.querySelector('.area-zoom');
                         const aumentar = document.querySelector('#aumentar');
                         const disminuir = document.querySelector('#disminuir');
+                        ////declaro los div de compra y resumen de boletos
+                        var comprarBoletos = $('#comprar-boletos');
+                        var resumenCompra = $('#resumen-compra');
+                        var cantidadBoletos = $('#cantidad-boletos');
+                        var localidadBoletos= $('#localidad-boletos');
+
                         let contador = 0;
 
                         if (aumentar && disminuir) {
@@ -267,17 +290,22 @@
                             }
 
                             contenedorUbicaciones.addEventListener('mousedown', mouseDownHandler);
+                            
                         }
-                    });
 
-                // Ocultando las demas localidades
-                //mapaCompleto.style.display = 'none';
-                //ocultarLocalidades();
-                // Mostrando solo localidad seleccionada
-                //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
-                //resumenCompra();
+                        cantidadBoletos.html(cantidad)
+                        localidadBoletos.html(localidadText)
+                        precioUnit.html(localidades[localidadIndex].precio)
+
+                        /////desaparesco el div de compra de boletos y muestro el resumen
+                        comprarBoletos.fadeOut();
+                        resumenCompra.fadeIn();
+                    });
 
             }
         }
+
+        
     </script>
 @endsection
+

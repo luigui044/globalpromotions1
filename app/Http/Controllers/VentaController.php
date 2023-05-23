@@ -22,6 +22,10 @@ class VentaController extends Controller
         $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
         $fecha2= $fecha->format('j F Y');
         $dia = $fecha->format('l');
+        JavaScript::put([
+            'localidades' => $localidades,
+            
+        ]);
         return view('tiquetera.venta-concierto',compact('evento','localidades','fecha2','dia'));
 
     }
@@ -138,8 +142,10 @@ class VentaController extends Controller
         $asignacion = VwAsiLocalidade::where('id_asignacion', $req->id)->first();
         $tipoLocal = $asignacion->tipo_localidad;     
         $cantidad = $asignacion->cantidad;
+
         JavaScript::put([
-            'tipoLocalidad' => $tipoLocal
+            'tipoLocalidad' => $tipoLocal,
+            
         ]);
 
         switch ($tipoLocal) {
