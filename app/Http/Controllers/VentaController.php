@@ -10,9 +10,8 @@ use App\Models\TPrueba;
 use App\Models\TEvento;
 use App\Models\VwAsiLocalidade;
 use Carbon\Carbon;
-
 use Exception;
-use DB;
+use JavaScript;
 
 class VentaController extends Controller
 {
@@ -139,6 +138,10 @@ class VentaController extends Controller
         $asignacion = VwAsiLocalidade::where('id_asignacion', $req->id)->first();
         $tipoLocal = $asignacion->tipo_localidad;     
         $cantidad = $asignacion->cantidad;
+        JavaScript::put([
+            'tipoLocalidad' => $tipoLocal
+        ]);
+
         switch ($tipoLocal) {
             case   'Mesa':
                     return view('tiquetera.desplegarmesas',compact('cantidad'));

@@ -1,7 +1,7 @@
 @extends('tiquetera.layouts.layout-master')
 
 @section('csrf')
-    <meta name="csrf-token" content="{{ csrf_token() }}">    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('titulo', 'Boletos')
@@ -19,7 +19,8 @@
                             </div>
                             <div class="card-body">
                                 <div id="comprar-boletos">
-                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona y 8 tickets por compra.</span>
+                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona
+                                        y 8 tickets por compra.</span>
                                     <hr>
                                     <div class="form-group">
                                         <label class="mdb-main-label" for="localidad">Localidad</label>
@@ -27,7 +28,8 @@
                                             name="localidad">
                                             <option value="" disabled selected>Seleccionar</option>
                                             @foreach ($localidades as $item)
-                                                <option value="{{ $item->id_asignacion }}">{{ $item->nombre_localidad }}</option>
+                                                <option value="{{ $item->id_asignacion }}">{{ $item->nombre_localidad }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <div class="error" id="error-localidad">
@@ -35,14 +37,15 @@
                                     </div>
                                     <div id="filtrarCantidad">
                                         <div class="form-group">
-                                            <label class="mdb-main-label" for="cantidad" >Cantidad</label>
-                                            <select disabled class="mdb-select md-form colorful-select dropdown-primary" id="cantidad"  name="cantidad">
-                                                <option value="" disabled selected>Seleccionar</option> 
+                                            <label class="mdb-main-label" for="cantidad">Cantidad</label>
+                                            <select disabled class="mdb-select md-form colorful-select dropdown-primary"
+                                                id="cantidad" name="cantidad">
+                                                <option value="" disabled selected>Seleccionar</option>
                                             </select>
                                             <div class="error" id="error-cantidad"></div>
                                         </div>
                                     </div>
-                                    <a onclick="selectAsientos()"  class="btn btn-info btn-sm btn-block">
+                                    <a onclick="selectAsientos()" class="btn btn-info btn-sm btn-block">
                                         Continuar
                                     </a>
                                 </div>
@@ -64,7 +67,7 @@
                                         <span class="text-info">Descuento</span>
                                         <span class="text-info" id="descuento">$0.00</span>
                                     </div>
-                                 
+
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
@@ -85,7 +88,7 @@
                             <div class="card-body scrollable text-center">
                                 {{-- @include('tiquetera.desplegarmesas') --}}
                                 <div id="vistaLocalidad">
-                                        <img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%" >
+                                    <img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%">
                                 </div>
                                 <input type="hidden" name="selectSeats2" id="selectSeats2" value="">
                             </div>
@@ -98,70 +101,175 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
-    
-    <script>
-        
-        $('#localidad').change(function () {
 
-            var id= $('#localidad option:selected').val()
-        
-            filtrarDisLocalidad(id)  
+    <script>
+        $('#localidad').change(function() {
+            var id = $('#localidad option:selected').val()
+            filtrarDisLocalidad(id)
         })
 
-        
-
-        function filtrarDisLocalidad(id){
-
+        function filtrarDisLocalidad(id) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.post( '/filDisLocalidad', { id: id})
-                .done(function( data ) {
-                   
-                    $('#filtrarCantidad').html(data)
+                }
+            });
+            $.post('/filDisLocalidad', {
+                    id: id
+                })
+                .done(function(data) {
+                    $('#filtrarCantidad').html(data);
                     $("#cantidad").materialSelect();
-                   
-                }).fail(function(e){
+                }).fail(function(e) {
                     console.log(e)
                     Swal.fire({
                         title: 'Alerta',
                         text: 'A ocurrido un error inesperado',
                         icon: 'error',
                         confirmButtonText: 'Ok'
-                        })
-                })
-                ;
-
-
-
+                    })
+                });
         }
 
-
-
-
         function selectAsientos() {
-            
             const localidad = $('#localidad option:selected').val()
             const errores = validandoCamposEntrada();
 
             if (errores == 0) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.post('/selectAsientos', {
+                        id: localidad
+                    })
+                    .done(function(data) {
+                        $('#vistaLocalidad').html(data)
+                        const scrollable = document.querySelector('.scrollable');
+                        const contenedorUbicaciones = document.querySelector('.area-zoom');
+                        const aumentar = document.querySelector('#aumentar');
+                        const disminuir = document.querySelector('#disminuir');
+                        let contador = 0;
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post( '/selectAsientos', { id: localidad})
-            .done(function( data ) {
-                $('#vistaLocalidad').html(data)
-            });
+                        if (aumentar && disminuir) {
+
+                            disminuir.disabled = true;
+
+                            const aumentarZoomConClick = () => {
+                                contador += 1;
+
+                                switch (contador) {
+                                    case 1:
+                                        contenedorUbicaciones.style.transform = 'scale(140%)';
+                                        disminuir.disabled = false;
+                                        break;
+                                    case 2:
+                                        contenedorUbicaciones.style.transform = 'scale(165%)';
+                                        break;
+                                    case 3:
+                                        contenedorUbicaciones.style.transform = 'scale(195%)';
+                                        aumentar.disabled = true;
+                                        break;
+                                    case 4:
+                                        contenedorUbicaciones.style.transform = 'scale(100%)';
+                                        aumentar.disabled = false;
+                                        disminuir.disabled = true;
+                                        contador = 0;
+                                        break;
+                                }
+                            }
+
+                            const aumentarZoomConBoton = () => {
+                                aumentar.disabled = false;
+                                contador += 1;
+
+                                switch (contador) {
+                                    case 1:
+                                        contenedorUbicaciones.style.transform = 'scale(140%)';
+                                        disminuir.disabled = false;
+                                        break;
+                                    case 2:
+                                        contenedorUbicaciones.style.transform = 'scale(165%)';
+                                        break;
+                                    case 3:
+                                        contenedorUbicaciones.style.transform = 'scale(195%)';
+                                        aumentar.disabled = true;
+                                        break;
+                                }
+                            }
+
+                            const disminuirZoomConBoton = () => {
+                                disminuir.disabled = false;
+
+                                switch (contador) {
+                                    case 1:
+                                        contenedorUbicaciones.style.transform = 'scale(100%)';
+                                        disminuir.disabled = true;
+                                        break;
+                                    case 2:
+                                        contenedorUbicaciones.style.transform = 'scale(140%)';
+                                        break;
+                                    case 3:
+                                        contenedorUbicaciones.style.transform = 'scale(165%)';
+                                        aumentar.disabled = false;
+                                        break;
+                                }
+
+                                contador -= 1;
+                            }
+
+                            contenedorUbicaciones.addEventListener('dblclick', aumentarZoomConClick);
+                            aumentar.addEventListener('click', aumentarZoomConBoton);
+                            disminuir.addEventListener('click', disminuirZoomConBoton);
+
+                            /* * Drag and Scroll */
+                            let pos = {
+                                top: 0,
+                                left: 0,
+                                x: 0,
+                                y: 0
+                            };
+
+                            const mouseMoveHandler = (e) => {
+                                const dx = e.clientX - pos.x;
+                                const dy = e.clientY - pos.y;
+
+                                // Hacer scroll hasta elemento
+                                scrollable.scrollTop = pos.top - dy;
+                                scrollable.scrollLeft = pos.left - dx;
+                            }
+
+                            const mouseUpHandler = () => {
+                                document.removeEventListener('mousemove', mouseMoveHandler);
+                                document.removeEventListener('mouseup', mouseUpHandler);
+                                contenedorUbicaciones.style.cursor = 'grab';
+                                contenedorUbicaciones.style.removeProperty('user-select');
+                            }
+
+                            const mouseDownHandler = (e) => {
+                                contenedorUbicaciones.style.cursor = 'grabbing';
+                                contenedorUbicaciones.style.userSelect = 'none';
+
+                                pos = {
+                                    // Obteniendo scroll actual
+                                    top: scrollable.scrollTop,
+                                    left: scrollable.scrollLeft,
+                                    // Obtener la ubicación actual del mouse
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                };
+
+                                document.addEventListener('mousemove', mouseMoveHandler);
+                                document.addEventListener('mouseup', mouseUpHandler);
+                            }
+
+                            contenedorUbicaciones.addEventListener('mousedown', mouseDownHandler);
+                        }
+                    });
 
                 // Ocultando las demas localidades
                 //mapaCompleto.style.display = 'none';
@@ -171,10 +279,6 @@
                 //resumenCompra();
 
             }
-
-
-
-           
         }
     </script>
 @endsection

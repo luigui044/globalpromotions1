@@ -1,5 +1,4 @@
 <section class="contenedor-ubicaciones">
-   
     <div id="localidad-1">
         <div class="zoom">
             <button type="button" class="aumentar mb-2" id="aumentar">

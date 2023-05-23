@@ -1,16 +1,3 @@
-// const preview = $('.mesas').minimap({
-//     heightRatio : 0.2,
-//     widthRatio : 0.1,
-//     offsetHeightRatio : 0.1,
-//     offsetWidthRatio : 0.1,
-//     position : "right",
-//     touch: true,
-//     smoothScroll: true,
-//     smoothScrollDelay: 200,
-//     onPreviewChange: function(minimap, scale) {},
-//     disableFind : false
-// });
-
 const scrollable = document.querySelector('.scrollable');
 const contenedorUbicaciones = document.querySelector('.area-zoom');
 const aumentar = document.querySelector('#aumentar');
