@@ -16,7 +16,6 @@ use JavaScript;
 class VentaController extends Controller
 {
     function concierto($id){
-
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
         $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
@@ -145,19 +144,18 @@ class VentaController extends Controller
 
         JavaScript::put([
             'tipoLocalidad' => $tipoLocal,
-            
         ]);
 
         switch ($tipoLocal) {
-            case   'Mesa':
-                    return view('tiquetera.desplegarmesas',compact('cantidad'));
-                break;
-            case   'Silla':
-                    return view('tiquetera.desplegarsillas',compact('cantidad'));
-                break;
+            case 'Mesa':
+                return view('tiquetera.desplegarmesas', compact('cantidad', 'asignacion'));
+            break;
+            case 'Silla':
+                return view('tiquetera.desplegarsillas', compact('cantidad', 'asignacion'));
+            break;
             default:
-                    return 'imagen default';
-                break;
+                return 'imagen default';
+            break;
         }
 
     }

@@ -22,28 +22,43 @@
         </div>
     </div>
     <div class="contenedor-sillas area-zoom">
-        <div>
-            @for ($i = 1; $i <= 25; $i++)
-                <div class="row justify-content-center">
-                    <span class="numeroFila">{{ $i }}</span>
-                    @for ($k = 1; $k <= 35; $k++)
-                        <div class="silla"> @include('tiquetera.components.sillas', ['fila' => $i, 'silla' => $k])</div>
-                    @endfor
-                    <span class="numeroFila">{{ $i }}</span>
-                </div>
-            @endfor
-        </div>
-        <div>
-            @for ($i = 1; $i <= 25; $i++)
-                <div class="row justify-content-center">
-                    <span class="numeroFila">{{ $i }}</span>
-                    @for ($k = 36; $k <= 70; $k++)
-                        <div class="silla"> @include('tiquetera.components.sillas', ['fila' => $i, 'silla' => $k])</div>
-                    @endfor
-                    <span class="numeroFila">{{ $i }}</span>
-                </div>
-            @endfor
-        </div>
+        @php 
+            $tipo = 1; 
+        @endphp
+
+        @if ($tipo == 1)
+            @php
+                // Se guarda la cantidad de sillas por cada una de las 2 columnas
+                $cantidadSillasPorColumna = $cantidad / 2;
+                // Número de filas por cada columna
+                $cantidadFilas = intval($cantidadSillasPorColumna / 35);
+                // Se obtiene el residuo de la división para ver si sobran sillas y colocarlas en la última fila
+                $sillasSobrantes = $cantidadSillasPorColumna % 35
+            @endphp
+            <div>
+                @for ($i = 1; $i <= $cantidadFilas; $i++)
+                    <div class="row justify-content-center">
+                        <span class="numeroFila">{{ $i }}</span>
+                        @for ($k = 1; $k <= 35; $k++)
+                            <div class="silla"> @include('tiquetera.components.sillas', ['fila' => $i, 'silla' => $k])</div>
+                        @endfor
+                        <span class="numeroFila">{{ $i }}</span>
+                    </div>
+                @endfor
+            </div>
+            <div>
+                @for ($i = 1; $i <= $cantidadFilas; $i++)
+                    <div class="row justify-content-center">
+                        <span class="numeroFila">{{ $i }}</span>
+                        @for ($k = 36; $k <= 70; $k++)
+                            <div class="silla"> @include('tiquetera.components.sillas', ['fila' => $i, 'silla' => $k])</div>
+                        @endfor
+                        <span class="numeroFila">{{ $i }}</span>
+                    </div>
+                @endfor
+            </div>
+        @else
+        @endif
     </div>
     <input type="hidden" name="selectSeats" id="selectSeats" value="">
 </section>

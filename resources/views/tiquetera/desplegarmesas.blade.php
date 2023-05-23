@@ -23,41 +23,54 @@
         </div>
     </div>
 
-    <div class="area-zoom">
-        {{-- for para primera fila --}}
-        <div class="mt-1 d-flex justify-content-center">
-            @for ($i = 1; $i <= 14; $i++)
-                <div class="mesasCol">
-                    @include('tiquetera.components.mesas', ['mesa' => $i])
-                </div>
-            @endfor
-        </div>
-        {{-- for para segunda fila --}}
-        <div class="d-flex justify-content-center">
-            @for ($i = 15; $i <= 32; $i++)
-                <div class="mesasCol">
-                    @include('tiquetera.components.mesas', ['mesa' => $i])
-                </div>
-            @endfor
-        </div>
-        {{-- for para tercera fila --}}
-        <div class="d-flex justify-content-center">
-            @for ($i = 33; $i <= 52; $i++)
-                <div class="mesasCol">
-                    @include('tiquetera.components.mesas', ['mesa' => $i])
-                </div>
-            @endfor
-        </div>
-
-        {{-- variable para generar los id de las mesas ya que con el for no se lograria por si solo --}}
-        @php
-            $mesaid = 53;
-        @endphp
-
-        {{-- for para genrar de la cuarta mesa en adelante --}}
-        @for ($i = 1; $i <= 7; $i++)
+    <div class="m-5 area-zoom">
+        @if ($asignacion->localidad == 2)
+            {{-- for para primera fila: 19 mesas --}}
+            <div class="mt-1 d-flex justify-content-center">
+                @for ($i = 1; $i <= 19; $i++)
+                    <div class="mesasCol">
+                        @include('tiquetera.components.mesas', ['mesa' => $i])
+                    </div>
+                @endfor
+            </div>
+            {{-- for para segunda fila: 25 mesas --}}
             <div class="d-flex justify-content-center">
-                @for ($k = 1; $k <= 21; $k++)
+                @for ($i = 20; $i <= 44; $i++)
+                    <div class="mesasCol">
+                        @include('tiquetera.components.mesas', ['mesa' => $i])
+                    </div>
+                @endfor
+            </div>
+
+            {{-- variable para generar los id de las mesas ya que con el for no se lograria por si solo --}}
+            @php
+                $mesaid = 45;
+                // Se calcula la cantidad de mesas restantes luego de pintar las primeras 3 filas con 14,18 y 20 mesas respectivamente
+                $mesasRestantes = $cantidad - (19 + 25);
+                // Como las demás filas iran de 21 mesas cada una dividimos entre 21 para obtener la cantidad de filas
+                // a iterar
+                $filasRestantes = intval($mesasRestantes / 29);
+                // Si existe un sobrante lo pintaremos al final en la última fila
+                $ultimasMesas = $mesasRestantes % 29;
+            @endphp
+
+            {{-- for para generar de la tercera fila en adelante: 29 mesas --}}
+            @for ($i = 1; $i <= $filasRestantes; $i++)
+                <div class="d-flex justify-content-center">
+                    @for ($k = 1; $k <= 29; $k++)
+                        <div class="mesasCol">
+                            @include('tiquetera.components.mesas', ['mesa' => $mesaid])
+                        </div>
+                        @php
+                            $mesaid = $mesaid + 1;
+                        @endphp
+                    @endfor
+                </div>
+            @endfor
+
+            {{-- Se va pintar una fila más si quedan mesas restantes por mostrar --}}
+            <div class="d-flex justify-content-center">
+                @for ($i = 1; $i <= $ultimasMesas; $i++)
                     <div class="mesasCol">
                         @include('tiquetera.components.mesas', ['mesa' => $mesaid])
                     </div>
@@ -66,7 +79,21 @@
                     @endphp
                 @endfor
             </div>
-        @endfor
+        @elseif($asignacion->localidad == 3)
+            @php
+               $filas = intval($cantidad / 29);
+            @endphp
+
+            @for ($i = 1; $i <= $filas; $i++)
+                <div class="d-flex justify-content-center">
+                    @for ($k = 1; $k <= 29; $k++)
+                        <div class="mesasCol">
+                            @include('tiquetera.components.mesas', ['mesa' => $k + 29*($i-1)])
+                        </div>
+                    @endfor
+                </div>
+            @endfor
+        @endif
     </div>
     <input type="hidden" name="selectSeats" id="selectSeats">
     <input type="hidden" id="asiento-actual">

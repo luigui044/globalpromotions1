@@ -160,6 +160,7 @@ div.jarallax {
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
+    margin-left: 1.5rem;
 }
 
 .contenedor-sillas > div {
