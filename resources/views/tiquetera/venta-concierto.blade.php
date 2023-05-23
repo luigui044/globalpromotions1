@@ -86,7 +86,6 @@
                                 <strong>{{ $evento->lugar }}</strong>
                             </div>
                             <div class="card-body scrollable text-center">
-                                {{-- @include('tiquetera.desplegarmesas') --}}
                                 <div id="vistaLocalidad">
                                     <img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%">
                                 </div>

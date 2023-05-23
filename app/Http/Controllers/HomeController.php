@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\TGaleria;
 use App\Models\Usuario;
 use App\Models\TEvento;
-
 use Illuminate\Http\Request;
-
 use DB;
+
 
 class HomeController extends Controller
 {

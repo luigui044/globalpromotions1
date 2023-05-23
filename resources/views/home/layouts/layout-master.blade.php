@@ -44,8 +44,8 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
     @endif
+    @include('variables')
     @include('home.layouts.script')
-
 </body>
 
 </html>

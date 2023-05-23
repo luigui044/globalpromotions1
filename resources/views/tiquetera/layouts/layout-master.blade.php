@@ -14,7 +14,6 @@
     </header>
         @include('tiquetera.layouts.banner')
         @yield('content')
-        @include('js-vars')
         @include('tiquetera.layouts.scripts')
 </body>
 </html>
