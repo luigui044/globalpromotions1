@@ -97,6 +97,27 @@ div.jarallax {
     position: relative;
 }
 
+.contenedor-mesas {
+    width: 1650px;
+    margin: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fila-1 {
+    width: 950px;
+}
+
+.fila-2 {
+    width: 1250px;
+}
+
+.fila-3 {
+    width: 1500px;
+}
+
+
 .area-zoom {
     cursor: grab;
     transition: all 300ms ease-out;
@@ -160,7 +181,7 @@ div.jarallax {
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
-    margin-left: 1.5rem;
+    margin: 1.5rem;
 }
 
 .contenedor-sillas > div {
@@ -201,3 +222,4 @@ div.jarallax {
 .p-relative {
     position: relative !important;
 }
+

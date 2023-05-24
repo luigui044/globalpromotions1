@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <div class="row justify-content-center p-4">
+    <div class="row justify-content-center p-4" style="width: 1650px;">
         <div class="mr-4">
             <span> Disponible </span>
             <div class="caja-verde"></div>
@@ -23,10 +23,10 @@
         </div>
     </div>
 
-    <div class="m-5 area-zoom">
+    <div class="area-zoom contenedor-mesas">
         @if ($asignacion->localidad == 2)
             {{-- for para primera fila: 19 mesas --}}
-            <div class="mt-1 d-flex justify-content-center">
+            <div class="fila-1 d-flex justify-content-center">
                 @for ($i = 1; $i <= 19; $i++)
                     <div class="mesasCol">
                         @include('tiquetera.components.mesas', ['mesa' => $i])
@@ -34,7 +34,7 @@
                 @endfor
             </div>
             {{-- for para segunda fila: 25 mesas --}}
-            <div class="d-flex justify-content-center">
+            <div class="fila-2 d-flex justify-content-center">
                 @for ($i = 20; $i <= 44; $i++)
                     <div class="mesasCol">
                         @include('tiquetera.components.mesas', ['mesa' => $i])
@@ -56,7 +56,7 @@
 
             {{-- for para generar de la tercera fila en adelante: 29 mesas --}}
             @for ($i = 1; $i <= $filasRestantes; $i++)
-                <div class="d-flex justify-content-center">
+                <div class="fila-3 d-flex justify-content-center">
                     @for ($k = 1; $k <= 29; $k++)
                         <div class="mesasCol">
                             @include('tiquetera.components.mesas', ['mesa' => $mesaid])

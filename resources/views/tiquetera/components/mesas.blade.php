@@ -1,6 +1,6 @@
 <div class="containerMesa">
     <svg version="1.1" id="Capa1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px" viewBox="0 0 121 180"style="enable-background:new 0 0 180 136;" xml:space="preserve">
+        x="0px" y="0px" viewBox="0 0 121 180" style="enable-background:new 0 0 180 136;margin:0 0.3rem;" xml:space="preserve">
 
         <a xlink:title="Mesa {{ $mesa }} | Asiento 8" id="mesa{{ $mesa }}-asiento8-link"
             onclick="reserva('mesa{{ $mesa }}-asiento8',true)">

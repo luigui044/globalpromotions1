@@ -324,8 +324,8 @@ async function reserva(identificador, seleccionado) {
     }
 }
 
-window.addEventListener('load', async function() {
-    const ubicaciones = await obtenerUbicacionesReservadas(1);
-    establecerUbicacionesReservadas(ubicaciones);
-});
+// window.addEventListener('load', async function() {
+//     const ubicaciones = await obtenerUbicacionesReservadas(1);
+//     establecerUbicacionesReservadas(ubicaciones);
+// });
 
