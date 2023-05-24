@@ -105,7 +105,10 @@
         /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
         $('#localidad').change(function() {
             var id = $('#localidad option:selected').val()
+            
+            if(  id !==undefined){
             filtrarDisLocalidad(id)
+         }
         })
         //// funcion que filtra la cantidad disponible por lo calidad, si tiene disponible igual o mas de 8, el select devolvera de 1 a 8 opciones y si es menor a 8 solo devolvera la cantidad disponible
         function filtrarDisLocalidad(id) {
@@ -121,7 +124,7 @@
                     $('#filtrarCantidad').html(data);
                     $("#cantidad").materialSelect();
                 }).fail(function(e) {
-                    console.log(e)
+                  
                     Swal.fire({
                         title: 'Alerta',
                         text: 'A ocurrido un error inesperado',
@@ -143,12 +146,12 @@
                 }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-                    const localidad = document.getElementById('localidad')
-                        comprarBoletos.fadeIn();
-                        resumenCompra.fadeOut();
-                        localidad.seletedIndex=0;
-                        $('#cantidad').prop('selectedIndex',0);
-                        $('#cantidad').prop('disabled',true);
+              
+                        resetSelect('#cantidad')
+                        resetSelect('#localidad')
+                        $('#localidad').attr('disabled','disabled')
+                         comprarBoletos.fadeIn();
+                         resumenCompra.fadeOut()
                         $('#vistaLocalidad').html('<div id="vistaLocalidad">'+
                                     '<img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%">'+
                                 '</div>'+
@@ -160,7 +163,14 @@
         }
 
 
-
+        function resetSelect(id) {
+            $(id).materialSelect('destroy');
+            $(id).val('0').change();
+            if( id == '#cantidad'){
+                $(id).prop('disabled',true)
+            }
+            $(id).materialSelect();
+        }
 
         //////funcion para filtrar mapa de localidad si es que la tiene
 
