@@ -19,8 +19,7 @@
                             </div>
                             <div class="card-body">
                                 <div id="comprar-boletos">
-                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona
-                                        y 8 tickets por compra.</span>
+                                    <span class="indicacion">Recuerda que puedes realizar únicamente una compra por persona y 8 tickets por compra.</span>
                                     <hr>
                                     <div class="form-group">
                                         <label class="mdb-main-label" for="localidad">Localidad</label>
@@ -50,7 +49,7 @@
                                     </a>
                                 </div>
                                 <div id="resumen-compra">
-                                    <a class="btn btn-sm btn-block btn-rounded btn-outline-secondary waves-effect"><i class="fas fa-arrow-circle-left"></i> Volver</a>
+                                    <a class="btn btn-sm btn-block btn-rounded btn-outline-secondary waves-effect" onclick="returnSelectAs()"><i class="fas fa-arrow-circle-left"></i> Volver</a>
                                     <div class="d-flex justify-content-between mb-2 mt-4">
                                         <div>
                                             <span id="cantidad-boletos"></span>
@@ -60,15 +59,12 @@
                                             <span id="precioUnit"></span>
                                         </div>
                                     </div>
+                                    <br><br>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Subtotal</span>
-                                        <span id="subtotal"></span>
+                                        <span id="subTotal"></span>
                                     </div>
-                                    {{-- <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-info">Descuento</span>
-                                        <span class="text-info" id="descuento">$0.00</span>
-                                    </div> --}}
-
+                                  
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
@@ -109,7 +105,10 @@
         /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
         $('#localidad').change(function() {
             var id = $('#localidad option:selected').val()
+            
+            if(  id !==undefined){
             filtrarDisLocalidad(id)
+         }
         })
         //// funcion que filtra la cantidad disponible por lo calidad, si tiene disponible igual o mas de 8, el select devolvera de 1 a 8 opciones y si es menor a 8 solo devolvera la cantidad disponible
         function filtrarDisLocalidad(id) {
@@ -125,7 +124,7 @@
                     $('#filtrarCantidad').html(data);
                     $("#cantidad").materialSelect();
                 }).fail(function(e) {
-                    console.log(e)
+                  
                     Swal.fire({
                         title: 'Alerta',
                         text: 'A ocurrido un error inesperado',
@@ -135,16 +134,60 @@
                 });
         }
 
+        ////funcion que esta como onclick en el boton volver para regresar a la seleccion de localidades
+        
+        function returnSelectAs()
+        {
+            var comprarBoletos = $('#comprar-boletos');
+            var resumenCompra = $('#resumen-compra');
+            Swal.fire({
+                title: 'Al regresar se eliminara la localidad seleccionada, ¿Desea continuar?',
+     
+                showCancelButton: true,
+                confirmButtonText: 'Continuar',
+                cancelButtonText: `Cancelar`,
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+              
+                        resetSelect('#cantidad')
+                        resetSelect('#localidad')
+                        $('#localidad').attr('disabled','disabled')
+                         comprarBoletos.fadeIn();
+                         resumenCompra.fadeOut()
+                        $('#vistaLocalidad').html('<div id="vistaLocalidad">'+
+                                    '<img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%">'+
+                                '</div>'+
+                                '<input type="hidden" name="selectSeats2" id="selectSeats2" value="">')
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+                })
+        }
+
+        ///funcion para resetear los material selects
+        function resetSelect(id) {
+            $(id).materialSelect('destroy');
+            $(id).val('0').change();
+            if( id == '#cantidad'){
+                $(id).prop('disabled',true)
+            }
+            $(id).materialSelect();
+        }
+
         //////funcion para filtrar mapa de localidad si es que la tiene
 
         function selectAsientos() {
             const localidad = $('#localidad option:selected').val()
             const localidadText = $('#localidad option:selected').text()
             const localidadIndex = $('#localidad ').index()-1;
-            const cantidad = $('#cantidad option:selected').val()
-            const precioUnit  =$('#precioUnit');
-            
-        
+            const cantidad = $('#cantidad option:selected').val();
+            const precioUnit = localidades[localidadIndex].precio;
+            const precioUnitDiv  =$('#precioUnit');
+            const subTotal = precioUnit * cantidad;
+            const subTotalDiv = $('#subTotal');
+            const total = subTotal;
+            const totalDiv = $('#total');
 
 
             
@@ -295,8 +338,9 @@
 
                         cantidadBoletos.html(cantidad)
                         localidadBoletos.html(localidadText)
-                        precioUnit.html(localidades[localidadIndex].precio)
-
+                        precioUnitDiv.html('$'+precioUnit)
+                        subTotalDiv.html('$'+subTotal.toFixed(2))
+                        totalDiv.html('$'+total.toFixed(2))
                         /////desaparesco el div de compra de boletos y muestro el resumen
                         comprarBoletos.fadeOut();
                         resumenCompra.fadeIn();
