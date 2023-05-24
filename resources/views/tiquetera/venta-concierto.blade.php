@@ -133,6 +133,9 @@
                     })
                 });
         }
+
+        ////funcion que esta como onclick en el boton volver para regresar a la seleccion de localidades
+        
         function returnSelectAs()
         {
             var comprarBoletos = $('#comprar-boletos');
@@ -162,7 +165,7 @@
                 })
         }
 
-
+        ///funcion para resetear los material selects
         function resetSelect(id) {
             $(id).materialSelect('destroy');
             $(id).val('0').change();
