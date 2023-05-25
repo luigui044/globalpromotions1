@@ -149,7 +149,6 @@
                 }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
-              
                         resetSelect('#cantidad')
                         resetSelect('#localidad')
                         $('#localidad').attr('disabled','disabled')
@@ -188,11 +187,6 @@
             const subTotalDiv = $('#subTotal');
             const total = subTotal;
             const totalDiv = $('#total');
-
-
-            
-           
-   
             const errores = validandoCamposEntrada();
             if (errores == 0) {
                 $.ajaxSetup({
@@ -345,11 +339,8 @@
                         comprarBoletos.fadeOut();
                         resumenCompra.fadeIn();
                     });
-
             }
         }
-
-        
     </script>
 @endsection
 
