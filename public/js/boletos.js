@@ -25,49 +25,6 @@ const validandoCamposEntrada = () => {
     return errores;
 }
 
-const ocultarLocalidades = () => {
-    const localidades = document.querySelectorAll(`div[id^="localidad"]`);
-    localidades.forEach(localidad => {
-        localidad.style.display = 'none';
-    });
-}
-
-const eliminarSignoDolar = (valor) => {
-    return valor.replace('$', '');
-}
-
-const resumenCompra = () => {
-    const titulo = document.querySelector('#titulo');
-    const seleccionEntradas = document.querySelector('#comprar-boletos');
-    const elPrecio = document.querySelector('#precio');
-    const elCantidadBoletos = document.querySelector('#cantidad-boletos');
-    const elSubtotal = document.querySelector('#subtotal');
-    const elTotal = document.querySelector('#total');
-    const elRecargos = document.querySelector('#recargos');
-    const elDescuento = document.querySelector('#descuento'); 
-    elCantidadBoletos.textContent = cantidad.value;
-    const precio = parseFloat(eliminarSignoDolar(elPrecio.textContent));
-    const cantidadBoletos = parseFloat(cantidad.value);
-    const subtotal = cantidadBoletos * precio;
-    const descuento = parseFloat(eliminarSignoDolar(elDescuento.textContent));
-    const recargos = parseFloat(eliminarSignoDolar(elRecargos.textContent));
-    const total = subtotal - descuento  + recargos;
-    elSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-    elTotal.textContent = `$${total.toFixed(2)}`;
-
-    // Mostrando resumen
-    resumen.style.display = 'block';
-    // Ocultando selección de entradas
-    seleccionEntradas.style.display = 'none';
-    // Cambiando titulo de sidebar
-    titulo.textContent = 'Resumen de compra'
-}
-
-// Ocultando todas las localidades
-ocultarLocalidades();
-// Ocultando por defecto el resumen de compra
-resumen.style.display = 'none';
-
 const cantidadAsientosSeleccionada = () => {
     const asientosSeleccionados = document.getElementById("selectSeats");
     const arrayAsientos = asientosSeleccionados.value.split(',');
