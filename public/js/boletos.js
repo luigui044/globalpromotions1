@@ -32,7 +32,7 @@ const cantidadAsientosSeleccionada = () => {
     if (arrayAsientos[0] == "") {
         return arrayAsientos.length - 1;
     }
-    return arrayAsientos.length
+    return arrayAsientos.length;
 }
 
 async function consultarUbicacion(url, asiento) {
@@ -75,18 +75,48 @@ async function ubicacionDisponible(asiento) {
     }
 }
 
-async function agregarReservaUbicacion(ubicacion) {
+// async function agregarReservaUbicacion(ubicacion) {
+//     const loader = document.querySelector('.mi-loader');
+//     try {
+//         loader.className = 'mi-loader animate__animated animate__fadeIn';
+//         const response = await fetch(route('reserva-tmp'), {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
+//             },
+//             method: 'POST',
+//             body: JSON.stringify({
+//                 ubicacion: ubicacion
+//             }),
+//         });
+
+//         if (response.status === 200) {
+//             const data = await response.json();
+//             loader.className = 'mi-loader d-none';
+//             return data;
+//         }
+//         loader.className = 'mi-loader d-none';
+//         return false;
+//     } catch(error) {
+//         console.error(error);
+//         loader.className = 'mi-loader d-none';
+//         return false;
+//     }
+// }
+
+async function prerreservaMesaAsiento(mesa, asiento) {
     const loader = document.querySelector('.mi-loader');
     try {
         loader.className = 'mi-loader animate__animated animate__fadeIn';
-        const response = await fetch(route('reserva-tmp'), {
+        const response = await fetch(route('prerreserva-mesas'), {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
             },
             method: 'POST',
             body: JSON.stringify({
-                ubicacion: ubicacion
+                mesa: mesa,
+                asiento: asiento 
             }),
         });
 
@@ -182,6 +212,18 @@ const agregarAsientos = (ubicacion) => {
     }
 }
 
+const obtenerNumeroMesaYAsiento = (identificador) => {
+    const mesaSilla = identificador.replace('mesa', '').replace('asiento', '');
+    const partes = mesaSilla.split('-');
+    const mesa = partes[0];
+    const asiento = partes[1];
+    const ubicacion = {
+        mesa: mesa,
+        asiento: asiento
+    }
+    return ubicacion;
+}
+
 async function reserva(identificador, seleccionado) {
     // Obteniendo circulo del svg
     const asiento = document.getElementById(identificador);
@@ -191,6 +233,8 @@ async function reserva(identificador, seleccionado) {
     const selectSeats = document.getElementById("selectSeats");
     // Se guarda el asiento actual
     const asientoActual = document.getElementById('asiento-actual');
+    // Cantidad de asientos especificada por el usuario en el select
+    const cantidad = document.querySelector('#cantidad');
 
     if (seleccionado) {
         // Cuando ya se han seleccionado todos los asientos indicados no se pueden escoger más
@@ -200,26 +244,22 @@ async function reserva(identificador, seleccionado) {
         }
         // Guardamos el asiento actual
         asientoActual.value = asiento.id;
-        const res = await ubicacionDisponible(asientoActual.value);
+        const ubicacion = obtenerNumeroMesaYAsiento(asiento.id);
+        const res = await prerreservaMesaAsiento(ubicacion.mesa, ubicacion.asiento);
 
-        if (res.estado) {
+        if (res) {
+            // Con esta función se llena el input de tipo hidden con las ubicaciones
+            // seleccionadas por el usuario separadas por coma.
             agregarAsientos(asiento.id);
             // Insertando registro en la base de datos
-            const reserva = await agregarReservaUbicacion(asientoActual.value);
-
-            if (reserva) {
-                asiento.style.fill = "#eca72c";
-                link.removeAttribute("onclick");
-                link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
-                alertify.notify('Ubicación agregada', 'success', 4);
-            }
-
-            if (!reserva) {
-                alertify.notify('No se pudo agregar la ubicación', 'error', 4);
-            }
+            //const reserva = await agregarReservaUbicacion(asientoActual.value);
+            asiento.style.fill = "#eca72c";
+            link.removeAttribute("onclick");
+            link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
+            alertify.notify('Ubicación agregada', 'success', 4);
         } 
 
-        if (!res.estado) 
+        if (!res) 
             alertify.alert('Información', `Esta ubicación no se encuentra disponible.`);
 
         return true;
@@ -256,4 +296,30 @@ async function reserva(identificador, seleccionado) {
 //     const ubicaciones = await obtenerUbicacionesReservadas(1);
 //     establecerUbicacionesReservadas(ubicaciones);
 // });
+
+/* 
+    Con esta función se cambia el color del asiento seleccionado a anaranjado (reservado)
+    y se elimina el evento onclick para que no pueda ejecutar ninguna acción
+*/
+const mostrarUbicacionPrerreservada = (mesa, asiento) => {
+    const idEnlaceUbicacion = obtenerIdEnlaceUbicacion(mesa, asiento);
+    const idCirculo = obtenerIdCirculo(idEnlaceUbicacion);
+    const enlaceUbicacion = document.getElementById(idEnlaceUbicacion);
+    const circulo = document.getElementById(idCirculo);
+    circulo.style.fill = "#eca72c";
+    enlaceUbicacion.removeAttribute("onclick");
+}
+
+/*
+    Escuchando eventos del websocket:
+    Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
+    los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
+    seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
+*/
+
+Echo.channel('PreReservaMesa').listen('NewPreReservaMesa', (e) => {
+    const mesa = e.mesa;
+    const asiento = e.asiento;
+    mostrarUbicacionPrerreservada(mesa, asiento);
+});
 

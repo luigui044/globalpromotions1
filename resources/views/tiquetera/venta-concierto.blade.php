@@ -99,12 +99,16 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
 
     <script>
+        // Se oculta el resumen de la compra en un inicio
+        document.querySelector('#resumen-compra').style.display = 'none';
+
         // Realizamos disparador para cuando la localidad se cambie, se actualice el select de 
         // cantidad correspondiendo a la cantidad disponible de esa localidad
         $('#localidad').change(function() {

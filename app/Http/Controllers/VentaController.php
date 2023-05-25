@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Jenssegers\Date\Date;
 
 use Illuminate\Http\Request;

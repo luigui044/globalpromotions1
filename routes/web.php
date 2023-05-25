@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PreRreservaController;
 use App\Http\Controllers\VentaController;
 
 /*
@@ -42,7 +43,7 @@ Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->name('concierto');
 Route::post('/comprar', [VentaController::class, 'vender'])->name('vender');
-Route::post('/entradas/reserva-temporal', [VentaController::class, 'reservaTemporalEntradas'])->name('reserva-tmp');
+Route::post('/entradas/reserva-temporal', [PreRreservaController::class, 'mesas'])->name('prerreserva-mesas');
 Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
 Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
