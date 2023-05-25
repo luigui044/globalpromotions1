@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 use Jenssegers\Date\Date;
 
 use Illuminate\Http\Request;
+use stdClass;
 use App\Models\TmpDetallesVenta;
 use App\Models\TmpVenta;
 use App\Models\TPrueba;
 use App\Models\TEvento;
 use App\Models\VwAsiLocalidade;
+use App\Models\TBoleto;
 use Carbon\Carbon;
+use SimpleSoftwareIO\QrCode\Generator;
 use Exception;
 use JavaScript;
 
@@ -22,6 +25,7 @@ class VentaController extends Controller
         $fecha2= $fecha->format('j F Y');
         $dia = $fecha->format('l');
         JavaScript::put([
+            'evento' => $evento,
             'localidades' => $localidades,
             
         ]);
@@ -29,12 +33,27 @@ class VentaController extends Controller
 
     }
 
-    function vender(Request $request){
-        $venta = new TPrueba();
-        $venta->selectseats = '['.$request->selectSeats2.']';
-        $venta->save();
+    function vender(Request $req){
 
-        return view('vendido');
+
+        $cantidad = $req->cantidad;
+        $boletos = array();
+
+
+
+        for ($i=0; $i < $cantidad ; $i++) { 
+            $nuevoBoleto = new TBoleto();
+            $nuevoBoleto->id_localidad = $req->localidad;
+            $nuevoBoleto->id_evento = $req->evento;
+            $nuevoBoleto->fecha_stamp = 1;
+            //codigo para genera el qr 
+            // $boleto = new stdClass();
+            // $qrCode =new Generator;
+            // $pruebaQR= $qrCode->size(500)->generate('6218447047');
+            // $boleto->qr = $pruebaQR;
+            // array_push($boletos,$boleto);
+        }
+        return view('tiquetera.ticket', compact('boletos'));
     }
 
     function obtenerDetalleUbicacion($ubicacion) {
