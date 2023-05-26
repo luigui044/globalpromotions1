@@ -41,7 +41,7 @@ Route::post('/clic-evento', [TrackingController::class, 'clicEvento'])->name('cl
 Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas');
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->name('concierto');
-Route::post('/ticketComprado', [VentaController::class, 'vender'])->name('vender');
+Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/reserva-temporal', [VentaController::class, 'reservaTemporalEntradas'])->name('reserva-tmp');
 Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');

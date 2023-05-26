@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Jenssegers\Date\Date;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 use App\Models\TmpDetallesVenta;
 use App\Models\TmpVenta;
@@ -13,6 +14,7 @@ use App\Models\VwAsiLocalidade;
 use App\Models\TBoleto;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Generator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Exception;
 use JavaScript;
 
@@ -34,7 +36,10 @@ class VentaController extends Controller
     }
 
     function vender(Request $req){
-
+        $evento = TEvento::find($req->id);
+        $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
+        $fecha2= $fecha->format('j F Y');
+        $dia = $fecha->format('l');
 
         $cantidad = $req->cantidad;
         $boletos = array();
@@ -45,15 +50,23 @@ class VentaController extends Controller
             $nuevoBoleto = new TBoleto();
             $nuevoBoleto->id_localidad = $req->localidad;
             $nuevoBoleto->id_evento = $req->evento;
-            $nuevoBoleto->fecha_stamp = 1;
-            //codigo para genera el qr 
-            // $boleto = new stdClass();
-            // $qrCode =new Generator;
-            // $pruebaQR= $qrCode->size(500)->generate('6218447047');
-            // $boleto->qr = $pruebaQR;
-            // array_push($boletos,$boleto);
+            $nuevoBoleto->fecha_stamp = strtotime('now');
+            $nuevoBoleto->save();
+
+            $boleto = $nuevoBoleto->id;
+            $localidad = $nuevoBoleto->id_localidad ;
+            $evento1 =  $nuevoBoleto->evento; 
+            $fechaStamp =$nuevoBoleto->fecha_stamp;
+        //codigo para genera el qr 
+            $qrCode =new Generator;
+            $rutaImagen = storage_path('globalProd/public/img/logo.jpg');
+            $nuevoBoleto->codigo_qr = QrCode::size(170)->style('dot')->eye('circle')->merge('\public\img\logo.png',.5)->generate($boleto.'-'.$localidad.'-'.$evento1.'-'.$fechaStamp);
+            $nuevoBoleto->save();
+        // $pruebaQR= $qrCode->size(500)->generate('6218447047');
+        // $boleto->qr = $pruebaQR;
+        array_push($boletos,$nuevoBoleto);
         }
-        return view('tiquetera.ticket', compact('boletos'));
+        return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
     }
 
     function obtenerDetalleUbicacion($ubicacion) {
@@ -173,7 +186,7 @@ class VentaController extends Controller
                 return view('tiquetera.desplegarsillas', compact('cantidad', 'asignacion'));
             break;
             default:
-                return 'imagen default';
+                return view('tiquetera.partials.default');
             break;
         }
 

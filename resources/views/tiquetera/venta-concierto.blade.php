@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row p-5">
-            <form action="{{ route('vender') }}" method="POST" class="w-100">
+            <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" method="POST" class="w-100">
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-3">
@@ -44,6 +44,7 @@
                                             <div class="error" id="error-cantidad"></div>
                                         </div>
                                     </div>
+                                    <input type="hidden" name="evento" id="evento" value="{{ $evento->id_evento }}">
                                     <a onclick="selectAsientos()" class="btn btn-info btn-sm btn-block">
                                         Continuar
                                     </a>
@@ -100,10 +101,5 @@
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
-
-    <script>
-   
-        
-    </script>
 @endsection
 
