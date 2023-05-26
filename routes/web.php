@@ -5,7 +5,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VentaController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +15,7 @@ use App\Http\Controllers\VentaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/',[HomeController::class, 'home'] )->name('home');
 Route::get('/nuevo-evento',[AdminController::class, 'nuevoEvento'] )->name('nuevoEvento');
@@ -48,3 +48,28 @@ Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDispo
 Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
