@@ -6,7 +6,6 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PreRreservaController;
 use App\Http\Controllers\VentaController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +16,7 @@ use App\Http\Controllers\VentaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/',[HomeController::class, 'home'] )->name('home');
 Route::get('/nuevo-evento',[AdminController::class, 'nuevoEvento'] )->name('nuevoEvento');
@@ -42,10 +42,35 @@ Route::post('/clic-evento', [TrackingController::class, 'clicEvento'])->name('cl
 Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas');
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->name('concierto');
-Route::post('/comprar', [VentaController::class, 'vender'])->name('vender');
+Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/reserva-temporal', [PreRreservaController::class, 'mesas'])->name('prerreserva-mesas');
 Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
 Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
