@@ -199,6 +199,7 @@ const establecerUbicacionesReservadas = (ubicaciones) => {
         circulo = document.getElementById(idCirculo);
         // Se elimina la función para agregar asiento
         enlace.removeAttribute('onclick');
+        // Se coloca en color rojo (no disponible) el asiento
         circulo.style.fill = '#e63946';
     });
 }
@@ -291,11 +292,6 @@ async function reserva(identificador, seleccionado) {
         
     }
 }
-
-// window.addEventListener('load', async function() {
-//     const ubicaciones = await obtenerUbicacionesReservadas(1);
-//     establecerUbicacionesReservadas(ubicaciones);
-// });
 
 /* 
     Con esta función se cambia el color del asiento seleccionado a anaranjado (reservado)

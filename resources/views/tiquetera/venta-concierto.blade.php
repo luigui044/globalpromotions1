@@ -204,7 +204,7 @@
                 $.post('/selectAsientos', {
                         id: localidad
                     })
-                    .done(function(data) {
+                    .done(async function(data) {
                         ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                         $('#vistaLocalidad').html(data)
 
@@ -226,6 +226,10 @@
                                 tanto el Zoom como el drag and scroll, la función está definida en el archivo zoom.js
                             */
                             zoom();
+
+                            // Se establecen en (No disponible) las ubicaciones ya compradas
+                            const ubicaciones = await obtenerUbicacionesReservadas(1);
+                            establecerUbicacionesReservadas(ubicaciones);
                         }
 
                         cantidadBoletos.html(cantidad)
