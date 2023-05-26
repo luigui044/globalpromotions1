@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\VentaController;
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,6 @@ use App\Http\Controllers\VentaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 Route::get('/',[HomeController::class, 'home'] )->name('home');
 Route::get('/nuevo-evento',[AdminController::class, 'nuevoEvento'] )->name('nuevoEvento');
@@ -40,7 +39,7 @@ Route::post('/clic-evento', [TrackingController::class, 'clicEvento'])->name('cl
 
 Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas');
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
-Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->name('concierto');
+Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->middleware(['auth'])->name('concierto');
 Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/reserva-temporal', [VentaController::class, 'reservaTemporalEntradas'])->name('reserva-tmp');
 Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
@@ -51,25 +50,5 @@ Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
