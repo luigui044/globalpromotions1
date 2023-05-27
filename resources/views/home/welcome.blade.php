@@ -11,7 +11,7 @@
         <div class="container section" id="afterHeader">
             <div class="row">
                 <div class="col-sm-12">
-                    lmedrano
+                    
                     <hr>
 
                     @foreach ($eventos as $item)
