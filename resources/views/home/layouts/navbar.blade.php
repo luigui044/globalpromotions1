@@ -92,6 +92,16 @@
 
                 </li>
 
+                <li>
+                    @if (auth()->user())
+                        <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <button type="submit" >Cerrar sesión</button>
+                        </form>
+                    @endif
+                    
+                </li>
+
             </ul>
 
         </div>
