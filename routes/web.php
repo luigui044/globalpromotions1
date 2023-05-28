@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\PayPalController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,6 +50,8 @@ Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])
 Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');
 
 
-
+Route::post('/paypal/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
+Route::get('/paypal/complete', [PayPalController::class, 'complete'])->name('paypal.complete');
+Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process-payment');
 
 require __DIR__.'/auth.php';

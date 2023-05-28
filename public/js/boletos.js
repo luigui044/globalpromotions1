@@ -444,7 +444,7 @@ async function reserva(identificador, seleccionado) {
                     var resumenCompra = $('#resumen-compra');
                     var cantidadBoletos = $('#cantidad-boletos');
                     var localidadBoletos= $('#localidad-boletos');
-
+                    var monto  = $('#amount')
                     let contador = 0;
 
                     if (aumentar && disminuir) {
@@ -568,6 +568,7 @@ async function reserva(identificador, seleccionado) {
                     precioUnitDiv.html('$'+precioUnit)
                     subTotalDiv.html('$'+subTotal.toFixed(2))
                     totalDiv.html('$'+total.toFixed(2))
+                    monto.val(total.toFixed(2))
                     /////desaparesco el div de compra de boletos y muestro el resumen
                     comprarBoletos.fadeOut();
                     resumenCompra.fadeIn();
