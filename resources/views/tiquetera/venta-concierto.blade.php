@@ -9,7 +9,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="row p-5">
-            <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" method="POST" class="w-100">
+            {{-- <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" method="POST" class="w-100"> --}}
+                <form action="{{ route('paypal.checkout') }}"  method="POST" class="w-100">
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-3">
@@ -69,7 +70,45 @@
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
+                                        <input type="hidden" name="amount" id="amount">
                                     </div>
+                                    <div class="md-form">
+                                        <input type="text" name="card_number" id="card_number"  class="form-control">
+                                        <label for="card_number">Número de tarjeta</label>
+                                       
+                                      </div>
+                                    <div class="md-form">
+                                        <input type="text" name="card_holder_name" id="card_holder_name"  class="form-control">
+                                        <label for="card_holder_name">Nombre de titular</label>
+                                    </div>
+                                     <!-- Grid row -->
+                                    <div class="row">
+                                        <!-- Grid column -->
+                                        <div class="col">
+                                        <!-- Material input -->
+                                        <div class="md-form mt-0">
+                                            <input type="text" name="expiration_date" id="expiration_date" class="form-control">
+                                            <label for="expiration_date">Expiración</label>
+
+                                        </div>
+                                        </div>
+                                        <!-- Grid column -->
+
+                                        <!-- Grid column -->
+                                        <div class="col">
+                                        <!-- Material input -->
+                                        <div class="md-form mt-0">
+                                            <input type="text" class="form-control" id="cvv" name="cvv" >
+                                            <label for="expiration_date">cvv</label>
+
+                                        </div>
+                                        </div>
+                                        <!-- Grid column -->
+                                    </div>
+                                    <!-- Grid row -->
+
+
+
                                     <button type="submit" class="btn btn-success btn-sm btn-block" id="btnPagar">
                                         Pagar
                                     </button>

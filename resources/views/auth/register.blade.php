@@ -17,12 +17,22 @@
                     <input id="name" name="name" type="text" autocomplete="name" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-                <div>
-                    <label for="email"  :value="__('Email')" class="block text-sm font-medium leading-6 text-gray-900">Dirección de correo</label>
-                    <div class="mt-1">
-                        <input id="email" name="email" type="email" autocomplete="email"  required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="email"  :value="__('Email')" class="block text-sm font-medium leading-6 text-gray-900">Dirección de correo</label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" autocomplete="email"  required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
                     </div>
+                    <div class="col-md-6">
+                        <label for="phone"   class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
+                        <div class="mt-1">
+                            <input id="phone" name="phone" type="text" autocomplete="phone"  required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                  
                 </div>
+               
                 <div>
                     <label for="password" :value="__('Password')" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
                     <div class="mt-1">
