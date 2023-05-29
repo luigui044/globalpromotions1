@@ -10,10 +10,10 @@
     <div class="container-fluid">
         <div class="row p-5">
             {{-- <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" method="POST" class="w-100"> --}}
-                <form action="{{ route('paypal.checkout') }}"  method="POST" class="w-100">
+                <form action="{{ route('process-payment') }}"  method="POST" class="w-100">
                 @csrf
                 <div class="row">
-                    <div class="col-12 col-lg-3">
+                    <div class="col-12 col-lg-4">
                         <div class="card h-100">
                             <div class="card-header">
                                 <strong id="titulo">Selecciona tus boletos</strong>
@@ -72,7 +72,10 @@
                                         <span class="text-success" id="total"></span>
                                         <input type="hidden" name="amount" id="amount">
                                     </div>
-                                    <div class="md-form">
+
+                                    <div id="paypal-button-container"></div>
+
+                                    {{-- <div class="md-form">
                                         <input type="text" name="card_number" id="card_number"  class="form-control">
                                         <label for="card_number">Número de tarjeta</label>
                                        
@@ -104,19 +107,19 @@
                                         </div>
                                         </div>
                                         <!-- Grid column -->
-                                    </div>
+                                    </div> --}}
                                     <!-- Grid row -->
 
 
-
+{{-- 
                                     <button type="submit" class="btn btn-success btn-sm btn-block" id="btnPagar">
                                         Pagar
-                                    </button>
+                                    </button> --}}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-9">
+                    <div class="col-12 col-lg-8">
                         <div class="card h-100 p-relative">
                             @include('tiquetera.components.loader')
                             <div class="card-header text-center">
@@ -140,5 +143,38 @@
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,funding-eligibility&currency=USD&locale=es_SV"></script>
+    <script>
+
+        paypal.Buttons({
+            fundingSource: paypal.FUNDING.CARD,
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    application_context: {
+                        shipping_preference: "NO_SHIPPING"
+                    },
+                    payer: {
+                        email_address:   '{{ auth()->user()->email }}',
+                        name:{
+                        given_name: '{{ auth()->user()->first_name }}',
+                        surname: '{{ auth()->user()->last_name }}'
+                      }
+                    },
+                   
+                    purchase_units: [{  
+                        amount: {
+                            value: $('#amount').val()
+                        }
+                    }],
+                });
+            },
+            onApprove: function(data, actions) {
+                 return actions.order.capture().then(function(details)
+                 {
+                    alert('pago completado exitosamente')
+                 });
+            }   
+        }).render('#paypal-button-container'); 
+    </script>
 @endsection
 

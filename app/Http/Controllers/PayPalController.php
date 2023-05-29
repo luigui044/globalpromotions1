@@ -12,11 +12,12 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
+USE App\Http\Controllers\VentaController;
 
 class PayPalController extends Controller
 {
     protected $apiContext;
-
+    ////credenciales de api
     public function __construct()
     {
         $this->apiContext = new ApiContext(
@@ -27,9 +28,12 @@ class PayPalController extends Controller
         );
         $this->apiContext->setConfig(config('paypal.settings'));
     }
-
+    //procesamiento de pago con formulario de pago 
     public function processPayment(Request $request)
     {
+
+
+        ////////////////CODIGO DE CHAT GPT///////////////////////////////
         // Obtener los datos del formulario
         $cardNumber = $request->input('card_number');
         $expirationDate = $request->input('expiration_date');
@@ -38,55 +42,52 @@ class PayPalController extends Controller
 
         // Validar los datos del formulario (agrega tus propias reglas de validación aquí)
 
-        // Configurar la API de PayPal
-        $apiContext = new \PayPal\Rest\ApiContext(
-            new \PayPal\Auth\OAuthTokenCredential(
-                config('paypal.client_id'),
-                config('paypal.secret')
-            )
-        );
+      
 
         // Crear un objeto Payer
         $payer = new Payer();
-        $payer->setPaymentMethod('credit_card');
+        $payer->setPaymentMethod('paypal');
 
+        $amount = new Amount();
+        $amount->setCurrency('USD')
+            ->setTotal(10);
         // Crear un objeto Transaction
         $transaction = new Transaction();
-        $transaction->setAmount(/* Configura el monto de la transacción */);
+        $transaction->setAmount($amount )
+        ->setDescription('Descripción de la transacción');
+
 
         // Configurar otros detalles de la transacción (opcional)
+        // Redireccionar URL
+            $redirectUrls = new RedirectUrls();
+            $redirectUrls->setReturnUrl(route('paypal.complete'))
+                ->setCancelUrl(route('paypal.checkout'));
 
         // Crear el objeto Payment
         $payment = new Payment();
         $payment->setIntent('sale')
             ->setPayer($payer)
-            ->setTransactions([$transaction]);
+            ->setTransactions([$transaction])
+            ->setRedirectUrls($redirectUrls);
 
-        // Redireccionar URL
-        $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl(/* URL de retorno después del pago exitoso */)
-            ->setCancelUrl(/* URL de cancelación del pago */);
-        $payment->setRedirectUrls($redirectUrls);
-
+       
         try {
             // Crear el pago
-            $payment->create($apiContext);
-
+            $payment->create($this->apiContext);
             // Obtener la URL de aprobación
-            $approvalUrl = $payment->getApprovalLink();
-
+            return redirect()->to($payment->getApprovalLink());
             // Redirigir al usuario a la URL de aprobación
-            return redirect($approvalUrl);
-        } catch (PayPalException $e) {
+        } catch (\PayPalException $e) {
             // Manejar el error
             return back()->withErrors('Error al procesar el pago: ' . $e->getMessage());
         }
     }
 
 
-
+    //procesamiento depago redirigiendo a paypal 
     public function checkout()
     {
+
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
 
@@ -111,12 +112,12 @@ class PayPalController extends Controller
         try {
             $payment->create($this->apiContext);
             return redirect()->to($payment->getApprovalLink());
-        } catch (\Exception $e) {
+        } catch (\PayPalException $e) {
             return $e;
         }
 
     }
-
+    ///cuando pasa de checkout a complete
     public function complete(Request $request)
     {
         $paymentId = $request->get('paymentId');
@@ -129,7 +130,7 @@ class PayPalController extends Controller
 
         try {
             $result = $payment->execute($execution, $this->apiContext);
-            return 'listo';
+   
         } catch (\Exception $e) {
             return $e;
         }
