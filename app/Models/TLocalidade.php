@@ -15,8 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_localidad
  * @property string|null $nombre_localidad
  * @property string|null $desc_localidad
- * @property int|null $id_lugar
+ * @property int|null $tipo_localidad
  * 
+ * @property CTipoLocalidad|null $c_tipo_localidad
  * @property Collection|TAsigLocalidade[] $t_asig_localidades
  *
  * @package App\Models
@@ -28,14 +29,19 @@ class TLocalidade extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'id_lugar' => 'int'
+		'tipo_localidad' => 'int'
 	];
 
 	protected $fillable = [
 		'nombre_localidad',
 		'desc_localidad',
-		'id_lugar'
+		'tipo_localidad'
 	];
+
+	public function c_tipo_localidad()
+	{
+		return $this->belongsTo(CTipoLocalidad::class, 'tipo_localidad');
+	}
 
 	public function t_asig_localidades()
 	{

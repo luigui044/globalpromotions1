@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $fechas
  * @property string|null $hora
  * @property string|null $localidades
- * @property string|null $ruta_compra
- * @property string|null $ruta_galeria
+ * @property string|null $lugar
+ * @property string|null $imagen_lugar
  * @property string|null $image_card
  * @property string|null $image_banner
  * @property int|null $estado_evento
@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * 
  * @property TArtista|null $t_artista
+ * @property Collection|TAsigLocalidade[] $t_asig_localidades
  * @property Collection|TEventosClic[] $t_eventos_clics
  *
  * @package App\Models
@@ -50,8 +51,8 @@ class TEvento extends Model
 		'fechas',
 		'hora',
 		'localidades',
-		'ruta_compra',
-		'ruta_galeria',
+		'lugar',
+		'imagen_lugar',
 		'image_card',
 		'image_banner',
 		'estado_evento'
@@ -60,6 +61,11 @@ class TEvento extends Model
 	public function t_artista()
 	{
 		return $this->belongsTo(TArtista::class, 'id_artista');
+	}
+
+	public function t_asig_localidades()
+	{
+		return $this->hasMany(TAsigLocalidade::class, 'evento');
 	}
 
 	public function t_eventos_clics()

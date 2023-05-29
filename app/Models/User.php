@@ -1,47 +1,75 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property string $name
+ * @property string $first_name
+ * @property string|null $middle_name
+ * @property string $last_name
+ * @property string $segundo_apellido
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $telefono
+ * @property string $password
+ * @property string|null $remember_token
+ * @property int|null $rol
+ * @property int|null $estado
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property CEstadoUsuario|null $c_estado_usuario
+ * @property CRolesUsuario|null $c_roles_usuario
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+	protected $table = 'users';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'telefono',
-        'rol',
-        'estado',
-        'password',
-    ];
+	protected $casts = [
+		'email_verified_at' => 'datetime',
+		'rol' => 'int',
+		'estado' => 'int'
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $hidden = [
+		'password',
+		'remember_token'
+	];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+	protected $fillable = [
+		'name',
+		'first_name',
+		'middle_name',
+		'last_name',
+		'segundo_apellido',
+		'email',
+		'email_verified_at',
+		'telefono',
+		'password',
+		'remember_token',
+		'rol',
+		'estado'
+	];
+
+	public function c_estado_usuario()
+	{
+		return $this->belongsTo(CEstadoUsuario::class, 'estado');
+	}
+
+	public function c_roles_usuario()
+	{
+		return $this->belongsTo(CRolesUsuario::class, 'rol');
+	}
 }

@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id_asignacion
  * @property int $evento
  * @property int $localidad
+ * @property float $precio
+ * @property float|null $descuento
+ * @property Carbon|null $inicio_desc
+ * @property Carbon|null $fin_desc
  * @property int $cantidad
  * @property int $vendidos
  * @property int $estado
@@ -34,6 +38,10 @@ class TAsigLocalidade extends Model
 	protected $casts = [
 		'evento' => 'int',
 		'localidad' => 'int',
+		'precio' => 'float',
+		'descuento' => 'float',
+		'inicio_desc' => 'datetime',
+		'fin_desc' => 'datetime',
 		'cantidad' => 'int',
 		'vendidos' => 'int',
 		'estado' => 'int'
@@ -42,6 +50,10 @@ class TAsigLocalidade extends Model
 	protected $fillable = [
 		'evento',
 		'localidad',
+		'precio',
+		'descuento',
+		'inicio_desc',
+		'fin_desc',
 		'cantidad',
 		'vendidos',
 		'estado'
