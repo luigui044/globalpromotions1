@@ -37,21 +37,21 @@ class VentaController extends Controller
 
     function vender(Request $req){
 
-        $prevReq = $req->session()->get('request');
+        // $prevReq = $req->session()->get('request');
 
-        $evento = TEvento::find($prevReq->id);
-        $fecha= new Date( Carbon::create($prevReq->fechas)->toDayDateTimeString());
+        $evento = TEvento::find($req->id);
+        $fecha= new Date( Carbon::create($req->fechas)->toDayDateTimeString());
         $fecha2= $fecha->format('j F Y');
         $dia = $fecha->format('l');
-        $cantidad = $prevReq->cantidad;
+        $cantidad = $req->cantidad;
         $boletos = array();
 
 
 
         for ($i=0; $i < $cantidad ; $i++) { 
             $nuevoBoleto = new TBoleto();
-            $nuevoBoleto->id_localidad = $prevReq->localidad;
-            $nuevoBoleto->id_evento = $prevReq->evento;
+            $nuevoBoleto->id_localidad = $req->localidad;
+            $nuevoBoleto->id_evento = $req->evento;
             $nuevoBoleto->fecha_stamp = strtotime('now');
             $nuevoBoleto->save();
 

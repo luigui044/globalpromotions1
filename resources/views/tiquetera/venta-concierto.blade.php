@@ -9,8 +9,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="row p-5">
-            {{-- <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" method="POST" class="w-100"> --}}
-                <form action="{{ route('process-payment') }}"  method="POST" class="w-100">
+            <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" id="form-venta"  method="POST" class="w-100">
+                {{-- <form action="{{ route('vender') }}"  id="form-venta" method="POST" class="w-100"> --}}
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-4">
@@ -71,6 +71,8 @@
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
                                         <input type="hidden" name="amount" id="amount">
+                                        <input type="hidden" name="orderId" id="orderId">
+                                        <input type="hidden" name="payerId" id="payerId">
                                     </div>
 
                                     <div id="paypal-button-container"></div>
@@ -169,11 +171,25 @@
                 });
             },
             onApprove: function(data, actions) {
-                 return actions.order.capture().then(function(details)
-                 {
-                    alert('pago completado exitosamente')
-                 });
-            }   
+            
+
+                $('#orderId').val(data.orderID)
+                $('#payerId').val(data.payerID)
+                setTimeout(() => {
+                    document.getElementById("form-venta").submit(); 
+
+                }, '500');
+
+
+            },
+            onError:  function(err){
+                console.log(err)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ups...',
+                    text: 'Algo ha ido mal'
+                    })
+            }
         }).render('#paypal-button-container'); 
     </script>
 @endsection
