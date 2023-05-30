@@ -409,9 +409,9 @@ async function reserva(identificador, seleccionado) {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
           
-                    resetSelect('#cantidad')
-                    resetSelect('#localidad')
-                    $('#localidad').attr('disabled','disabled')
+                    resetSelect('#cantidad');
+                    resetSelect('#localidad');
+                    $('#localidad').prop('disabled',false);
                      comprarBoletos.fadeIn();
                      resumenCompra.fadeOut()
                     $('#vistaLocalidad').html('<div id="vistaLocalidad">'+
@@ -437,7 +437,7 @@ async function reserva(identificador, seleccionado) {
     //////funcion para filtrar mapa de localidad si es que la tiene
 
     function selectAsientos() {
-        const localidad = $('#localidad option:selected').val()
+        var localidad = $('#localidad option:selected').val()
         const localidadText = $('#localidad option:selected').text()
         const localidadIndex = $('#localidad ').index()-1;
         const cantidad = $('#cantidad option:selected').val();
