@@ -224,8 +224,14 @@ const establecerUbicacionesVendidas = (ubicaciones) => {
             enlace = document.getElementById(idEnlace);
             circulo = document.getElementById(idCirculo);
             // Se elimina la función para agregar asiento
-            enlace.removeAttribute('onclick');
-            circulo.style.fill = '#e63946';
+            if(enlace != null)
+            {     enlace.removeAttribute('onclick');
+            }
+            if(circulo != null)
+            {
+                circulo.style.fill = '#e63946';
+
+            }
         });
     }
 }
