@@ -51,7 +51,9 @@ const resumenCompra = () => {
     const subtotal = cantidadBoletos * precio;
     const descuento = parseFloat(eliminarSignoDolar(elDescuento.textContent));
     const recargos = parseFloat(eliminarSignoDolar(elRecargos.textContent));
-    const total = subtotal - descuento  + recargos;
+    const total = subtotal - d
+    
+    escuento  + recargos;
     elSubtotal.textContent = `$${subtotal.toFixed(2)}`;
     elTotal.textContent = `$${total.toFixed(2)}`;
 
@@ -67,35 +69,6 @@ const resumenCompra = () => {
 ocultarLocalidades();
 // Ocultando por defecto el resumen de compra
 resumen.style.display = 'none';
-
-// Boton de seleccion de localidad y cantidad de entradas.
-// btnBoletos.addEventListener('click', (e) => {
-//     const mapaCompleto = document.querySelector('#completo');
-//     const errores = validandoCamposEntrada();
-
-//     if (errores == 0) {
-
-//         $.ajaxSetup({
-//             headers: {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             }
-//         });
-//         $.post( '/filtrar', { id: id})
-//         .done(function( data ) {
-//             $('.modal-body').html(data);
-//             $('#centralModalSm').modal('toggle');
-//         });
-
-
-//         // Ocultando las demas localidades
-//         //mapaCompleto.style.display = 'none';
-//         //ocultarLocalidades();
-//         // Mostrando solo localidad seleccionada
-//         //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
-//         //resumenCompra();
-//     }
-// });
-
 
 const cantidadAsientosSeleccionada = () => {
     const asientosSeleccionados = document.getElementById("selectSeats");
@@ -324,10 +297,6 @@ async function reserva(identificador, seleccionado) {
     }
 }
 
-// window.addEventListener('load', async function() {
-//     const ubicaciones = await obtenerUbicacionesReservadas(1);
-//     establecerUbicacionesReservadas(ubicaciones);
-// });
 
      /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
      $('#localidad').change(function() {
@@ -412,14 +381,15 @@ async function reserva(identificador, seleccionado) {
         const precioUnit = localidades[localidadIndex].precio;
         const precioUnitDiv  =$('#precioUnit');
         const subTotal = precioUnit * cantidad;
-        const subTotalDiv = $('#subTotal');
+        const subTotalDiv = $('#subTotalDiv');
+        const subTotalInput  = $('#subTotal')
         const total = subTotal;
         const totalDiv = $('#total');
 
 
         
        
-
+ 
         const errores = validandoCamposEntrada();
         if (errores == 0) {
             $.ajaxSetup({
@@ -445,6 +415,7 @@ async function reserva(identificador, seleccionado) {
                     var cantidadBoletos = $('#cantidad-boletos');
                     var localidadBoletos= $('#localidad-boletos');
                     var monto  = $('#amount')
+    
                     let contador = 0;
 
                     if (aumentar && disminuir) {
@@ -569,6 +540,7 @@ async function reserva(identificador, seleccionado) {
                     subTotalDiv.html('$'+subTotal.toFixed(2))
                     totalDiv.html('$'+total.toFixed(2))
                     monto.val(total.toFixed(2))
+                    subTotalInput.val(subTotal.toFixed(2))
                     /////desaparesco el div de compra de boletos y muestro el resumen
                     comprarBoletos.fadeOut();
                     resumenCompra.fadeIn();

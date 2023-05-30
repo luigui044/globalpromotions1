@@ -8,6 +8,11 @@
 
 @section('content')
     <div class="container-fluid">
+
+        @if (session('error'))
+           {{ session('error') }}
+        @endif
+
         <div class="row p-5">
             <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" id="form-venta"  method="POST" class="w-100">
                 {{-- <form action="{{ route('vender') }}"  id="form-venta" method="POST" class="w-100"> --}}
@@ -64,12 +69,13 @@
                                     <br><br>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Subtotal</span>
-                                        <span id="subTotal"></span>
+                                        <span id="subTotalDiv"></span>
                                     </div>
                                   
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-success">Total a pagar</span>
                                         <span class="text-success" id="total"></span>
+                                        <input type="hidden" name="subTotal" id="subTotal">
                                         <input type="hidden" name="amount" id="amount">
                                         <input type="hidden" name="orderId" id="orderId">
                                         <input type="hidden" name="payerId" id="payerId">
