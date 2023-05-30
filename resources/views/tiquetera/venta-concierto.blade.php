@@ -141,6 +141,7 @@
 
 @section('scripts')
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
     <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,funding-eligibility&currency=USD&locale=es_SV"></script>
