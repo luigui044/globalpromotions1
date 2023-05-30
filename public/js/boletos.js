@@ -182,7 +182,7 @@ async function obtenerUbicacionesVendidas(datos) {
     const loader = document.querySelector('.mi-loader');
     try {
         loader.className = 'mi-loader animate__animated animate__fadeIn';
-        const response = await fetch(route('ubicaciones-vendidas', {idEvento: datos.id_evento, idLocalidad: datos.id_localidad}), {
+        const response = await fetch(route('ubicaciones-vendidas', [datos.id_evento, datos.id_localidad]), {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -216,15 +216,18 @@ const obtenerIdCirculo = (idEnlaceUbicacion) => {
 */
 const establecerUbicacionesVendidas = (ubicaciones) => {
     let idEnlace, idCirculo, enlace, circulo;
-    ubicaciones.forEach(ubicacion => {
-        idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
-        idCirculo = obtenerIdCirculo(idEnlace);
-        enlace = document.getElementById(idEnlace);
-        circulo = document.getElementById(idCirculo);
-        // Se elimina la función para agregar asiento
-        enlace.removeAttribute('onclick');
-        circulo.style.fill = '#e63946';
-    });
+
+    if (ubicaciones.length > 0) {
+        ubicaciones.forEach(ubicacion => {
+            idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
+            idCirculo = obtenerIdCirculo(idEnlace);
+            enlace = document.getElementById(idEnlace);
+            circulo = document.getElementById(idCirculo);
+            // Se elimina la función para agregar asiento
+            enlace.removeAttribute('onclick');
+            circulo.style.fill = '#e63946';
+        });
+    }
 }
 
 const agregarAsientos = (ubicacion) => {
@@ -440,7 +443,7 @@ async function reserva(identificador, seleccionado) {
         const total = subTotal;
         const totalDiv = $('#total');
         const errores = validandoCamposEntrada();
-        
+
         if (errores == 0) {
             $.ajaxSetup({
                 headers: {
@@ -457,7 +460,7 @@ async function reserva(identificador, seleccionado) {
                     // Se muestran en el mapa las ubicaciones vendidas
                     const datosEvento = {
                         id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
-                        id_localidad: localidad.value
+                        id_localidad: localidad
                     };
                     const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
                     establecerUbicacionesVendidas(ubicacionesVendidas);
