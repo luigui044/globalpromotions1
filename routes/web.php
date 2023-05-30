@@ -42,10 +42,8 @@ Route::get('/sillas', [VentaController::class, 'desplegarsillas'])->name('sillas
 Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->middleware(['auth'])->name('concierto');
 Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
-Route::post('/entradas/reserva-temporal', [VentaController::class, 'reservaTemporalEntradas'])->name('reserva-tmp');
-Route::post('/entradas/eliminar-reserva-temporal', [VentaController::class, 'eliminarReservaTemporal'])->name('eliminar-reserva-tmp');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
-Route::get('/entradas/reserva/{idEvento}', [VentaController::class, 'listarUbicacionesUsadas'])->name('ubicaciones-reservadas');
+Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [VentaController::class, 'listarUbicacionesVendidas'])->name('ubicaciones-vendidas');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');
 

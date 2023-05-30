@@ -27,7 +27,6 @@ class VentaController extends Controller
         JavaScript::put([
             'evento' => $evento,
             'localidades' => $localidades,
-            
         ]);
         return view('tiquetera.venta-concierto',compact('evento','localidades','fecha2','dia'));
 
@@ -91,12 +90,9 @@ class VentaController extends Controller
         return response()->json(['estado' => false]);
     }
 
-    function listarUbicacionesUsadas($idEvento) {
-        $ubicaciones = TmpDetallesVenta::where('id_evento', $idEvento)->get();
-
-        if ($ubicaciones->count() > 0)
-            return $ubicaciones;
-        return response()->json(['mensaje' => 'No se encontró el evento indicado.'], 404);
+    function listarUbicacionesVendidas($idEvento, $idLocalidad) {
+        $ubicaciones = TBoleto::where('id_evento', $idEvento)->where('id_localidad', $idLocalidad)->get();
+        return $ubicaciones;
     }
 
     function filtrarDisLocalidad(Request $req){

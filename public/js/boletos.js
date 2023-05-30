@@ -176,9 +176,11 @@ async function eliminarReservaUbicacion(ubicacion) {
     }
 }
 
-async function obtenerUbicacionesReservadas(idEvento) {
+async function obtenerUbicacionesVendidas(datos) {
+    const loader = document.querySelector('.mi-loader');
     try {
-        const response = await fetch(route('ubicaciones-reservadas', idEvento), {
+        loader.className = 'mi-loader animate__animated animate__fadeIn';
+        const response = await fetch(route('ubicaciones-vendidas', {idEvento: datos.id_evento, idLocalidad: datos.id_localidad}), {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -186,11 +188,14 @@ async function obtenerUbicacionesReservadas(idEvento) {
 
         if (response.status === 200) {
             const data = await response.json();
+            loader.className = 'mi-loader d-none';
             return data;
         }
+        loader.className = 'mi-loader d-none';
         return false;
     } catch(error) {
         console.error(error);
+        loader.className = 'mi-loader d-none';
         return false;
     }
 }
@@ -203,6 +208,10 @@ const obtenerIdCirculo = (idEnlaceUbicacion) => {
     return idEnlaceUbicacion.replace('-link', '');
 }
 
+/*
+    Coloca en color rojo los asientos vendidos (círculos) y elimina el evento onclick para
+    que no haga ninguna acción al presionar el círculo
+*/
 const establecerUbicacionesVendidas = (ubicaciones) => {
     let idEnlace, idCirculo, enlace, circulo;
     ubicaciones.forEach(ubicacion => {
@@ -225,6 +234,7 @@ const agregarAsientos = (ubicacion) => {
     }
 }
 
+// Objeto Toast de SweetAlert para mostrar notificaciones
 const Toast = Swal.mixin({
     toast: true,
     position: 'bottom-right',
@@ -233,15 +243,52 @@ const Toast = Swal.mixin({
       popup: 'colored-toast'
     },
     showConfirmButton: false,
-    timer: 1500,
+    timer: 3000,
     timerProgressBar: true
-  });
-
+});
 
 const mensajeCantidadAsientos = (cantidadAsientos) => {
     if (cantidadAsientos == 1)
         return 'Solo puede seleccionar un asiento';
     return `Ya han sido seleccionados los ${cantidadAsientos} asientos.`
+}
+
+/* 
+    Con esta función se cambia el color del asiento seleccionado a anaranjado (reservado)
+    y se elimina el evento onclick para que no pueda ejecutar ninguna acción
+*/
+const mostrarUbicacionPrerreservada = (mesa, asiento) => {
+    const idEnlaceUbicacion = obtenerIdEnlaceUbicacion(mesa, asiento);
+    const idCirculo = obtenerIdCirculo(idEnlaceUbicacion);
+    const enlaceUbicacion = document.getElementById(idEnlaceUbicacion);
+    const circulo = document.getElementById(idCirculo);
+    circulo.style.fill = "#eca72c";
+    enlaceUbicacion.removeAttribute("onclick");
+}
+
+/*
+    Escuchando eventos del websocket:
+    Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
+    los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
+    seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
+*/
+
+// Echo.channel('PreReservaMesa').listen('NewPreReservaMesa', (e) => {
+//     const mesa = e.mesa;
+//     const asiento = e.asiento;
+//     mostrarUbicacionPrerreservada(mesa, asiento);
+// });
+
+const obtenerNumeroMesaYAsiento = (identificador) => {
+    const mesaSilla = identificador.replace('mesa', '').replace('asiento', '');
+    const partes = mesaSilla.split('-');
+    const mesa = partes[0];
+    const asiento = partes[1];
+    const ubicacion = {
+        mesa: mesa,
+        asiento: asiento
+    }
+    return ubicacion;
 }
 
 async function reserva(identificador, seleccionado) {
@@ -255,6 +302,8 @@ async function reserva(identificador, seleccionado) {
     const asientoActual = document.getElementById('asiento-actual');
     // Cantidad de asientos indicada por el usuario
     const cantidad = document.querySelector('#cantidad');
+    // En este objeto se guarda la mesa y asiento seleccionado por el usuario
+    const ubicacion = obtenerNumeroMesaYAsiento(identificador);
 
     if (seleccionado) {
         // Cuando ya se han seleccionado todos los asientos indicados no se pueden escoger más
@@ -275,7 +324,7 @@ async function reserva(identificador, seleccionado) {
         link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
         await Toast.fire({
             icon: 'success',
-            title: 'Asiento seleccionado'
+            title: `Ubicación seleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
         });
     } 
 
@@ -295,15 +344,12 @@ async function reserva(identificador, seleccionado) {
         link.setAttribute("onclick", 'reserva("' + asiento.id + '", true)');
         await Toast.fire({
             icon: 'info',
-            title: 'Asiento deseleccionado'
+            title: `Ubicación deseleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
         });
     }
 }
 
-// window.addEventListener('load', async function() {
-//     const ubicaciones = await obtenerUbicacionesReservadas(1);
-//     establecerUbicacionesReservadas(ubicaciones);
-// });
+
 
      /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
      $('#localidad').change(function() {
@@ -402,10 +448,18 @@ async function reserva(identificador, seleccionado) {
             $.post('/selectAsientos', {
                     id: localidad
                 })
-                .done(function(data) {
+                .done(async function(data) {
                     ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                     $('#vistaLocalidad').html(data)
-               
+
+                    // Se muestran en el mapa las ubicaciones vendidas
+                    const datosEvento = {
+                        id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
+                        id_localidad: localidad.value
+                    };
+                    const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
+                    establecerUbicacionesVendidas(ubicacionesVendidas);
+                                
                     const btnAumentar = document.querySelector('#aumentar');
                     const btnDisminuir = document.querySelector('#disminuir');
                     ////declaro los div de compra y resumen de boletos
