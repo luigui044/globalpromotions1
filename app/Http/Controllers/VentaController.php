@@ -7,18 +7,141 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
 use App\Models\TPrueba;
+use App\Models\TVenta;
+use App\Models\TDetaVenta;
 use App\Models\TEvento;
 use App\Models\VwAsiLocalidade;
 use App\Models\TBoleto;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use GuzzleHttp\Client;
+Use Alert;
 use Exception;
 use JavaScript;
 
 class VentaController extends Controller
 {
+    private $client;
+    private $clienteId;
+    private $secret;
+
+    public function __construct()
+    {
+        $this->client = new Client([
+            'base_uri' => 'https://api-m.sandbox.paypal.com'
+        ]);
+        $this->clientId =  'ASTK97kvu4JcQSt1rVeLFAK_HAMHTjIYd1u46_nYHJEkbo7I1xokfl15dQxG1pWDLk7S-lJOvnw6I6-v';
+        $this->secret =  'EF_RCV8NU5MRW2is8cwXHa5a8tvgiDPViX8acZkPxE41t2TxyR8Q1oN5E_d1rzJ-wkBC1RlyssgowxhH';
+
+
+    } 
+
+    private function getAccesssToken()
+    {
+        $response = $this->client->request('POST','/v1/oauth2/token',[
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ],
+            'body' => 'grant_type=client_credentials',
+            'auth' => [
+                $this->clientId, $this->secret, 'basic'
+            ]
+        ]);
+        
+        $data = json_decode($response->getBody(), true);
+        return $data['access_token'];
+    }
+    function vender(Request $req){
+        $evento = TEvento::find($req->id);
+        $fecha_actual = date("d-m-Y");
+        $fecha= new Date( Carbon::create($req->fechas)->toDayDateTimeString());
+        $fecha2= $fecha->format('j F Y');
+        $dia = $fecha->format('l');
+        $cantidad = $req->cantidad;
+        $boletos = array();
+        $nombre = auth()->user()->first_name.' '. auth()->user()->last_name;
+        $accessToken = $this->getAccesssToken();
+        $orderId= $req->orderId;
+        $payerId= $req->payerId;
+
+        $response =   $this->client->request('GET','/v2/checkout/orders/'.$orderId,[
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer $accessToken"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+
+        if($data['status']==='APPROVED')
+        {
+            $venta = new TVenta();
+            $venta->id_cliente = auth()->user()->id;
+            $venta->fecha = $fecha_actual;
+            $venta->id_evento = $req->id;
+            $venta->tipo_venta = 1;
+            $venta->subtotal = $req->subTotal;
+            $venta->total = $data['purchase_units'][0]['amount']['value'];
+            $venta->pp_order_id = $orderId;
+            $venta->pp_payer_id = $payerId;
+            $venta->save();
+            
+            $idVenta = $venta->id;
+
+            for ($i=0; $i < $cantidad ; $i++) { 
+
+                $nuevoBoleto = new TBoleto();
+                $nuevoBoleto->id_localidad = $req->localidad;
+                $nuevoBoleto->id_evento = $req->evento;
+                $nuevoBoleto->fecha_stamp = strtotime('now');
+                if ($req->electSeats2 != "") {
+                $nuevoBoleto->id_espacio = $req->electSeats2;
+                }
+                $nuevoBoleto->save();
+
+                $boleto = $nuevoBoleto->id;
+                $localidad = $nuevoBoleto->id_localidad ;
+                $evento1 =  $nuevoBoleto->evento; 
+                $fechaStamp =$nuevoBoleto->fecha_stamp;
+
+                 //codigo para genera el qr 
+                $qrCode =new Generator;
+                $rutaImagen = storage_path('globalProd/public/img/logo.jpg');
+                $nuevoBoleto->codigo_qr = QrCode::size(170)->style('dot')->eye('circle')->merge('\public\img\logo.png',.5)->generate($boleto.'-'.$localidad.'-'.$evento1.'-'.$fechaStamp);
+                $nuevoBoleto->save();
+                array_push($boletos,$nuevoBoleto);
+
+
+                $detVenta =  new TDetaVenta();
+                $detVenta->id_venta = $idVenta;
+                $detVenta->id_boleto = $boleto;
+                $detVenta->id_localidad = $localidad;
+                $detVenta->id_evento = $req->evento;
+                $detVenta->fecha_stamp = $fechaStamp;
+                $detVenta->save();
+
+            }
+            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
+            
+
+
+        }
+
+        alert()->error('Error','No se ha podido procesar el pago');
+
+        return back();
+
+        
+    }
+
+
+
     function concierto($id){
+
+
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
         $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
@@ -32,42 +155,7 @@ class VentaController extends Controller
 
     }
 
-    function vender(Request $req){
-
-        $prevReq = $req->session()->get('request');
-
-        $evento = TEvento::find($prevReq->id);
-        $fecha= new Date( Carbon::create($prevReq->fechas)->toDayDateTimeString());
-        $fecha2= $fecha->format('j F Y');
-        $dia = $fecha->format('l');
-        $cantidad = $prevReq->cantidad;
-        $boletos = array();
-
-
-
-        for ($i=0; $i < $cantidad ; $i++) { 
-            $nuevoBoleto = new TBoleto();
-            $nuevoBoleto->id_localidad = $prevReq->localidad;
-            $nuevoBoleto->id_evento = $prevReq->evento;
-            $nuevoBoleto->fecha_stamp = strtotime('now');
-            $nuevoBoleto->save();
-
-            $boleto = $nuevoBoleto->id;
-            $localidad = $nuevoBoleto->id_localidad ;
-            $evento1 =  $nuevoBoleto->evento; 
-            $fechaStamp =$nuevoBoleto->fecha_stamp;
-        //codigo para genera el qr 
-            $qrCode =new Generator;
-            $rutaImagen = storage_path('globalProd/public/img/logo.jpg');
-            $nuevoBoleto->codigo_qr = QrCode::size(170)->style('dot')->eye('circle')->merge('\public\img\logo.png',.5)->generate($boleto.'-'.$localidad.'-'.$evento1.'-'.$fechaStamp);
-            $nuevoBoleto->save();
-        // $pruebaQR= $qrCode->size(500)->generate('6218447047');
-        // $boleto->qr = $pruebaQR;
-        array_push($boletos,$nuevoBoleto);
-        }
-        return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
-    }
-
+   
     function obtenerDetalleUbicacion($ubicacion) {
         $partes = explode('-', $ubicacion);
         $mesa = str_replace('mesa', '', $partes[0]);

@@ -10,7 +10,7 @@
 </head>
 <body>
 
-        @include('tiquetera.layouts.banner')
+         @include('sweetalert::alert')
         @yield('content')
         @include('variables')
         @include('tiquetera.layouts.scripts')

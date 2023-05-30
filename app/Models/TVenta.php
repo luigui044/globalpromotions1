@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class TVenta
  * 
- * @property int $id_venta
+ * @property int $id
  * @property string|null $nombre_cliente
  * @property string|null $telefono_cliente
  * @property string|null $correo_cliente
@@ -22,6 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property float|null $subtotal
  * @property float|null $iva
  * @property float|null $total
+ * @property string|null $pp_order_id
+ * @property string|null $pp_payer_id
+ * @property Carbon|null $create_at
+ * @property Carbon|null $update_at
  * 
  * @property TDetaVenta $t_deta_venta
  *
@@ -30,7 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 class TVenta extends Model
 {
 	protected $table = 't_ventas';
-	protected $primaryKey = 'id_venta';
+	protected $primaryKey = 'id';
 	public $timestamps = false;
 
 	protected $casts = [
@@ -39,7 +43,9 @@ class TVenta extends Model
 		'tipo_venta' => 'int',
 		'subtotal' => 'float',
 		'iva' => 'float',
-		'total' => 'float'
+		'total' => 'float',
+		'create_at' => 'datetime',
+		'update_at' => 'datetime'
 	];
 
 	protected $fillable = [
@@ -51,11 +57,15 @@ class TVenta extends Model
 		'tipo_venta',
 		'subtotal',
 		'iva',
-		'total'
+		'total',
+		'pp_order_id',
+		'pp_payer_id',
+		'create_at',
+		'update_at'
 	];
 
 	public function t_deta_venta()
 	{
-		return $this->hasOne(TDetaVenta::class, 'id_venta');
+		return $this->hasOne(TDetaVenta::class, 'id');
 	}
 }

@@ -51,7 +51,9 @@ const resumenCompra = () => {
     const subtotal = cantidadBoletos * precio;
     const descuento = parseFloat(eliminarSignoDolar(elDescuento.textContent));
     const recargos = parseFloat(eliminarSignoDolar(elRecargos.textContent));
-    const total = subtotal - descuento  + recargos;
+    const total = subtotal - d
+    
+    escuento  + recargos;
     elSubtotal.textContent = `$${subtotal.toFixed(2)}`;
     elTotal.textContent = `$${total.toFixed(2)}`;
 
@@ -350,7 +352,6 @@ async function reserva(identificador, seleccionado) {
 }
 
 
-
      /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
      $('#localidad').change(function() {
         var id = $('#localidad option:selected').val()
@@ -434,11 +435,12 @@ async function reserva(identificador, seleccionado) {
         const precioUnit = localidades[localidadIndex].precio;
         const precioUnitDiv  =$('#precioUnit');
         const subTotal = precioUnit * cantidad;
-        const subTotalDiv = $('#subTotal');
+        const subTotalDiv = $('#subTotalDiv');
+        const subTotalInput  = $('#subTotal')
         const total = subTotal;
         const totalDiv = $('#total');
-
         const errores = validandoCamposEntrada();
+        
         if (errores == 0) {
             $.ajaxSetup({
                 headers: {
@@ -485,7 +487,8 @@ async function reserva(identificador, seleccionado) {
                     subTotalDiv.html('$'+subTotal.toFixed(2))
                     totalDiv.html('$'+total.toFixed(2))
                     monto.val(total.toFixed(2))
-                    // Desaparesco el div de compra de boletos y muestro el resumen
+                    subTotalInput.val(subTotal.toFixed(2))
+                    /////desaparesco el div de compra de boletos y muestro el resumen
                     comprarBoletos.fadeOut();
                     resumenCompra.fadeIn();
                 });
