@@ -68,35 +68,6 @@ ocultarLocalidades();
 // Ocultando por defecto el resumen de compra
 resumen.style.display = 'none';
 
-// Boton de seleccion de localidad y cantidad de entradas.
-// btnBoletos.addEventListener('click', (e) => {
-//     const mapaCompleto = document.querySelector('#completo');
-//     const errores = validandoCamposEntrada();
-
-//     if (errores == 0) {
-
-//         $.ajaxSetup({
-//             headers: {
-//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             }
-//         });
-//         $.post( '/filtrar', { id: id})
-//         .done(function( data ) {
-//             $('.modal-body').html(data);
-//             $('#centralModalSm').modal('toggle');
-//         });
-
-
-//         // Ocultando las demas localidades
-//         //mapaCompleto.style.display = 'none';
-//         //ocultarLocalidades();
-//         // Mostrando solo localidad seleccionada
-//         //document.querySelector(`#localidad-${localidad.value}`).style.display = 'block';
-//         //resumenCompra();
-//     }
-// });
-
-
 const cantidadAsientosSeleccionada = () => {
     const asientosSeleccionados = document.getElementById("selectSeats");
     const arrayAsientos = asientosSeleccionados.value.split(',');
@@ -254,6 +225,25 @@ const agregarAsientos = (ubicacion) => {
     }
 }
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-right',
+    iconColor: 'white',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true
+  });
+
+
+const mensajeCantidadAsientos = (cantidadAsientos) => {
+    if (cantidadAsientos == 1)
+        return 'Solo puede seleccionar un asiento';
+    return `Ya han sido seleccionados los ${cantidadAsientos} asientos.`
+}
+
 async function reserva(identificador, seleccionado) {
     // Obteniendo circulo del svg
     const asiento = document.getElementById(identificador);
@@ -263,38 +253,30 @@ async function reserva(identificador, seleccionado) {
     const selectSeats = document.getElementById("selectSeats");
     // Se guarda el asiento actual
     const asientoActual = document.getElementById('asiento-actual');
+    // Cantidad de asientos indicada por el usuario
+    const cantidad = document.querySelector('#cantidad');
 
     if (seleccionado) {
         // Cuando ya se han seleccionado todos los asientos indicados no se pueden escoger más
         if (cantidadAsientosSeleccionada() == cantidad.value) {
-            alertify.alert('Información', `Ya han sido seleccionados los ${cantidad.value} asientos.`);
+            Swal.fire(
+                'Información',
+                mensajeCantidadAsientos(cantidad.value)
+            );
             return false;
         }
         // Guardamos el asiento actual
         asientoActual.value = asiento.id;
-        const res = await ubicacionDisponible(asientoActual.value);
-
-        if (res.estado) {
-            agregarAsientos(asiento.id);
-            // Insertando registro en la base de datos
-            const reserva = await agregarReservaUbicacion(asientoActual.value);
-
-            if (reserva) {
-                asiento.style.fill = "#eca72c";
-                link.removeAttribute("onclick");
-                link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
-                alertify.notify('Ubicación agregada', 'success', 4);
-            }
-
-            if (!reserva) {
-                alertify.notify('No se pudo agregar la ubicación', 'error', 4);
-            }
-        } 
-
-        if (!res.estado) 
-            alertify.alert('Información', `Esta ubicación no se encuentra disponible.`);
-
-        return true;
+        //const res = await ubicacionDisponible(asientoActual.value);
+        agregarAsientos(asiento.id);
+        
+        asiento.style.fill = "#eca72c";
+        link.removeAttribute("onclick");
+        link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
+        await Toast.fire({
+            icon: 'success',
+            title: 'Asiento seleccionado'
+        });
     } 
 
     if (!seleccionado) {
@@ -307,20 +289,14 @@ async function reserva(identificador, seleccionado) {
         }
         // Se elimina el asiento actual
         asientoActual.value = '';
-        // Eliminando registro en la base de datos
-        const res = await eliminarReservaUbicacion(asiento.id);
-
-        if (res) {
-            asiento.style.fill = "#8ac926";
-            link.removeAttribute("onclick");
-            link.setAttribute("onclick", 'reserva("' + asiento.id + '", true)');
-            alertify.notify('Ubicación deseleccionada', 'success', 4);
-        }
-
-        if (!res) {
-            alertify.notify('No se pudo eliminar la ubicación seleccionada.', 'error', 4);
-        }
-        
+       
+        asiento.style.fill = "#8ac926";
+        link.removeAttribute("onclick");
+        link.setAttribute("onclick", 'reserva("' + asiento.id + '", true)');
+        await Toast.fire({
+            icon: 'info',
+            title: 'Asiento deseleccionado'
+        });
     }
 }
 

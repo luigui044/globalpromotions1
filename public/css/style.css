@@ -141,7 +141,7 @@ div.jarallax {
     z-index: 1000;
 }
 
-.zoom > button {
+.zoom>button {
     background-color: #f2f2f2;
     padding: 0.5rem;
     display: flex;
@@ -151,11 +151,11 @@ div.jarallax {
     border: none;
 }
 
-.zoom > button:disabled i{
+.zoom>button:disabled i {
     color: #ccc;
 }
 
-.zoom > button i {
+.zoom>button i {
     font-size: 1.4rem;
     color: #4285f4;
 }
@@ -184,7 +184,7 @@ div.jarallax {
     margin: 1.5rem;
 }
 
-.contenedor-sillas > div {
+.contenedor-sillas>div {
     width: 550px;
     margin: 0 1.3rem;
 }
@@ -223,3 +223,35 @@ div.jarallax {
     position: relative !important;
 }
 
+/* SweetAlert Toast styles */
+.colored-toast.swal2-icon-success {
+    background-color: #a5dc86 !important;
+}
+
+.colored-toast.swal2-icon-error {
+    background-color: #f27474 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+    color: white;
+}
+
+.colored-toast .swal2-close {
+    color: white;
+}
+
+.colored-toast .swal2-html-container {
+    color: white;
+}
