@@ -456,15 +456,7 @@ async function reserva(identificador, seleccionado) {
                 .done(async function(data) {
                     ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                     $('#vistaLocalidad').html(data)
-
-                    // Se muestran en el mapa las ubicaciones vendidas
-                    const datosEvento = {
-                        id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
-                        id_localidad: localidad
-                    };
-                    const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
-                    establecerUbicacionesVendidas(ubicacionesVendidas);
-                                
+                    // Botones para aumentar y disminuir zoom del mapa de las ubicaciones
                     const btnAumentar = document.querySelector('#aumentar');
                     const btnDisminuir = document.querySelector('#disminuir');
                     ////declaro los div de compra y resumen de boletos
@@ -482,6 +474,13 @@ async function reserva(identificador, seleccionado) {
                             de igual forma hacer el drag and scroll. Está definida en el archivo zoom.js    
                         */
                         zoom();  
+                        // Se muestran en el mapa las ubicaciones vendidas
+                        const datosEvento = {
+                            id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
+                            id_localidad: localidad
+                        };
+                        const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
+                        establecerUbicacionesVendidas(ubicacionesVendidas);
                     }
 
                     cantidadBoletos.html(cantidad)
