@@ -48,10 +48,7 @@ Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [VentaController::class
 Route::post('/tickets/prerreserva', [VentaController::class, 'dispatchPreReserva'])->name('prerreserva-mesa');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 
-
-
 Route::post('/selectAsientos', [AsientosController::class, 'selectAsientos'])->name('selectAsientos');
-
 
 Route::post('/paypal/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
 Route::get('/paypal/complete', [PayPalController::class, 'complete'])->name('paypal.complete');

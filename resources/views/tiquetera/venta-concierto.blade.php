@@ -148,6 +148,8 @@
                 $('#orderId').val(data.orderID)
                 $('#payerId').val(data.payerID)
                 setTimeout(() => {
+                    // Cuando ya se ha procesado el pago del usuario eliminamos la suscripción del canal
+                    Echo.leaveChannel(`prerreservamesa.${evento.id_evento}.${localidad.value}`);
                     document.getElementById("form-venta").submit(); 
                 }, '500');
             },
