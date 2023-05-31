@@ -129,8 +129,11 @@ async function agregarPrerreservaUbicacion(ubicacion) {
             },
             method: 'POST',
             body: JSON.stringify({
+                id_evento: ubicacion.idEvento,
+                id_localidad: ubicacion.idLocalidad,
                 mesa: ubicacion.mesa,
-                asiento: ubicacion.asiento
+                asiento: ubicacion.asiento,
+                prerreserva: ubicacion.prerreserva,
             }),
         });
 
@@ -232,12 +235,25 @@ const establecerUbicacionesVendidas = (ubicaciones) => {
     }
 }
 
-const agregarAsientos = (ubicacion) => {
+// Agrega los id de asientos en el input de tipo hidden separados por coma (,)
+const agregarAsiento = (ubicacion) => {
     const asientos = document.getElementById("selectSeats");
     if (asientos.value == "") {
         asientos.value = ubicacion;
     } else {
         asientos.value = asientos.value + "," + ubicacion;
+    }
+}
+
+// Con esta función se elimina del input de tipo hidden el identificador de la mesa y el asiento 
+const eliminarAsiento = (ubicacion) => {
+    const asientos = document.getElementById('selectSeats');
+    if (asientos.value.indexOf("," + ubicacion) !== -1) {
+        const borrarAsiento = asientos.value.replace("," + ubicacion, "");
+        asientos.value = borrarAsiento;
+    } else if (asientos.value.indexOf(ubicacion) !== -1) {
+        const borrarAsiento = selectSeats.value.replace(ubicacion, "");
+        asientos.value = borrarAsiento;
     }
 }
 
@@ -273,6 +289,20 @@ const mostrarUbicacionPrerreservada = (mesa, asiento) => {
     enlaceUbicacion.removeAttribute("onclick");
 }
 
+/* 
+    Con esta función se cambia el color del asiento seleccionado a verde (disponible)
+    y se agrega nuevamente la función onclick para que puedan prerreservar el asiento
+*/
+const mostrarUbicacionDisponible = (mesa, asiento) => {
+    const idEnlaceUbicacion = obtenerIdEnlaceUbicacion(mesa, asiento);
+    const idCirculo = obtenerIdCirculo(idEnlaceUbicacion);
+    const enlaceUbicacion = document.getElementById(idEnlaceUbicacion);
+    const circulo = document.getElementById(idCirculo);
+    circulo.style.fill = "#8ac926";
+    enlaceUbicacion.removeAttribute("onclick");
+    enlaceUbicacion.setAttribute("onclick", 'reserva("' + idCirculo + '", true)');
+}
+
 const obtenerNumeroMesaYAsiento = (identificador) => {
     const mesaSilla = identificador.replace('mesa', '').replace('asiento', '');
     const partes = mesaSilla.split('-');
@@ -285,6 +315,7 @@ const obtenerNumeroMesaYAsiento = (identificador) => {
     return ubicacion;
 }
 
+// En esta función se gestiona la prerreserva del asiento
 async function reserva(identificador, seleccionado) {
     // Obteniendo circulo del svg
     const asiento = document.getElementById(identificador);
@@ -298,6 +329,10 @@ async function reserva(identificador, seleccionado) {
     const cantidad = document.querySelector('#cantidad');
     // En este objeto se guarda la mesa y asiento seleccionado por el usuario
     const ubicacion = obtenerNumeroMesaYAsiento(identificador);
+    // Objeto donde se guarda la información enviada al evento del websockets
+    const datosWS = ubicacion;
+    datosWS.idEvento = evento.id_evento; // Variable pasada desde controlador de Laravel
+    datosWS.idLocalidad = localidad.value;
 
     if (seleccionado) {
         // Cuando ya se han seleccionado todos los asientos indicados no se pueden escoger más
@@ -311,12 +346,13 @@ async function reserva(identificador, seleccionado) {
 
         // Guardamos el asiento actual
         asientoActual.value = asiento.id;
-        //const res = await ubicacionDisponible(asientoActual.value);
-        agregarAsientos(asiento.id);
-
-        const prerreserva = await agregarPrerreservaUbicacion(obtenerNumeroMesaYAsiento(asiento.id));
+        agregarAsiento(asiento.id);
+        datosWS.prerreserva = true;
+        const prerreserva = await agregarPrerreservaUbicacion(datosWS);
 
         if (prerreserva) {
+            // Se cambia el color del asiento a anaranjado y se cambian los parámetros de la función reserva
+            // llamada en el onclick
             asiento.style.fill = "#eca72c";
             link.removeAttribute("onclick");
             link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
@@ -339,23 +375,32 @@ async function reserva(identificador, seleccionado) {
     } 
 
     if (!seleccionado) {
-        if (selectSeats.value.indexOf("," + asiento.id) !== -1) {
-            var removeSeat = selectSeats.value.replace("," + asiento.id, "");
-            selectSeats.value = removeSeat;
-        } else if (selectSeats.value.indexOf(asiento.id) !== -1) {
-            var removeSeat = selectSeats.value.replace(asiento.id, "");
-            selectSeats.value = removeSeat;
-        }
+        eliminarAsiento(asiento.id);
         // Se elimina el asiento actual
         asientoActual.value = '';
-       
-        asiento.style.fill = "#8ac926";
-        link.removeAttribute("onclick");
-        link.setAttribute("onclick", 'reserva("' + asiento.id + '", true)');
-        await Toast.fire({
-            icon: 'info',
-            title: `Ubicación deseleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
-        });
+        datosWS.prerreserva = false;
+        const prerreserva = await agregarPrerreservaUbicacion(datosWS);
+
+        if (prerreserva) {
+            // Se coloca el asiento de nuevo en color verde y se ajustan los parámetros de la función reserva() 
+            asiento.style.fill = "#8ac926";
+            link.removeAttribute("onclick");
+            link.setAttribute("onclick", 'reserva("' + asiento.id + '", true)');
+
+            await Toast.fire({
+                icon: 'info',
+                title: `Ubicación deseleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+            });
+            return true;
+        }
+
+        if (!prerreserva) {
+            await Toast.fire({
+                icon: 'error',
+                title: `Ocurrió un error al intentar deseleccionar la ubicación. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+            });
+            return true;
+        }
     }
 }
 
@@ -407,7 +452,6 @@ async function reserva(identificador, seleccionado) {
             }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-          
                     resetSelect('#cantidad');
                     resetSelect('#localidad');
                     $('#localidad').prop('disabled',false);
@@ -486,6 +530,28 @@ async function reserva(identificador, seleccionado) {
                         };
                         const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
                         establecerUbicacionesVendidas(ubicacionesVendidas);
+
+                        /*
+                            Escuchando eventos del websocket:
+                            Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
+                            los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
+                            seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
+                        */
+
+                        Echo.channel(`prerreservamesa.${evento.id_evento}.${localidad}`).listen('NewPreReservaMesa', (e) => {
+                            const mesa = e.mesa;
+                            const asiento = e.asiento;
+                            const prerreserva = e.prerreserva;
+
+                            // Si el estado de prerreserva es verdadero
+                            if (prerreserva) {
+                                mostrarUbicacionPrerreservada(mesa, asiento);
+                            } else {
+                                // Si el estado de prerreserva es falso, es decir, se ha liberado este asiento
+                                mostrarUbicacionDisponible(mesa, asiento);
+                            }
+                        
+                        });
                     }
 
                     cantidadBoletos.html(cantidad)
@@ -502,3 +568,4 @@ async function reserva(identificador, seleccionado) {
 
         }
     }
+

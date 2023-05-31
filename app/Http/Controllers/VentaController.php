@@ -138,7 +138,6 @@ class VentaController extends Controller
     }
 
 
-
     function concierto($id){
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
@@ -183,11 +182,22 @@ class VentaController extends Controller
 
     function dispatchPreReserva(Request $request) {
         try {
-            broadcast(new NewPreReservaMesa($request->mesa, $request->asiento))->toOthers();
+            broadcast(new NewPreReservaMesa(
+                $request->id_evento,
+                $request->id_localidad,
+                $request->mesa, 
+                $request->asiento, 
+                $request->prerreserva
+            ))->toOthers();
             return response()->json(['message' => 'Prerreserva realizada exitosamente'], 200);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Ocurrió un error con la prerreserva'], 500);
+            return response()->json(['error' => 'Ocurrió un error con la prerreserva: ' . $e->getMessage()], 500);
         } 
+    }
+
+    function proof($mesa, $asiento) {
+        NewPreReservaMesa::dispatch($mesa, $asiento);
+        return 'Mensaje enviado';
     }
 
     function filtrarDisLocalidad(Request $req){

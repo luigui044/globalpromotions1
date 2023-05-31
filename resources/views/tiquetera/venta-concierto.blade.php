@@ -1,7 +1,7 @@
 @extends('tiquetera.layouts.layout-master')
 
 @section('csrf')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 
 @section('titulo', 'Boletos')
@@ -22,7 +22,6 @@
 
         <div class="row p-5">
             <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" id="form-venta"  method="POST" class="w-100">
-                {{-- <form action="{{ route('vender') }}"  id="form-venta" method="POST" class="w-100"> --}}
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-4">
@@ -155,25 +154,10 @@
 @endsection
 
 @section('scripts')
+    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
-    <script>
-        /*
-    Escuchando eventos del websocket:
-    Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
-    los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
-    seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
-*/
-
-Echo.channel('PreReservaMesa').listen('NewPreReservaMesa', (e) => {
-    const mesa = e.mesa;
-    const asiento = e.asiento;
-    //mostrarUbicacionPrerreservada(mesa, asiento);
-    console.log(mesa);
-});
-    </script>
     <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
     <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,funding-eligibility&currency=USD&locale=es_SV"></script>
     <script>
@@ -200,16 +184,11 @@ Echo.channel('PreReservaMesa').listen('NewPreReservaMesa', (e) => {
                 });
             },
             onApprove: function(data, actions) {
-            
-
                 $('#orderId').val(data.orderID)
                 $('#payerId').val(data.payerID)
                 setTimeout(() => {
                     document.getElementById("form-venta").submit(); 
-
                 }, '500');
-
-
             },
             onError:  function(err){
                 console.log(err)

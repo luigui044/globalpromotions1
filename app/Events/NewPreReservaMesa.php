@@ -14,17 +14,20 @@ class NewPreReservaMesa implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $mesa, $asiento;
+    public $evento, $localidad, $mesa, $asiento, $prerreserva;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($mesa, $asiento)
+    public function __construct($evento, $localidad, $mesa, $asiento, $prerreserva)
     {
+        $this->evento = $evento;
+        $this->localidad = $localidad;
         $this->mesa = $mesa;
         $this->asiento = $asiento;
+        $this->prerreserva = $prerreserva;
     }
 
     /**
@@ -34,6 +37,6 @@ class NewPreReservaMesa implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('PreReservaMesa');
+        return new Channel("prerreservamesa.$this->evento.$this->localidad");
     }
 }

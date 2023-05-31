@@ -52,5 +52,7 @@ Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name
 Route::post('/paypal/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
 Route::get('/paypal/complete', [PayPalController::class, 'complete'])->name('paypal.complete');
 Route::post('/process-payment', [PayPalController::class, 'processPayment'])->name('process-payment');
+Route::get('/proof/{mesa}/{asiento}', [VentaController::class, 'proof']);
+Route::view('/ws', 'ws');
 
 require __DIR__.'/auth.php';
