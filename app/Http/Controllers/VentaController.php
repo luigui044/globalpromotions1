@@ -89,6 +89,9 @@ class VentaController extends Controller
             $venta->total = $data['purchase_units'][0]['amount']['value'];
             $venta->pp_order_id = $orderId;
             $venta->pp_payer_id = $payerId;
+            if ($req->selectSeats2 != "") {
+            $venta->asientos =  $req->selectSeats2;
+            }
             $venta->save();
             
             $idVenta = $venta->id;
@@ -99,8 +102,8 @@ class VentaController extends Controller
                 $nuevoBoleto->id_localidad = $req->localidad;
                 $nuevoBoleto->id_evento = $req->evento;
                 $nuevoBoleto->fecha_stamp = strtotime('now');
-                if ($req->electSeats2 != "") {
-                $nuevoBoleto->id_espacio = $req->electSeats2;
+                if ($req->selectSeats2 != "") {
+                $nuevoBoleto->id_espacio = $req->selectSeats2;
                 }
                 $nuevoBoleto->save();
 
