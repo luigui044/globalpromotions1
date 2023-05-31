@@ -83,46 +83,7 @@
 
                                     <div id="paypal-button-container"></div>
 
-                                    {{-- <div class="md-form">
-                                        <input type="text" name="card_number" id="card_number"  class="form-control">
-                                        <label for="card_number">Número de tarjeta</label>
-                                       
-                                      </div>
-                                    <div class="md-form">
-                                        <input type="text" name="card_holder_name" id="card_holder_name"  class="form-control">
-                                        <label for="card_holder_name">Nombre de titular</label>
-                                    </div>
-                                     <!-- Grid row -->
-                                    <div class="row">
-                                        <!-- Grid column -->
-                                        <div class="col">
-                                        <!-- Material input -->
-                                        <div class="md-form mt-0">
-                                            <input type="text" name="expiration_date" id="expiration_date" class="form-control">
-                                            <label for="expiration_date">Expiración</label>
-
-                                        </div>
-                                        </div>
-                                        <!-- Grid column -->
-
-                                        <!-- Grid column -->
-                                        <div class="col">
-                                        <!-- Material input -->
-                                        <div class="md-form mt-0">
-                                            <input type="text" class="form-control" id="cvv" name="cvv" >
-                                            <label for="expiration_date">cvv</label>
-
-                                        </div>
-                                        </div>
-                                        <!-- Grid column -->
-                                    </div> --}}
-                                    <!-- Grid row -->
-
-
-{{-- 
-                                    <button type="submit" class="btn btn-success btn-sm btn-block" id="btnPagar">
-                                        Pagar
-                                    </button> --}}
+                              
                                 </div>
                             </div>
                         </div>
@@ -151,7 +112,7 @@
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('js/sillas.js') }}"></script> --}}
     <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,funding-eligibility&currency=USD&locale=es_SV"></script>
     <script>
         paypal.Buttons({
