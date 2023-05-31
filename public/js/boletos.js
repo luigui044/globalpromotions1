@@ -408,7 +408,6 @@ async function reserva(identificador, seleccionado) {
      /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
      $('#localidad').change(function() {
         var id = $('#localidad option:selected').val()
-        
         if(  id !==undefined){
         filtrarDisLocalidad(id)
      }
@@ -480,17 +479,18 @@ async function reserva(identificador, seleccionado) {
     //////funcion para filtrar mapa de localidad si es que la tiene
 
     function selectAsientos() {
-        var localidad = $('#localidad option:selected').val()
-        const localidadText = $('#localidad option:selected').text()
-        const localidadIndex = $('#localidad ').index()-1;
-        const cantidad = $('#cantidad option:selected').val();
-        const precioUnit = localidades[localidadIndex].precio;
-        const precioUnitDiv  =$('#precioUnit');
-        const subTotal = precioUnit * cantidad;
         const subTotalDiv = $('#subTotalDiv');
-        const subTotalInput  = $('#subTotal')
-        const total = subTotal;
+        const subTotalInput  = $('#subTotal');
+        const precioUnitDiv  =$('#precioUnit');
         const totalDiv = $('#total');
+        const cantidad = $('#cantidad option:selected').val();
+        const localidad = $('#localidad option:selected').val();
+        const localidadText = $('#localidad option:selected').text();
+        ///es importante que el index lleve el -1 ya que eso sirve para navegar en el array localidades y seleccionar el precio
+        let localidadIndex = $('#localidad').prop('selectedIndex')-1;
+        let precioUnit = localidades[localidadIndex].precio;
+        let subTotal = precioUnit * cantidad;
+        let total = subTotal;
         const errores = validandoCamposEntrada();
 
         if (errores == 0) {
@@ -503,6 +503,8 @@ async function reserva(identificador, seleccionado) {
                     id: localidad
                 })
                 .done(async function(data) {
+
+         
                     ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                     $('#vistaLocalidad').html(data)
                     // Botones para aumentar y disminuir zoom del mapa de las ubicaciones
@@ -514,14 +516,11 @@ async function reserva(identificador, seleccionado) {
                     var cantidadBoletos = $('#cantidad-boletos');
                     var localidadBoletos= $('#localidad-boletos');
                     var monto  = $('#amount')
-                   
+
                     /* Si se muestran en el html los botones de aumentar y disminuir zoom se deben agregar las funcionalidades
                         para que realicen la acción de zoom     
                     */ 
                     if (btnAumentar && btnDisminuir) {
-                        /* Esta función contiene todo el código para realizar el zoom en el mapa de la localidad
-                            de igual forma hacer el drag and scroll. Está definida en el archivo zoom.js    
-                        */
                         zoom();  
                         // Se muestran en el mapa las ubicaciones vendidas
                         const datosEvento = {

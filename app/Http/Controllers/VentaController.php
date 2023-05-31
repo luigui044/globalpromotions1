@@ -97,11 +97,21 @@ class VentaController extends Controller
             $idVenta = $venta->id;
 
             for ($i=0; $i < $cantidad ; $i++) { 
+                if ($req->selectSeats != "")
+                {
+                    $arrayBoletos = explode(',',$req->selectSeats);
+                    $mesaSilla = $this->obtenerDetalleUbicacion($arrayBoletos[$i]);
+                }
+                
 
                 $nuevoBoleto = new TBoleto();
                 $nuevoBoleto->id_localidad = $req->localidad;
                 $nuevoBoleto->id_evento = $req->evento;
                 $nuevoBoleto->fecha_stamp = strtotime('now');
+                if ($mesaSilla != "" && $mesaSilla !=null) {
+                $nuevoBoleto->mesa = $mesaSilla['mesa'];
+                $nuevoBoleto->asiento = $mesaSilla['asiento'];
+                }
                 if ($req->selectSeats != "") {
                 $nuevoBoleto->id_espacio = $req->selectSeats;
                 }
@@ -153,7 +163,7 @@ class VentaController extends Controller
     }
 
    
-    function obtenerDetalleUbicacion($ubicacion) {
+    public function obtenerDetalleUbicacion($ubicacion) {
         $partes = explode('-', $ubicacion);
         $mesa = str_replace('mesa', '', $partes[0]);
         $asiento = str_replace('asiento', '', $partes[1]); 
@@ -213,27 +223,6 @@ class VentaController extends Controller
         return view('desplegarsillas');
     }
 
-    function selectAsientos(Request $req){
-        $asignacion = VwAsiLocalidade::where('id_asignacion', $req->id)->first();
-        $tipoLocal = $asignacion->tipo_localidad;     
-        $cantidad = $asignacion->cantidad;
-
-        JavaScript::put([
-            'tipoLocalidad' => $tipoLocal,
-        ]);
-
-        switch ($tipoLocal) {
-            case 'Mesa':
-                return view('tiquetera.desplegarmesas', compact('cantidad', 'asignacion'));
-            break;
-            case 'Silla':
-                return view('tiquetera.desplegarsillas', compact('cantidad', 'asignacion'));
-            break;
-            default:
-                return view('tiquetera.partials.default');
-            break;
-        }
-
-    }
+  
 
 }

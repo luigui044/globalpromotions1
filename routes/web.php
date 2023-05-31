@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\AsientosController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,7 +47,10 @@ Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDispo
 Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [VentaController::class, 'listarUbicacionesVendidas'])->name('ubicaciones-vendidas');
 Route::post('/tickets/prerreserva', [VentaController::class, 'dispatchPreReserva'])->name('prerreserva-mesa');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
-Route::post('/selectAsientos', [VentaController::class, 'selectAsientos'])->name('selectAsientos');
+
+
+
+Route::post('/selectAsientos', [AsientosController::class, 'selectAsientos'])->name('selectAsientos');
 
 
 Route::post('/paypal/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
