@@ -120,31 +120,27 @@ async function ubicacionDisponible(asiento) {
     }
 }
 
-async function agregarReservaUbicacion(ubicacion) {
-    const loader = document.querySelector('.mi-loader');
+async function agregarPrerreservaUbicacion(ubicacion) {
     try {
-        loader.className = 'mi-loader animate__animated animate__fadeIn';
-        const response = await fetch(route('reserva-tmp'), {
+        const response = await fetch(route('prerreserva-mesa'), {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
             },
             method: 'POST',
             body: JSON.stringify({
-                ubicacion: ubicacion
+                mesa: ubicacion.mesa,
+                asiento: ubicacion.asiento
             }),
         });
 
         if (response.status === 200) {
             const data = await response.json();
-            loader.className = 'mi-loader d-none';
             return data;
         }
-        loader.className = 'mi-loader d-none';
         return false;
     } catch(error) {
         console.error(error);
-        loader.className = 'mi-loader d-none';
         return false;
     }
 }
@@ -271,19 +267,6 @@ const mostrarUbicacionPrerreservada = (mesa, asiento) => {
     enlaceUbicacion.removeAttribute("onclick");
 }
 
-/*
-    Escuchando eventos del websocket:
-    Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
-    los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
-    seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
-*/
-
-// Echo.channel('PreReservaMesa').listen('NewPreReservaMesa', (e) => {
-//     const mesa = e.mesa;
-//     const asiento = e.asiento;
-//     mostrarUbicacionPrerreservada(mesa, asiento);
-// });
-
 const obtenerNumeroMesaYAsiento = (identificador) => {
     const mesaSilla = identificador.replace('mesa', '').replace('asiento', '');
     const partes = mesaSilla.split('-');
@@ -317,20 +300,36 @@ async function reserva(identificador, seleccionado) {
                 'Información',
                 mensajeCantidadAsientos(cantidad.value)
             );
-            return false;
+            return true;
         }
+
         // Guardamos el asiento actual
         asientoActual.value = asiento.id;
         //const res = await ubicacionDisponible(asientoActual.value);
         agregarAsientos(asiento.id);
-        
-        asiento.style.fill = "#eca72c";
-        link.removeAttribute("onclick");
-        link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
-        await Toast.fire({
-            icon: 'success',
-            title: `Ubicación seleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
-        });
+
+        const prerreserva = await agregarPrerreservaUbicacion(obtenerNumeroMesaYAsiento(asiento.id));
+
+        if (prerreserva) {
+            asiento.style.fill = "#eca72c";
+            link.removeAttribute("onclick");
+            link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
+            
+            await Toast.fire({
+                icon: 'success',
+                title: `Ubicación seleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+            });
+
+            return true;
+        }
+
+        if (!prerreserva) {
+            await Toast.fire({
+                icon: 'error',
+                title: `Ocurrió un error al intentar seleccionar la ubicación. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+            });
+            return true;
+        }
     } 
 
     if (!seleccionado) {

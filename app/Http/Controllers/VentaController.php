@@ -17,6 +17,7 @@ use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Client;
 Use Alert;
+use App\Events\NewPreReservaMesa;
 use Exception;
 use JavaScript;
 
@@ -53,6 +54,7 @@ class VentaController extends Controller
         $data = json_decode($response->getBody(), true);
         return $data['access_token'];
     }
+
     function vender(Request $req){
         $evento = TEvento::find($req->id);
         $fecha_actual = date("d-m-Y");
@@ -125,23 +127,16 @@ class VentaController extends Controller
 
             }
             return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
-            
-
-
         }
 
         alert()->error('Error','No se ha podido procesar el pago');
 
-        return back();
-
-        
+        return back(); 
     }
 
 
 
     function concierto($id){
-
-
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
         $fecha= new Date( Carbon::create($evento->fechas)->toDayDateTimeString());
@@ -181,6 +176,15 @@ class VentaController extends Controller
     function listarUbicacionesVendidas($idEvento, $idLocalidad) {
         $ubicaciones = TBoleto::where('id_evento', $idEvento)->where('id_localidad', $idLocalidad)->get();
         return $ubicaciones;
+    }
+
+    function dispatchPreReserva(Request $request) {
+        try {
+            broadcast(new NewPreReservaMesa($request->mesa, $request->asiento))->toOthers();
+            return response()->json(['message' => 'Prerreserva realizada exitosamente'], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error con la prerreserva'], 500);
+        } 
     }
 
     function filtrarDisLocalidad(Request $req){

@@ -14,17 +14,17 @@ class NewPreReservaMesa implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $mesa, $silla;
+    public $mesa, $asiento;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($mesa, $silla)
+    public function __construct($mesa, $asiento)
     {
         $this->mesa = $mesa;
-        $this->silla = $silla;
+        $this->asiento = $asiento;
     }
 
     /**
