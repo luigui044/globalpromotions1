@@ -18,6 +18,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Client;
 Use Alert;
 use App\Events\NewPreReservaMesa;
+use App\Events\NewVentaTicketMesa;
 use Exception;
 use JavaScript;
 
@@ -118,7 +119,7 @@ class VentaController extends Controller
                 $nuevoBoleto->save();
 
                 $boleto = $nuevoBoleto->id;
-                $localidad = $nuevoBoleto->id_localidad ;
+                $localidad = $nuevoBoleto->id_localidad;
                 $evento1 =  $nuevoBoleto->evento; 
                 $fechaStamp =$nuevoBoleto->fecha_stamp;
 
@@ -138,6 +139,13 @@ class VentaController extends Controller
                 $detVenta->fecha_stamp = $fechaStamp;
                 $detVenta->save();
 
+                // Se dispara el evento de boleto comprado cuando ya se han insertado los datos en todas las tablas
+                broadcast(new NewVentaTicketMesa(
+                    $nuevoBoleto->id_evento,
+                    $nuevoBoleto->id_localidad,
+                    $nuevoBoleto->mesa, 
+                    $nuevoBoleto->asiento, 
+                ))->toOthers();
             }
             return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
         }

@@ -216,23 +216,25 @@ const obtenerIdCirculo = (idEnlaceUbicacion) => {
 const establecerUbicacionesVendidas = (ubicaciones) => {
     let idEnlace, idCirculo, enlace, circulo;
 
-    if (ubicaciones.length > 0) {
-        ubicaciones.forEach(ubicacion => {
-            idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
-            idCirculo = obtenerIdCirculo(idEnlace);
-            enlace = document.getElementById(idEnlace);
-            circulo = document.getElementById(idCirculo);
-            // Se elimina la función para agregar asiento
-            if(enlace != null)
-            {     enlace.removeAttribute('onclick');
-            }
-            if(circulo != null)
-            {
+    if (Array.isArray(ubicaciones)) {
+        if (ubicaciones.length > 0) {
+            ubicaciones.forEach(ubicacion => {
+                idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
+                idCirculo = obtenerIdCirculo(idEnlace);
+                enlace = document.getElementById(idEnlace);
+                circulo = document.getElementById(idCirculo);
+                enlace.removeAttribute('onclick');
                 circulo.style.fill = '#e63946';
-
-            }
-        });
-    }
+            });
+        }
+    } else {
+        idEnlace = obtenerIdEnlaceUbicacion(ubicaciones.mesa, ubicaciones.asiento);
+        idCirculo = obtenerIdCirculo(idEnlace);
+        enlace = document.getElementById(idEnlace);
+        circulo = document.getElementById(idCirculo);
+        enlace.removeAttribute('onclick');
+        circulo.style.fill = '#e63946';
+    } 
 }
 
 // Agrega los id de asientos en el input de tipo hidden separados por coma (,)
@@ -537,20 +539,31 @@ async function reserva(identificador, seleccionado) {
                             seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
                         */
 
-                        Echo.channel(`prerreservamesa.${evento.id_evento}.${localidad}`).listen('NewPreReservaMesa', (e) => {
-                            const mesa = e.mesa;
-                            const asiento = e.asiento;
-                            const prerreserva = e.prerreserva;
+                        Echo.channel(`prerreservamesa.${evento.id_evento}.${localidad}`)
+                            .listen('NewPreReservaMesa', (e) => {
+                                const mesa = e.mesa;
+                                const asiento = e.asiento;
+                                const prerreserva = e.prerreserva;
 
-                            // Si el estado de prerreserva es verdadero
-                            if (prerreserva) {
-                                mostrarUbicacionPrerreservada(mesa, asiento);
-                            } else {
-                                // Si el estado de prerreserva es falso, es decir, se ha liberado este asiento
-                                mostrarUbicacionDisponible(mesa, asiento);
-                            }
+                                // Si el estado de prerreserva es verdadero
+                                if (prerreserva) {
+                                    mostrarUbicacionPrerreservada(mesa, asiento);
+                                } else {
+                                    // Si el estado de prerreserva es falso, es decir, se ha liberado este asiento
+                                    mostrarUbicacionDisponible(mesa, asiento);
+                                }
                         
-                        });
+                            })
+                            .listen('NewVentaTicketMesa', (e) => {
+                                // Cuando un nuevo ticket es vendido se actualiza en tiempo real como no disponible
+                                const mesa = e.mesa;
+                                const asiento = e.asiento; 
+                                const ubicacion = {
+                                    mesa: mesa,
+                                    asiento: asiento
+                                };
+                                establecerUbicacionesVendidas(ubicacion);
+                            });
                     }
 
                     cantidadBoletos.html(cantidad)
