@@ -6,11 +6,18 @@
 
     <div class="container mt-3 mb-3">
         @foreach ($boletos as $item)
+        <br>
         <div class="ticket pl-2 py-2 sinDesborde">
             <div class="ticket-evento sinDesborde">
                 <div class="datos-usuario sinDesborde py-1 px-2">
-                        <span class="nombre-text">Luis Humberto Medrano Lemus</span>
-                        <span class="precio-text">Valor de boleto:  $80.00 </span>
+                    @if (isset($nombreCliente))
+                    <span class="nombre-text">{{ $nombreCliente }}</span>
+
+                    @else
+                    <span class="nombre-text">Global Promotions</span>
+
+                    @endif
+                        <span class="precio-text">Valor de boleto:  {{ $precioBoleto }}</span>
 
                 </div>
                 <div class="datos-evento sinDesborde px-2">

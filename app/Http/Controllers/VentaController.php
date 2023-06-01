@@ -64,7 +64,7 @@ class VentaController extends Controller
         $dia = $fecha->format('l');
         $cantidad = $req->cantidad;
         $boletos = array();
-        $nombre = auth()->user()->first_name.' '. auth()->user()->last_name;
+        $nombreCliente = auth()->user()->first_name.' '. auth()->user()->last_name;
         $accessToken = $this->getAccesssToken();
         $orderId= $req->orderId;
         $payerId= $req->payerId;
@@ -90,8 +90,9 @@ class VentaController extends Controller
             $venta->total = $data['purchase_units'][0]['amount']['value'];
             $venta->pp_order_id = $orderId;
             $venta->pp_payer_id = $payerId;
+            
             if ($req->selectSeats != "") {
-            $venta->asientos =  $req->selectSeats;
+                $venta->asientos =  $req->selectSeats;
             }
             $venta->save();
             
@@ -109,13 +110,13 @@ class VentaController extends Controller
                 $nuevoBoleto->id_localidad = $req->localidad;
                 $nuevoBoleto->id_evento = $req->evento;
                 $nuevoBoleto->fecha_stamp = strtotime('now');
-                if ($mesaSilla != "" && $mesaSilla !=null) {
-                $nuevoBoleto->mesa = $mesaSilla['mesa'];
-                $nuevoBoleto->asiento = $mesaSilla['asiento'];
-                }
                 if ($req->selectSeats != "") {
+                $nuevoBoleto->mesa = $mesaSilla['mesa'];
+                $nuevoBoleto->asiento = $mesaSilla['asiento'];           
                 $nuevoBoleto->id_espacio = $req->selectSeats;
+
                 }
+             
                 $nuevoBoleto->save();
 
                 $boleto = $nuevoBoleto->id;
@@ -147,7 +148,10 @@ class VentaController extends Controller
                     $nuevoBoleto->asiento, 
                 ))->toOthers();
             }
-            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
+
+
+
+            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia','nombreCliente'));
         }
 
         alert()->error('Error','No se ha podido procesar el pago');
