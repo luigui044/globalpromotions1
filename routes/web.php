@@ -45,7 +45,7 @@ Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->middleware
 Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
 Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [VentaController::class, 'listarUbicacionesVendidas'])->name('ubicaciones-vendidas');
-Route::post('/tickets/prerreserva', [VentaController::class, 'dispatchPreReserva'])->name('prerreserva-mesa');
+Route::post('/tickets/prerreserva', [VentaController::class, 'dispatchPreReserva'])->name('prerreserva');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 
 Route::post('/selectAsientos', [AsientosController::class, 'selectAsientos'])->name('selectAsientos');

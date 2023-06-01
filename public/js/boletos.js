@@ -122,7 +122,7 @@ async function ubicacionDisponible(asiento) {
 
 async function agregarPrerreservaUbicacion(ubicacion) {
     try {
-        const response = await fetch(route('prerreserva-mesa'), {
+        const response = await fetch(route('prerreserva'), {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
@@ -323,8 +323,6 @@ async function reserva(identificador, seleccionado) {
     const asiento = document.getElementById(identificador);
     // Obteniendo enlace del svg
     const link = document.getElementById(asiento.id + "-link");
-    // Input oculto donde almacenan los asientos seleccionados
-    const selectSeats = document.getElementById("selectSeats");
     // Se guarda el asiento actual
     const asientoActual = document.getElementById('asiento-actual');
     // Cantidad de asientos indicada por el usuario
