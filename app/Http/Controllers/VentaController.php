@@ -80,6 +80,7 @@ class VentaController extends Controller
 
         if($data['status']==='APPROVED')
         {
+       
             $venta = new TVenta();
             $venta->id_cliente = auth()->user()->id;
             $venta->fecha = $fecha_actual;
@@ -89,7 +90,9 @@ class VentaController extends Controller
             $venta->total = $data['purchase_units'][0]['amount']['value'];
             $venta->pp_order_id = $orderId;
             $venta->pp_payer_id = $payerId;
-            
+
+
+          
             if ($req->selectSeats != "") {
                 $venta->asientos =  $req->selectSeats;
             }
@@ -141,9 +144,10 @@ class VentaController extends Controller
 
             }
 
+            $datosBoletos = VwAsiLocalidade::where('evento',$req->evento)->where('id_asignacion',$localidad)->first();
+            $precioBoleto = $datosBoletos->precio;
 
-
-            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia','nombreCliente'));
+            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia','nombreCliente','precioBoleto'));
         }
 
         alert()->error('Error','No se ha podido procesar el pago');
