@@ -108,13 +108,13 @@ class VentaController extends Controller
                 $nuevoBoleto->id_localidad = $req->localidad;
                 $nuevoBoleto->id_evento = $req->evento;
                 $nuevoBoleto->fecha_stamp = strtotime('now');
-                if ($mesaSilla != "" && $mesaSilla !=null) {
-                $nuevoBoleto->mesa = $mesaSilla['mesa'];
-                $nuevoBoleto->asiento = $mesaSilla['asiento'];
-                }
                 if ($req->selectSeats != "") {
+                $nuevoBoleto->mesa = $mesaSilla['mesa'];
+                $nuevoBoleto->asiento = $mesaSilla['asiento'];           
                 $nuevoBoleto->id_espacio = $req->selectSeats;
+
                 }
+             
                 $nuevoBoleto->save();
 
                 $boleto = $nuevoBoleto->id;
