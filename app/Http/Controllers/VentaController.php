@@ -63,7 +63,7 @@ class VentaController extends Controller
         $dia = $fecha->format('l');
         $cantidad = $req->cantidad;
         $boletos = array();
-        $nombre = auth()->user()->first_name.' '. auth()->user()->last_name;
+        $nombreCliente = auth()->user()->first_name.' '. auth()->user()->last_name;
         $accessToken = $this->getAccesssToken();
         $orderId= $req->orderId;
         $payerId= $req->payerId;
@@ -89,8 +89,9 @@ class VentaController extends Controller
             $venta->total = $data['purchase_units'][0]['amount']['value'];
             $venta->pp_order_id = $orderId;
             $venta->pp_payer_id = $payerId;
+            
             if ($req->selectSeats != "") {
-            $venta->asientos =  $req->selectSeats;
+                $venta->asientos =  $req->selectSeats;
             }
             $venta->save();
             
@@ -139,7 +140,10 @@ class VentaController extends Controller
                 $detVenta->save();
 
             }
-            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia'));
+
+
+
+            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia','nombreCliente'));
         }
 
         alert()->error('Error','No se ha podido procesar el pago');
