@@ -86,10 +86,7 @@
                                         <input type="hidden" name="orderId" id="orderId">
                                         <input type="hidden" name="payerId" id="payerId">
                                     </div>
-
                                     <div id="paypal-button-container"></div>
-
-                              
                                 </div>
                             </div>
                         </div>
@@ -104,7 +101,6 @@
                                 <div id="vistaLocalidad">
                                     <img src="{{ asset($evento->imagen_lugar) }}" style="width: 50%">
                                 </div>
-                                <input type="hidden" name="selectSeats2" id="selectSeats2" value="">
                             </div>
                         </div>
                     </div>

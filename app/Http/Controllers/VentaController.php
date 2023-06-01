@@ -6,7 +6,6 @@ use Jenssegers\Date\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
-use App\Models\TPrueba;
 use App\Models\TVenta;
 use App\Models\TDetaVenta;
 use App\Models\TEvento;
@@ -16,10 +15,7 @@ use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use GuzzleHttp\Client;
-Use Alert;
-use App\Events\NewPreReservaMesa;
 use App\Events\NewVentaTicketMesa;
-use Exception;
 use JavaScript;
 
 class VentaController extends Controller
@@ -201,31 +197,6 @@ class VentaController extends Controller
         return response()->json(['estado' => false]);
     }
 
-    function listarUbicacionesVendidas($idEvento, $idLocalidad) {
-        $ubicaciones = TBoleto::where('id_evento', $idEvento)->where('id_localidad', $idLocalidad)->get();
-        return $ubicaciones;
-    }
-
-    function dispatchPreReserva(Request $request) {
-        try {
-            broadcast(new NewPreReservaMesa(
-                $request->id_evento,
-                $request->id_localidad,
-                $request->mesa, 
-                $request->asiento, 
-                $request->prerreserva
-            ))->toOthers();
-            return response()->json(['message' => 'Prerreserva realizada exitosamente'], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Ocurrió un error con la prerreserva: ' . $e->getMessage()], 500);
-        } 
-    }
-
-    function proof($mesa, $asiento) {
-        NewPreReservaMesa::dispatch($mesa, $asiento);
-        return 'Mensaje enviado';
-    }
-
     function filtrarDisLocalidad(Request $req){
         $localDis = VwAsiLocalidade::where('id_asignacion',$req->id)->first();
         return view('tiquetera.partials.localidad-disponible',compact('localDis'));
@@ -238,7 +209,4 @@ class VentaController extends Controller
     function desplegarsillas(){
         return view('desplegarsillas');
     }
-
-  
-
 }
