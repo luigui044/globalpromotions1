@@ -223,6 +223,24 @@ div.jarallax {
     position: relative !important;
 }
 
+/* Botón desactivado de compra de entradas */
+.btn-desactivado-pagar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkgray;
+    border-radius: 4px;
+    padding: 0.6rem;
+    border: none;
+    color: #fff;
+}
+
+.btn-desactivado-pagar img {
+    width: 30px;
+    margin-right: 5px;
+}
+
 /* SweetAlert Toast styles */
 .colored-toast.swal2-icon-success {
     background-color: #a5dc86 !important;

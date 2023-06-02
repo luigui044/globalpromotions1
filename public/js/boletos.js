@@ -2,8 +2,13 @@ const localidad = document.querySelector('#localidad');
 const btnBoletos = document.querySelector('#btn-boletos');
 const mesas = document.querySelector('.mesas');
 const resumen = document.querySelector('#resumen-compra');
+const btnPagarPayPal = document.getElementById('paypal-button-container');
+// Botón que simula el btn de PayPal desactivado
+const btnDesactivadoPayPal = document.getElementById('btn-desactivado-pagar')
 // Ocultando por defecto el resumen de compra
 resumen.style.display = 'none';
+// Se oculta el boton de paypal y se muestra hasta que se seleccione la cantidad de entradas definida por el usuario
+btnPagarPayPal.style.display = 'none';
 
 const validandoCamposEntrada = () => {
     const errorLocalidad = document.querySelector('#error-localidad');
@@ -397,6 +402,7 @@ async function reserva(identificador, seleccionado) {
         }
 
         agregarAsiento(asiento.id);
+
         datosWS.prerreserva = true;
         // Aquí se dispara el evento del websockets para la prerreserva del asiento
         const prerreserva = await agregarPrerreservaUbicacion(datosWS);
@@ -407,6 +413,12 @@ async function reserva(identificador, seleccionado) {
             asiento.style.fill = "#eca72c";
             link.removeAttribute("onclick");
             link.setAttribute("onclick", 'reserva("' + asiento.id + '", false)');
+            
+            // Se habilita el botón de pago cuando ya seleccionó todos los asientos indicados
+            if (cantidadAsientosSeleccionada() == cantidad.value) {
+                btnDesactivadoPayPal.style.display = 'none';
+                btnPagarPayPal.style.display = 'block';
+            }
             
             await Toast.fire({
                 icon: 'success',
@@ -429,6 +441,10 @@ async function reserva(identificador, seleccionado) {
 
     if (!seleccionado) {
         eliminarAsiento(asiento.id);
+        // Actualizando visibilidad de los botones de pago
+        btnDesactivadoPayPal.style.display = 'flex';
+        btnPagarPayPal.style.display = 'none';
+
         datosWS.prerreserva = false;
         const prerreserva = await agregarPrerreservaUbicacion(datosWS);
 
@@ -504,10 +520,13 @@ function returnSelectAs() {
         if (result.isConfirmed) {
             // Se debe dejar de escuchar el canal y se deben liberar los asientos
             Echo.leaveChannel(`prerreservamesa.${evento.id_evento}.${localidad.value}`);
-            liberarPrerreserva({
-                idLocalidad: localidad.value,
-                idEvento: evento.id_evento
-            });
+            // liberarPrerreserva({
+            //     idLocalidad: localidad.value,
+            //     idEvento: evento.id_evento
+            // });
+            // Se resetea el estado de los botones de pago de PayPal
+            btnDesactivadoPayPal.style.display = 'flex';
+            btnPagarPayPal.style.display = 'none';
 
             resetSelect('#cantidad');
             resetSelect('#localidad');

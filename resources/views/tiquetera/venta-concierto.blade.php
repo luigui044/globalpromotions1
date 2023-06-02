@@ -87,6 +87,10 @@
                                         <input type="hidden" name="payerId" id="payerId">
                                     </div>
                                     <div id="paypal-button-container"></div>
+                                    <button type="button" id="btn-desactivado-pagar" class="btn-desactivado-pagar" disabled>
+                                        <img src="{{ asset('img/tarjeta.svg') }}" alt="Tarjeta" title="Tarjeta">
+                                        Tarjeta de débito o crédito
+                                    </button>
                                 </div>
                             </div>
                         </div>
