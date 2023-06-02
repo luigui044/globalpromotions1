@@ -8,6 +8,8 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\AsientosController;
 use App\Http\Controllers\PreRreservaController;
+use App\Http\Controllers\UsuarioController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,6 +65,8 @@ Route::view('/ws', 'ws');
 
 route::post('/tiquetera/sendPDF',[VentaController::class, 'sendPdfEmail'] )->name('sendPdfEmail');
 
-
-
+// Rutas para usuarios
+Route::get('/usuario/perfil', [UsuarioController::class, 'perfil'])->name('perfil');
+Route::get('/usuario/perfil/editar', [UsuarioController::class, 'editarPerfil'])->name('perfil.editar');
+Route::post('/usuario/perfil/editar', [UsuarioController::class, 'actualizarPerfil'])->name('perfil.actualizar');
 require __DIR__.'/auth.php';

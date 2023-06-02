@@ -1,6 +1,6 @@
 <!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-lg fixed-top navbar-dark elegant-color-dark">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{{ route('home') }}">
         <img src="{{ asset('assets/images/logo3.svg') }}" alt="Global Promotions">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
@@ -14,7 +14,7 @@
                     aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user"></i> Mi cuenta </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{ route('perfil') }}">
                         <i class="fas fa-user mr-2"></i>
                         Perfil
                     </a>
