@@ -96,5 +96,4 @@
         @endif
     </div>
     <input type="hidden" name="selectSeats" id="selectSeats">
-    <input type="hidden" id="asiento-actual">
 </section>

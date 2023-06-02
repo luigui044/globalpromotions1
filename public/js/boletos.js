@@ -2,6 +2,8 @@ const localidad = document.querySelector('#localidad');
 const btnBoletos = document.querySelector('#btn-boletos');
 const mesas = document.querySelector('.mesas');
 const resumen = document.querySelector('#resumen-compra');
+// Ocultando por defecto el resumen de compra
+resumen.style.display = 'none';
 
 const validandoCamposEntrada = () => {
     const errorLocalidad = document.querySelector('#error-localidad');
@@ -25,50 +27,9 @@ const validandoCamposEntrada = () => {
     return errores;
 }
 
-const ocultarLocalidades = () => {
-    const localidades = document.querySelectorAll(`div[id^="localidad"]`);
-    localidades.forEach(localidad => {
-        localidad.style.display = 'none';
-    });
-}
-
 const eliminarSignoDolar = (valor) => {
     return valor.replace('$', '');
 }
-
-const resumenCompra = () => {
-    const titulo = document.querySelector('#titulo');
-    const seleccionEntradas = document.querySelector('#comprar-boletos');
-    const elPrecio = document.querySelector('#precio');
-    const elCantidadBoletos = document.querySelector('#cantidad-boletos');
-    const elSubtotal = document.querySelector('#subtotal');
-    const elTotal = document.querySelector('#total');
-    const elRecargos = document.querySelector('#recargos');
-    const elDescuento = document.querySelector('#descuento'); 
-    elCantidadBoletos.textContent = cantidad.value;
-    const precio = parseFloat(eliminarSignoDolar(elPrecio.textContent));
-    const cantidadBoletos = parseFloat(cantidad.value);
-    const subtotal = cantidadBoletos * precio;
-    const descuento = parseFloat(eliminarSignoDolar(elDescuento.textContent));
-    const recargos = parseFloat(eliminarSignoDolar(elRecargos.textContent));
-    const total = subtotal - d
-    
-    escuento  + recargos;
-    elSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-    elTotal.textContent = `$${total.toFixed(2)}`;
-
-    // Mostrando resumen
-    resumen.style.display = 'block';
-    // Ocultando selección de entradas
-    seleccionEntradas.style.display = 'none';
-    // Cambiando titulo de sidebar
-    titulo.textContent = 'Resumen de compra'
-}
-
-// Ocultando todas las localidades
-ocultarLocalidades();
-// Ocultando por defecto el resumen de compra
-resumen.style.display = 'none';
 
 const cantidadAsientosSeleccionada = () => {
     const asientosSeleccionados = document.getElementById("selectSeats");
@@ -122,7 +83,7 @@ async function ubicacionDisponible(asiento) {
 
 async function agregarPrerreservaUbicacion(ubicacion) {
     try {
-        const response = await fetch(route('prerreserva-mesa'), {
+        const response = await fetch(route('prerreserva'), {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
@@ -148,19 +109,93 @@ async function agregarPrerreservaUbicacion(ubicacion) {
     }
 }
 
-async function eliminarReservaUbicacion(ubicacion) {
-    const loader = document.querySelector('.mi-loader');
+async function guardarPrerreservaUbicacion(ubicacion) {
     try {
-        loader.className = 'mi-loader animate__animated animate__fadeIn';
-        const response = await fetch(route('eliminar-reserva-tmp'), {
+        const response = await fetch(route('prerreserva.guardar'), {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
             },
             method: 'POST',
             body: JSON.stringify({
-                ubicacion: ubicacion
+                id_evento: ubicacion.idEvento,
+                id_localidad: ubicacion.idLocalidad,
+                mesa: ubicacion.mesa,
+                asiento: ubicacion.asiento,
             }),
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            return data;
+        }
+        return false;
+    } catch(error) {
+        console.error(error);
+        return false;
+    }
+}
+
+async function eliminarPrerreservaUbicacion(ubicacion) {
+    try {
+        const response = await fetch(route('prerreserva.eliminar'), {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                id_evento: ubicacion.idEvento,
+                id_localidad: ubicacion.idLocalidad,
+                mesa: ubicacion.mesa,
+                asiento: ubicacion.asiento,
+            }),
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            return data;
+        }
+        return false;
+    } catch(error) {
+        console.error(error);
+        return false;
+    }
+}
+
+async function liberarPrerreserva(datos) {
+    try {
+        const response = await fetch(route('prerreserva.liberar'), {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].content 
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                id_localidad: datos.idLocalidad,
+                id_evento: datos.idEvento,
+            }),
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            return data;
+        }
+        return false;
+    } catch(error) {
+        console.error(error);
+        return false;
+    }
+}
+
+async function obtenerUbicacionesVendidas(datos) {
+    const loader = document.querySelector('.mi-loader');
+    try {
+        loader.className = 'mi-loader animate__animated animate__fadeIn';
+        const response = await fetch(route('ubicaciones-vendidas', [datos.id_evento, datos.id_localidad]), {
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         if (response.status === 200) {
@@ -177,11 +212,11 @@ async function eliminarReservaUbicacion(ubicacion) {
     }
 }
 
-async function obtenerUbicacionesVendidas(datos) {
+async function obtenerUbicacionesPrerreservadas(datos) {
     const loader = document.querySelector('.mi-loader');
     try {
         loader.className = 'mi-loader animate__animated animate__fadeIn';
-        const response = await fetch(route('ubicaciones-vendidas', [datos.id_evento, datos.id_localidad]), {
+        const response = await fetch(route('ubicaciones-prerreservadas', [datos.id_evento, datos.id_localidad]), {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -216,22 +251,51 @@ const obtenerIdCirculo = (idEnlaceUbicacion) => {
 const establecerUbicacionesVendidas = (ubicaciones) => {
     let idEnlace, idCirculo, enlace, circulo;
 
-    if (ubicaciones.length > 0) {
-        ubicaciones.forEach(ubicacion => {
-            idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
-            idCirculo = obtenerIdCirculo(idEnlace);
-            enlace = document.getElementById(idEnlace);
-            circulo = document.getElementById(idCirculo);
-            // Se elimina la función para agregar asiento
-            if(enlace != null)
-            {     enlace.removeAttribute('onclick');
-            }
-            if(circulo != null)
-            {
-                circulo.style.fill = '#e63946';
+    if (Array.isArray(ubicaciones)) {
+        if (ubicaciones.length > 0) {
+            ubicaciones.forEach(ubicacion => {
+                idEnlace = obtenerIdEnlaceUbicacion(ubicacion.mesa, ubicacion.asiento);
+                idCirculo = obtenerIdCirculo(idEnlace);
+                enlace = document.getElementById(idEnlace);
+                circulo = document.getElementById(idCirculo);
+                if (enlace != null && circulo != null) {
+                    enlace.removeAttribute('onclick');
+                    circulo.style.fill = '#e63946';
+                }
+            });
+        }
+    } else {
+        idEnlace = obtenerIdEnlaceUbicacion(ubicaciones.mesa, ubicaciones.asiento);
+        idCirculo = obtenerIdCirculo(idEnlace);
+        enlace = document.getElementById(idEnlace);
+        circulo = document.getElementById(idCirculo);
+        if (enlace != null && circulo != null) {
+            enlace.removeAttribute('onclick');
+            circulo.style.fill = '#e63946';
+        }
+    } 
+}
 
-            }
-        });
+/* 
+    Con esta función se cambia el color del asiento seleccionado a anaranjado (reservado)
+    y se elimina el evento onclick para que no pueda ejecutar ninguna acción
+*/
+const mostrarUbicacionPrerreservada = (mesa, asiento) => {
+    const idEnlaceUbicacion = obtenerIdEnlaceUbicacion(mesa, asiento);
+    const idCirculo = obtenerIdCirculo(idEnlaceUbicacion);
+    const enlaceUbicacion = document.getElementById(idEnlaceUbicacion);
+    const circulo = document.getElementById(idCirculo);
+    circulo.style.fill = "#eca72c";
+    enlaceUbicacion.removeAttribute("onclick");
+}
+
+const establecerUbicacionesPrerreservadas = (ubicaciones) => {
+    if (Array.isArray(ubicaciones)) {
+        if (ubicaciones.length > 0) {
+            ubicaciones.forEach(ubicacion => {
+                mostrarUbicacionPrerreservada(ubicacion.mesa, ubicacion.asiento);
+            });
+        }
     }
 }
 
@@ -248,11 +312,16 @@ const agregarAsiento = (ubicacion) => {
 // Con esta función se elimina del input de tipo hidden el identificador de la mesa y el asiento 
 const eliminarAsiento = (ubicacion) => {
     const asientos = document.getElementById('selectSeats');
+    let borrarAsiento = '';
     if (asientos.value.indexOf("," + ubicacion) !== -1) {
-        const borrarAsiento = asientos.value.replace("," + ubicacion, "");
+        borrarAsiento = asientos.value.replace("," + ubicacion, "");
         asientos.value = borrarAsiento;
     } else if (asientos.value.indexOf(ubicacion) !== -1) {
-        const borrarAsiento = selectSeats.value.replace(ubicacion, "");
+        const cantidadAsientos = asientos.value.split(',').length;
+        if (cantidadAsientos == 1)
+            borrarAsiento = selectSeats.value.replace(ubicacion, "");
+        if (cantidadAsientos > 1)
+            borrarAsiento = selectSeats.value.replace(ubicacion + ",", "");
         asientos.value = borrarAsiento;
     }
 }
@@ -274,19 +343,6 @@ const mensajeCantidadAsientos = (cantidadAsientos) => {
     if (cantidadAsientos == 1)
         return 'Solo puede seleccionar un asiento';
     return `Ya han sido seleccionados los ${cantidadAsientos} asientos.`
-}
-
-/* 
-    Con esta función se cambia el color del asiento seleccionado a anaranjado (reservado)
-    y se elimina el evento onclick para que no pueda ejecutar ninguna acción
-*/
-const mostrarUbicacionPrerreservada = (mesa, asiento) => {
-    const idEnlaceUbicacion = obtenerIdEnlaceUbicacion(mesa, asiento);
-    const idCirculo = obtenerIdCirculo(idEnlaceUbicacion);
-    const enlaceUbicacion = document.getElementById(idEnlaceUbicacion);
-    const circulo = document.getElementById(idCirculo);
-    circulo.style.fill = "#eca72c";
-    enlaceUbicacion.removeAttribute("onclick");
 }
 
 /* 
@@ -321,10 +377,6 @@ async function reserva(identificador, seleccionado) {
     const asiento = document.getElementById(identificador);
     // Obteniendo enlace del svg
     const link = document.getElementById(asiento.id + "-link");
-    // Input oculto donde almacenan los asientos seleccionados
-    const selectSeats = document.getElementById("selectSeats");
-    // Se guarda el asiento actual
-    const asientoActual = document.getElementById('asiento-actual');
     // Cantidad de asientos indicada por el usuario
     const cantidad = document.querySelector('#cantidad');
     // En este objeto se guarda la mesa y asiento seleccionado por el usuario
@@ -344,14 +396,13 @@ async function reserva(identificador, seleccionado) {
             return true;
         }
 
-        // Guardamos el asiento actual
-        asientoActual.value = asiento.id;
         agregarAsiento(asiento.id);
         datosWS.prerreserva = true;
+        // Aquí se dispara el evento del websockets para la prerreserva del asiento
         const prerreserva = await agregarPrerreservaUbicacion(datosWS);
 
         if (prerreserva) {
-            // Se cambia el color del asiento a anaranjado y se cambian los parámetros de la función reserva
+            // Se cambia el color del asiento a anaranjado y se cambian los parámetros de la función reserva()
             // llamada en el onclick
             asiento.style.fill = "#eca72c";
             link.removeAttribute("onclick");
@@ -359,16 +410,18 @@ async function reserva(identificador, seleccionado) {
             
             await Toast.fire({
                 icon: 'success',
-                title: `Ubicación seleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+                title: `Ubicación seleccionada. ${link.getAttribute('xlink:title')}`
             });
 
-            return true;
+            // Se almacena la prerreserva temporalmente en la base de datos
+            const h = await guardarPrerreservaUbicacion(datosWS);
+            
         }
 
         if (!prerreserva) {
             await Toast.fire({
                 icon: 'error',
-                title: `Ocurrió un error al intentar seleccionar la ubicación. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+                title: `Ocurrió un error al intentar seleccionar la ubicación. ${link.getAttribute('xlink:title')}`
             });
             return true;
         }
@@ -376,8 +429,6 @@ async function reserva(identificador, seleccionado) {
 
     if (!seleccionado) {
         eliminarAsiento(asiento.id);
-        // Se elimina el asiento actual
-        asientoActual.value = '';
         datosWS.prerreserva = false;
         const prerreserva = await agregarPrerreservaUbicacion(datosWS);
 
@@ -389,15 +440,18 @@ async function reserva(identificador, seleccionado) {
 
             await Toast.fire({
                 icon: 'info',
-                title: `Ubicación deseleccionada. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+                title: `Ubicación deseleccionada. ${link.getAttribute('xlink:title')}`
             });
+
+            // Se elimina la prerreserva de la base de datos
+            await eliminarPrerreservaUbicacion(datosWS);
             return true;
         }
 
         if (!prerreserva) {
             await Toast.fire({
                 icon: 'error',
-                title: `Ocurrió un error al intentar deseleccionar la ubicación. Mesa: ${ubicacion.mesa} | Asiento: ${ubicacion.asiento}`
+                title: `Ocurrió un error al intentar deseleccionar la ubicación. ${link.getAttribute('xlink:title')}`
             });
             return true;
         }
@@ -405,139 +459,144 @@ async function reserva(identificador, seleccionado) {
 }
 
 
-     /////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
-     $('#localidad').change(function() {
-        var id = $('#localidad option:selected').val()
-        if(  id !==undefined){
+/////realizamos disparador para cuando la localidad se cambie, se actualice el select de cantidad correspondiendo a la cantidad disponible de esa localidad
+$('#localidad').change(function() {
+    var id = $('#localidad option:selected').val()
+    if (id !==undefined) {
         filtrarDisLocalidad(id)
-     }
-    })
-    //// funcion que filtra la cantidad disponible por lo calidad, si tiene disponible igual o mas de 8, el select devolvera de 1 a 8 opciones y si es menor a 8 solo devolvera la cantidad disponible
-    function filtrarDisLocalidad(id) {
+    }
+});
+
+//// funcion que filtra la cantidad disponible por lo calidad, si tiene disponible igual o mas de 8, el select devolvera de 1 a 8 opciones y si es menor a 8 solo devolvera la cantidad disponible
+function filtrarDisLocalidad(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.post('/filDisLocalidad', {
+            id: id
+        })
+        .done(function(data) {
+            $('#filtrarCantidad').html(data);
+            $("#cantidad").materialSelect();
+        }).fail(function(e) {
+            
+            Swal.fire({
+                title: 'Alerta',
+                text: 'A ocurrido un error inesperado',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        });
+}
+
+// Función que esta como onclick en el boton volver para regresar a la seleccion de localidades
+function returnSelectAs() {
+    var comprarBoletos = $('#comprar-boletos');
+    var resumenCompra = $('#resumen-compra');
+    Swal.fire({
+        title: 'Al regresar se eliminara la localidad seleccionada, ¿Desea continuar?',
+        showCancelButton: true,
+        confirmButtonText: 'Continuar',
+        cancelButtonText: `Cancelar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Se debe dejar de escuchar el canal y se deben liberar los asientos
+            Echo.leaveChannel(`prerreservamesa.${evento.id_evento}.${localidad.value}`);
+            liberarPrerreserva({
+                idLocalidad: localidad.value,
+                idEvento: evento.id_evento
+            });
+
+            resetSelect('#cantidad');
+            resetSelect('#localidad');
+            $('#localidad').prop('disabled',false);
+            comprarBoletos.fadeIn();
+            resumenCompra.fadeOut();
+            $('#vistaLocalidad').html('<div id="vistaLocalidad">'+
+                        '<img src="'+evento.imagen_lugar+'" style="width: 50%">'+
+                    '</div>'+
+                    '<input type="hidden" name="selectSeats2" id="selectSeats2" value="">');
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info')
+        }
+    });
+}
+
+///funcion para resetear los material selects
+function resetSelect(id) {
+    $(id).materialSelect('destroy');
+    $(id).val('0').change();
+    if( id == '#cantidad'){
+        $(id).prop('disabled',true)
+    }
+    $(id).materialSelect();
+}
+
+// Función para filtrar mapa de localidad si es que la tiene
+function selectAsientos() {
+    const subTotalDiv = $('#subTotalDiv');
+    const subTotalInput  = $('#subTotal');
+    const precioUnitDiv  =$('#precioUnit');
+    const totalDiv = $('#total');
+    const cantidad = $('#cantidad option:selected').val();
+    const localidad = $('#localidad option:selected').val();
+    const localidadText = $('#localidad option:selected').text();
+    ///es importante que el index lleve el -1 ya que eso sirve para navegar en el array localidades y seleccionar el precio
+    let localidadIndex = $('#localidad').prop('selectedIndex')-1;
+    let precioUnit = localidades[localidadIndex].precio;
+    let subTotal = precioUnit * cantidad;
+    let total = subTotal;
+    const errores = validandoCamposEntrada();
+
+    if (errores == 0) {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $.post('/filDisLocalidad', {
-                id: id
+        $.post('/selectAsientos', {
+                id: localidad
             })
-            .done(function(data) {
-                $('#filtrarCantidad').html(data);
-                $("#cantidad").materialSelect();
-            }).fail(function(e) {
-              
-                Swal.fire({
-                    title: 'Alerta',
-                    text: 'A ocurrido un error inesperado',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                })
-            });
-    }
+            .done(async function(data) {
+                ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
+                $('#vistaLocalidad').html(data)
+                // Botones para aumentar y disminuir zoom del mapa de las ubicaciones
+                const btnAumentar = document.querySelector('#aumentar');
+                const btnDisminuir = document.querySelector('#disminuir');
+                ////declaro los div de compra y resumen de boletos
+                var comprarBoletos = $('#comprar-boletos');
+                var resumenCompra = $('#resumen-compra');
+                var cantidadBoletos = $('#cantidad-boletos');
+                var localidadBoletos= $('#localidad-boletos');
+                var monto  = $('#amount')
 
-    ////funcion que esta como onclick en el boton volver para regresar a la seleccion de localidades
-    
-    function returnSelectAs()
-    {
-        var comprarBoletos = $('#comprar-boletos');
-        var resumenCompra = $('#resumen-compra');
-        Swal.fire({
-            title: 'Al regresar se eliminara la localidad seleccionada, ¿Desea continuar?',
- 
-            showCancelButton: true,
-            confirmButtonText: 'Continuar',
-            cancelButtonText: `Cancelar`,
-            }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                    resetSelect('#cantidad');
-                    resetSelect('#localidad');
-                    $('#localidad').prop('disabled',false);
-                     comprarBoletos.fadeIn();
-                     resumenCompra.fadeOut()
-                    $('#vistaLocalidad').html('<div id="vistaLocalidad">'+
-                                '<img src="'+evento.imagen_lugar+'" style="width: 50%">'+
-                            '</div>'+
-                            '<input type="hidden" name="selectSeats2" id="selectSeats2" value="">')
-            } else if (result.isDenied) {
-                Swal.fire('Changes are not saved', '', 'info')
-            }
-            })
-    }
+                /* Si se muestran en el html los botones de aumentar y disminuir zoom se deben agregar las funcionalidades
+                    para que realicen la acción de zoom     
+                */ 
+                if (btnAumentar && btnDisminuir) {
+                    zoom();  
+                    // Se muestran en el mapa las ubicaciones vendidas y prerreservadas
+                    const datosEvento = {
+                        id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
+                        id_localidad: localidad
+                    };
 
-    ///funcion para resetear los material selects
-    function resetSelect(id) {
-        $(id).materialSelect('destroy');
-        $(id).val('0').change();
-        if( id == '#cantidad'){
-            $(id).prop('disabled',true)
-        }
-        $(id).materialSelect();
-    }
+                    const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
+                    const ubicacionesPrerreservadas = await obtenerUbicacionesPrerreservadas(datosEvento);
+                    establecerUbicacionesVendidas(ubicacionesVendidas);
+                    establecerUbicacionesPrerreservadas(ubicacionesPrerreservadas);
 
-    //////funcion para filtrar mapa de localidad si es que la tiene
+                    /*
+                        Escuchando eventos del websocket:
+                        Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
+                        los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
+                        seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
+                    */
 
-    function selectAsientos() {
-        const subTotalDiv = $('#subTotalDiv');
-        const subTotalInput  = $('#subTotal');
-        const precioUnitDiv  =$('#precioUnit');
-        const totalDiv = $('#total');
-        const cantidad = $('#cantidad option:selected').val();
-        const localidad = $('#localidad option:selected').val();
-        const localidadText = $('#localidad option:selected').text();
-        ///es importante que el index lleve el -1 ya que eso sirve para navegar en el array localidades y seleccionar el precio
-        let localidadIndex = $('#localidad').prop('selectedIndex')-1;
-        let precioUnit = localidades[localidadIndex].precio;
-        let subTotal = precioUnit * cantidad;
-        let total = subTotal;
-        const errores = validandoCamposEntrada();
-
-        if (errores == 0) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post('/selectAsientos', {
-                    id: localidad
-                })
-                .done(async function(data) {
-
-         
-                    ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
-                    $('#vistaLocalidad').html(data)
-                    // Botones para aumentar y disminuir zoom del mapa de las ubicaciones
-                    const btnAumentar = document.querySelector('#aumentar');
-                    const btnDisminuir = document.querySelector('#disminuir');
-                    ////declaro los div de compra y resumen de boletos
-                    var comprarBoletos = $('#comprar-boletos');
-                    var resumenCompra = $('#resumen-compra');
-                    var cantidadBoletos = $('#cantidad-boletos');
-                    var localidadBoletos= $('#localidad-boletos');
-                    var monto  = $('#amount')
-
-                    /* Si se muestran en el html los botones de aumentar y disminuir zoom se deben agregar las funcionalidades
-                        para que realicen la acción de zoom     
-                    */ 
-                    if (btnAumentar && btnDisminuir) {
-                        zoom();  
-                        // Se muestran en el mapa las ubicaciones vendidas
-                        const datosEvento = {
-                            id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
-                            id_localidad: localidad
-                        };
-                        const ubicacionesVendidas = await obtenerUbicacionesVendidas(datosEvento);
-                        establecerUbicacionesVendidas(ubicacionesVendidas);
-
-                        /*
-                            Escuchando eventos del websocket:
-                            Se manda a llamar el canal por su nombre y que escuche el evento de dicho canal para poder utilizar
-                            los datos devueltos por el evento, en este caso el evento devuelve el identificador de la mesa y asiento
-                            seleccionado por un usuario para que se muestre como NO disponible para los demás usuarios que están comprando
-                        */
-
-                        Echo.channel(`prerreservamesa.${evento.id_evento}.${localidad}`).listen('NewPreReservaMesa', (e) => {
+                    Echo.channel(`prerreservamesa.${evento.id_evento}.${localidad}`)
+                        .listen('NewPreReservaMesa', (e) => {
                             const mesa = e.mesa;
                             const asiento = e.asiento;
                             const prerreserva = e.prerreserva;
@@ -549,22 +608,32 @@ async function reserva(identificador, seleccionado) {
                                 // Si el estado de prerreserva es falso, es decir, se ha liberado este asiento
                                 mostrarUbicacionDisponible(mesa, asiento);
                             }
-                        
+                    
+                        })
+                        .listen('NewVentaTicketMesa', (e) => {
+                            // Cuando un nuevo ticket es vendido se actualiza en tiempo real como no disponible
+                            const mesa = e.mesa;
+                            const asiento = e.asiento; 
+                            const ubicacion = {
+                                mesa: mesa,
+                                asiento: asiento
+                            };
+                            establecerUbicacionesVendidas(ubicacion);
                         });
-                    }
+                }
 
-                    cantidadBoletos.html(cantidad)
-                    localidadBoletos.html(localidadText)
-                    precioUnitDiv.html('$'+precioUnit)
-                    subTotalDiv.html('$'+subTotal.toFixed(2))
-                    totalDiv.html('$'+total.toFixed(2))
-                    monto.val(total.toFixed(2))
-                    subTotalInput.val(subTotal.toFixed(2))
-                    /////desaparesco el div de compra de boletos y muestro el resumen
-                    comprarBoletos.fadeOut();
-                    resumenCompra.fadeIn();
-                });
+                cantidadBoletos.html(cantidad)
+                localidadBoletos.html(localidadText)
+                precioUnitDiv.html('$'+precioUnit)
+                subTotalDiv.html('$'+subTotal.toFixed(2))
+                totalDiv.html('$'+total.toFixed(2))
+                monto.val(total.toFixed(2))
+                subTotalInput.val(subTotal.toFixed(2))
+                /////desaparesco el div de compra de boletos y muestro el resumen
+                comprarBoletos.fadeOut();
+                resumenCompra.fadeIn();
+            });
 
-        }
     }
+}
 

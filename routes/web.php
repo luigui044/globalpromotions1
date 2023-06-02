@@ -7,6 +7,7 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\AsientosController;
+use App\Http\Controllers\PreRreservaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,8 +45,12 @@ Route::get('/mesas', [VentaController::class, 'desplegarMesas'])->name('mesas');
 Route::get('/concierto/{id?}',[VentaController::class, 'concierto'])->middleware(['auth'])->name('concierto');
 Route::post('/ticketComprado/{id}', [VentaController::class, 'vender'])->name('vender');
 Route::post('/entradas/disponibilidad', [VentaController::class, 'ubicacionDisponible'])->name('ubicacion-disponible');
-Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [VentaController::class, 'listarUbicacionesVendidas'])->name('ubicaciones-vendidas');
-Route::post('/tickets/prerreserva', [VentaController::class, 'dispatchPreReserva'])->name('prerreserva-mesa');
+Route::get('/tickets/vendidos/{idEvento}/{idLocalidad}', [PreRreservaController::class, 'listarUbicacionesVendidas'])->name('ubicaciones-vendidas');
+Route::get('/tickets/prerreservados/{idEvento}/{idLocalidad}', [PreRreservaController::class, 'listarUbicacionesPrerreservadas'])->name('ubicaciones-prerreservadas');
+Route::post('/tickets/prerreserva', [PreRreservaController::class, 'dispatchPreReserva'])->name('prerreserva');
+Route::post('/tickets/guardar-prerreserva', [PreRreservaController::class, 'guardarPrerreserva'])->name('prerreserva.guardar');
+Route::post('/tickets/liberar-prerreserva', [PreRreservaController::class, 'liberarPrerreserva'])->name('prerreserva.liberar');
+Route::post('/tickets/eliminar-prerreserva', [PreRreservaController::class, 'eliminarPrerreserva'])->name('prerreserva.eliminar');
 Route::post('/filDisLocalidad', [VentaController::class, 'filtrarDisLocalidad'])->name('filtrarDisLocalidad');
 
 Route::post('/selectAsientos', [AsientosController::class, 'selectAsientos'])->name('selectAsientos');

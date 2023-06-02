@@ -24,14 +24,14 @@ use App\Models\TBoleto;
 use App\Models\VwVenta;
 use App\Models\VwDatosBoleto;
 use App\Models\VwAsiLocalidade;
-
+use App\Events\NewPreReservaMesa;
 use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Jenssegers\Date\Date;
 
 use Dompdf\Dompdf;
 use GuzzleHttp\Client;
-use Jenssegers\Date\Date;
-use App\Events\NewPreReservaMesa;
+
 
 
 class VentaController extends Controller
@@ -149,7 +149,7 @@ class VentaController extends Controller
                 $nuevoBoleto->save();
 
                 $boleto = $nuevoBoleto->id;
-                $localidad = $nuevoBoleto->id_localidad ;
+                $localidad = $nuevoBoleto->id_localidad;
                 $evento1 =  $nuevoBoleto->evento; 
                 $fechaStamp =$nuevoBoleto->fecha_stamp;
 
@@ -169,6 +169,13 @@ class VentaController extends Controller
                 $detVenta->fecha_stamp = $fechaStamp;
                 $detVenta->save();
 
+                // Se dispara el evento de boleto comprado cuando ya se han insertado los datos en todas las tablas
+                broadcast(new NewVentaTicketMesa(
+                    $nuevoBoleto->id_evento,
+                    $nuevoBoleto->id_localidad,
+                    $nuevoBoleto->mesa, 
+                    $nuevoBoleto->asiento, 
+                ))->toOthers();
             }
 
             $datosBoletos = VwAsiLocalidade::where('evento',$req->evento)->where('id_asignacion',$localidad)->first();
@@ -195,7 +202,6 @@ class VentaController extends Controller
         return back(); 
     }
 
-
     function concierto($id){
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
@@ -210,52 +216,11 @@ class VentaController extends Controller
 
     }
 
-   
     public function obtenerDetalleUbicacion($ubicacion) {
         $partes = explode('-', $ubicacion);
         $mesa = str_replace('mesa', '', $partes[0]);
         $asiento = str_replace('asiento', '', $partes[1]); 
         return ['mesa' => $mesa, 'asiento' => $asiento];
-    }
-
-    function ubicacionDisponible(Request $request) {
-        $ubicacion = $request->ubicacion;
-        $partes = $this->obtenerDetalleUbicacion($ubicacion);
-        $mesa = $partes['mesa'];
-        $asiento = $partes['asiento'];
-
-        $resultado = TmpDetallesVenta::where('mesa', $mesa)
-            ->where('asiento', $asiento)
-            ->first();
-
-        if (is_null($resultado))
-            return response()->json(['estado' => true]);
-        return response()->json(['estado' => false]);
-    }
-
-    function listarUbicacionesVendidas($idEvento, $idLocalidad) {
-        $ubicaciones = TBoleto::where('id_evento', $idEvento)->where('id_localidad', $idLocalidad)->get();
-        return $ubicaciones;
-    }
-
-    function dispatchPreReserva(Request $request) {
-        try {
-            broadcast(new NewPreReservaMesa(
-                $request->id_evento,
-                $request->id_localidad,
-                $request->mesa, 
-                $request->asiento, 
-                $request->prerreserva
-            ))->toOthers();
-            return response()->json(['message' => 'Prerreserva realizada exitosamente'], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Ocurrió un error con la prerreserva: ' . $e->getMessage()], 500);
-        } 
-    }
-
-    function proof($mesa, $asiento) {
-        NewPreReservaMesa::dispatch($mesa, $asiento);
-        return 'Mensaje enviado';
     }
 
     function filtrarDisLocalidad(Request $req){
