@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Auth;
 class PreRreservaController extends Controller
 {
     function listarUbicacionesVendidas($idEvento, $idLocalidad) {
-        $ubicaciones = TBoleto::where('id_evento', $idEvento)->where('id_localidad', $idLocalidad)->get();
+        $ubicaciones = TBoleto::select('mesa', 'asiento')
+            ->where('id_evento', $idEvento)
+            ->where('id_localidad', $idLocalidad)
+            ->get();
         return $ubicaciones;
     }
 
@@ -62,7 +65,12 @@ class PreRreservaController extends Controller
         if ($prerreserva !== null) {
             try {
                 // Se elimina el registro
-                TPrerreserva::destroy($prerreserva->id);
+                TPrerreserva::where('id_usuario', Auth::user()->id)
+                    ->where('id_evento', $request->id_evento)
+                    ->where('id_localidad', $request->id_localidad)
+                    ->where('mesa', $request->mesa)
+                    ->where('asiento', $request->asiento)
+                    ->delete();
                 return response()->json(['message' => 'Prerreserva eliminada exitosamente'], 200);
             } catch (Exception $e) {
                 return response()->json(['error' => 'No se pudo eliminar la prerreserva de nuestros datos: ' . $e->getMessage()], 500);

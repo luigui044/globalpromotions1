@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class TPrerreserva
  * 
- * @property int $id
  * @property int $id_usuario
  * @property int $id_localidad
  * @property int $id_evento
@@ -23,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 class TPrerreserva extends Model
 {
 	protected $table = 't_prerreservas';
+	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [

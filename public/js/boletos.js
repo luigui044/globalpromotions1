@@ -172,8 +172,8 @@ async function liberarPrerreserva(datos) {
             },
             method: 'POST',
             body: JSON.stringify({
-                id_evento: datos.idEvento,
                 id_localidad: datos.idLocalidad,
+                id_evento: datos.idEvento,
             }),
         });
 
@@ -307,7 +307,6 @@ const agregarAsiento = (ubicacion) => {
     } else {
         asientos.value = asientos.value + "," + ubicacion;
     }
-    console.log(asientos);
 }
 
 // Con esta función se elimina del input de tipo hidden el identificador de la mesa y el asiento 
@@ -325,7 +324,6 @@ const eliminarAsiento = (ubicacion) => {
             borrarAsiento = selectSeats.value.replace(ubicacion + ",", "");
         asientos.value = borrarAsiento;
     }
-    console.log(asientos);
 }
 
 // Objeto Toast de SweetAlert para mostrar notificaciones
@@ -416,8 +414,8 @@ async function reserva(identificador, seleccionado) {
             });
 
             // Se almacena la prerreserva temporalmente en la base de datos
-            guardarPrerreservaUbicacion(datosWS);
-            return true;
+            const h = await guardarPrerreservaUbicacion(datosWS);
+            
         }
 
         if (!prerreserva) {
@@ -446,7 +444,7 @@ async function reserva(identificador, seleccionado) {
             });
 
             // Se elimina la prerreserva de la base de datos
-            eliminarPrerreservaUbicacion(datosWS);
+            await eliminarPrerreservaUbicacion(datosWS);
             return true;
         }
 
@@ -504,6 +502,13 @@ function returnSelectAs() {
         cancelButtonText: `Cancelar`,
     }).then((result) => {
         if (result.isConfirmed) {
+            // Se debe dejar de escuchar el canal y se deben liberar los asientos
+            Echo.leaveChannel(`prerreservamesa.${evento.id_evento}.${localidad.value}`);
+            liberarPrerreserva({
+                idLocalidad: localidad.value,
+                idEvento: evento.id_evento
+            });
+
             resetSelect('#cantidad');
             resetSelect('#localidad');
             $('#localidad').prop('disabled',false);
@@ -513,12 +518,6 @@ function returnSelectAs() {
                         '<img src="'+evento.imagen_lugar+'" style="width: 50%">'+
                     '</div>'+
                     '<input type="hidden" name="selectSeats2" id="selectSeats2" value="">');
-            // Se debe dejar de escuchar el canal y se deben liberar los asientos
-            Echo.leaveChannel(`prerreservamesa.${evento.id_evento}.${localidad.value}`);
-            liberarPrerreserva({
-                idEvento: evento.id_evento,
-                idLocalidad : localidad.value
-            });
         } else if (result.isDenied) {
             Swal.fire('Changes are not saved', '', 'info')
         }
@@ -561,8 +560,6 @@ function selectAsientos() {
                 id: localidad
             })
             .done(async function(data) {
-
-        
                 ////se agrega la vista que retorna la funcion ajax al div vistaLocalidad
                 $('#vistaLocalidad').html(data)
                 // Botones para aumentar y disminuir zoom del mapa de las ubicaciones

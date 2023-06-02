@@ -159,7 +159,6 @@ class VentaController extends Controller
         return back(); 
     }
 
-
     function concierto($id){
         $evento = TEvento::where('id_evento', $id)->first();
         $localidades = VwAsiLocalidade::where('evento',$id)->get();
@@ -174,27 +173,11 @@ class VentaController extends Controller
 
     }
 
-   
     public function obtenerDetalleUbicacion($ubicacion) {
         $partes = explode('-', $ubicacion);
         $mesa = str_replace('mesa', '', $partes[0]);
         $asiento = str_replace('asiento', '', $partes[1]); 
         return ['mesa' => $mesa, 'asiento' => $asiento];
-    }
-
-    function ubicacionDisponible(Request $request) {
-        $ubicacion = $request->ubicacion;
-        $partes = $this->obtenerDetalleUbicacion($ubicacion);
-        $mesa = $partes['mesa'];
-        $asiento = $partes['asiento'];
-
-        $resultado = TmpDetallesVenta::where('mesa', $mesa)
-            ->where('asiento', $asiento)
-            ->first();
-
-        if (is_null($resultado))
-            return response()->json(['estado' => true]);
-        return response()->json(['estado' => false]);
     }
 
     function filtrarDisLocalidad(Request $req){
