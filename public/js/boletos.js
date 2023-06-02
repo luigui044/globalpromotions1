@@ -414,8 +414,8 @@ async function reserva(identificador, seleccionado) {
             });
 
             // Se almacena la prerreserva temporalmente en la base de datos
-            const h = await guardarPrerreservaUbicacion(datosWS);
-            
+            //await guardarPrerreservaUbicacion(datosWS);
+            return true;
         }
 
         if (!prerreserva) {
@@ -444,7 +444,7 @@ async function reserva(identificador, seleccionado) {
             });
 
             // Se elimina la prerreserva de la base de datos
-            await eliminarPrerreservaUbicacion(datosWS);
+            //await eliminarPrerreservaUbicacion(datosWS);
             return true;
         }
 
