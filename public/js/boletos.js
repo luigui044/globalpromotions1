@@ -7,8 +7,6 @@ const btnPagarPayPal = document.getElementById('paypal-button-container');
 const btnDesactivadoPayPal = document.getElementById('btn-desactivado-pagar')
 // Ocultando por defecto el resumen de compra
 resumen.style.display = 'none';
-// Se oculta el boton de paypal y se muestra hasta que se seleccione la cantidad de entradas definida por el usuario
-btnPagarPayPal.style.display = 'none';
 
 const validandoCamposEntrada = () => {
     const errorLocalidad = document.querySelector('#error-localidad');
@@ -568,6 +566,9 @@ function selectAsientos() {
     let subTotal = precioUnit * cantidad;
     let total = subTotal;
     const errores = validandoCamposEntrada();
+    // Configurando visualización de botones de pago
+    btnDesactivadoPayPal.style.display = 'none';
+    btnPagarPayPal.style.display = 'block';
 
     if (errores == 0) {
         $.ajaxSetup({
@@ -595,7 +596,11 @@ function selectAsientos() {
                     para que realicen la acción de zoom     
                 */ 
                 if (btnAumentar && btnDisminuir) {
-                    zoom();  
+                    zoom();
+                    // Se oculta el boton de paypal y se muestra hasta que se seleccione la cantidad de entradas definida por el usuario
+                    btnPagarPayPal.style.display = 'none';  
+                    btnDesactivadoPayPal.style.display = 'flex';
+
                     // Se muestran en el mapa las ubicaciones vendidas y prerreservadas
                     const datosEvento = {
                         id_evento: evento.id_evento, // Variable pasada desde el controlador de Laravel
