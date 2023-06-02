@@ -1,25 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
-use Jenssegers\Date\Date;
+
+
+use DB;
+use PDF;
+Use Alert;
+use stdClass;
+use Exception;
+use JavaScript;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use stdClass;
+use Illuminate\Support\Facades\View;
+use Mail;
+
+use Carbon\Carbon;
 use App\Models\TPrueba;
 use App\Models\TVenta;
 use App\Models\TDetaVenta;
 use App\Models\TEvento;
-use App\Models\VwAsiLocalidade;
 use App\Models\TBoleto;
-use Carbon\Carbon;
+use App\Models\VwVenta;
+use App\Models\VwDatosBoleto;
+use App\Models\VwAsiLocalidade;
+
 use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+use Dompdf\Dompdf;
 use GuzzleHttp\Client;
-Use Alert;
+use Jenssegers\Date\Date;
 use App\Events\NewPreReservaMesa;
-use Exception;
-use JavaScript;
+
 
 class VentaController extends Controller
 {
@@ -54,6 +67,20 @@ class VentaController extends Controller
         $data = json_decode($response->getBody(), true);
         return $data['access_token'];
     }
+
+    public function sendPdfEmail(Request $request)
+    {
+        if ($request->hasFile('pdf')) {
+           
+            $pdf = $request->file('pdf');
+
+            Mail::to('luishumberto.043@gmail.com')->send(new SendPdfEmail($pdf));
+
+            return response('El archivo PDF ha sido recibido correctamente.', 200);
+        }
+        return response('No se ha enviado ningún archivo PDF.', 400);
+    }
+
 
     function vender(Request $req){
         $evento = TEvento::find($req->id);
@@ -146,8 +173,21 @@ class VentaController extends Controller
 
             $datosBoletos = VwAsiLocalidade::where('evento',$req->evento)->where('id_asignacion',$localidad)->first();
             $precioBoleto = $datosBoletos->precio;
+            $nombreLocalidad = $datosBoletos->nombre_localidad;
+            // $this->generarPDF($idVenta);
 
-            return view('tiquetera.ticket', compact('boletos','evento','fecha2','dia','nombreCliente','precioBoleto'));
+            JavaScript::put([
+                'boletos' => $boletos,
+                'orderId' => $orderId,
+                'evento' => $evento,
+                'fecha2' => $fecha2,
+                'dia' => $nombreCliente,
+                'precioBoleto' => $precioBoleto,
+                'nombreLocalidad' => $nombreLocalidad
+
+            ]);
+
+            return view('tiquetera.ticket', compact('idVenta','boletos','orderId','evento','fecha2','dia','nombreCliente','precioBoleto','nombreLocalidad','localidad'));
         }
 
         alert()->error('Error','No se ha podido procesar el pago');
@@ -231,6 +271,5 @@ class VentaController extends Controller
         return view('desplegarsillas');
     }
 
-  
 
 }

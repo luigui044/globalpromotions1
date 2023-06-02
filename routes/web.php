@@ -56,4 +56,8 @@ Route::post('/process-payment', [PayPalController::class, 'processPayment'])->na
 Route::get('/proof/{mesa}/{asiento}', [VentaController::class, 'proof']);
 Route::view('/ws', 'ws');
 
+route::post('/tiquetera/sendPDF',[VentaController::class, 'sendPdfEmail'] )->name('sendPdfEmail');
+
+
+
 require __DIR__.'/auth.php';
