@@ -24,7 +24,7 @@ use App\Models\TBoleto;
 use App\Models\VwVenta;
 use App\Models\VwDatosBoleto;
 use App\Models\VwAsiLocalidade;
-use App\Events\NewPreReservaMesa;
+use App\Events\NewVentaTicketMesa;
 use SimpleSoftwareIO\QrCode\Generator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Jenssegers\Date\Date;
