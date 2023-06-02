@@ -13,13 +13,6 @@
            {{ session('error') }}
         @endif
 
-        @if(Auth::check())
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">Cerrar sesión</button>
-            </form>
-        @endif
-
         <div class="row p-5">
             <form action="{{ route('vender',['id'=>$evento->id_evento]) }}" id="form-venta"  method="POST" class="w-100">
                 @csrf
