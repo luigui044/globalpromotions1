@@ -12,9 +12,15 @@
             <form class="space-y-6" action="{{ route('register') }}" method="POST">
                 @csrf
                 <div>
-                    <label for="name" :value="__('Name')"  class="block text-sm font-medium leading-6 text-gray-900">Nombre completo</label>
+                    <label for="first_name" class="block text-sm font-medium leading-6 text-gray-900">Primer Nombre</label>
                     <div class="mt-1">
-                    <input id="name" name="name" type="text" autocomplete="name" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <input id="first_name" name="first_name" type="text"  required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+                <div>
+                    <label for="last_name"  class="block text-sm font-medium leading-6 text-gray-900">Apellido</label>
+                    <div class="mt-1">
+                    <input id="last_name" name="last_name" type="text"  required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
                 <div class="row">
