@@ -12,15 +12,10 @@
 <script src="{{ asset('js/html2canvas.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
 <script src="{{ asset('js/jspdf.min.js') }}"></script>
-
 <script src="{{ asset('js/minimap.min.js') }}"></script>
 
-<!-- Alertify JS -->
-<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <script type="text/javascript">
     // Material Select Initialization
-
-
     $(document).ready(function () {
         $(".mdb-select").materialSelect();
         $('[data-toggle="popover"]').popover()

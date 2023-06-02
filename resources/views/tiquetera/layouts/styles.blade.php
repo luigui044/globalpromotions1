@@ -11,9 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Josefin+Sans&family=Lato&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('css/minimap.min.css') }}">
-<!-- Alertify CSS -->
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 <!-- Animate CSS -->
 <link
     rel="stylesheet"

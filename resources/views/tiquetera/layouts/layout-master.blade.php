@@ -9,6 +9,7 @@
     @include('tiquetera.layouts.styles')
 </head>
 <body>
+    @include('tiquetera.components.navbar')
     <header>
         @include('tiquetera.layouts.header')
     </header>
