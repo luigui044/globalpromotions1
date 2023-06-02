@@ -8,10 +8,22 @@
     <title>@yield('titulo') | Global Promotions</title>
     @include('tiquetera.layouts.styles')
 </head>
-<body>
+<body class="deep-purple-skin">
 
          @include('sweetalert::alert')
-        @yield('content')
+         <div class="container mt-3 mb-3">
+            <div class="row">
+                <div class="col-md-8" id="tickets">
+                    @yield('content1')
+                </div>
+                <div class="col-md-4">
+                    @yield('content2')
+                </div>
+            </div>
+           
+    
+        </div>
+  
         @include('variables')
         @include('tiquetera.layouts.scripts')
 

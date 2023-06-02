@@ -1,74 +1,180 @@
 @extends('tiquetera.layouts.master-ticket')
 @section('titulo', 'ticket')
     
-
-@section('content')
-
-    <div class="container mt-3 mb-3">
-        @foreach ($boletos as $item)
-        <br>
-        <div class="ticket pl-2 py-2 sinDesborde">
-            <div class="ticket-evento sinDesborde">
-                <div class="datos-usuario sinDesborde py-1 px-2">
-                    @if (isset($nombreCliente))
-                    <span class="nombre-text">{{ $nombreCliente }}</span>
-
-                    @else
-                    <span class="nombre-text">Global Promotions</span>
-
-                    @endif
-                        <span class="precio-text">Valor de boleto:  {{ $precioBoleto }}</span>
-
-                </div>
-                <div class="datos-evento sinDesborde px-2">
-                    <h5 id="titulo-evento">  {{ $evento->titulo_evento }} </h5>
-                    <span id="fecha-evento">{{ $fecha2 }}, {{ $evento->hora }}</span><br>
-                    <span id="lugar-evento">{{ $evento->lugar }}</span>
-                </div>
-            </div>
-            <div class="ticket-codigo sinDesborde">
-                <p class="sinDesborde text-center p-cod1 ">Ticket ID serie</p><br>
-               
-            </div>
-            <div class="ticket-codigo sinDesborde ">
-                <p class="sinDesborde text-center p-cod1">000000000000</p>
-            </div>
+@section('csrf')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
-            <div class="ticket-qr p-2 sinDesborde">
-               
-             {{ $item->codigo_qr }}
-            
-   
-            </div>
-        </div>
-             @endforeach
+@endsection
+@section('content1')
 
-    </div>
+    
+                @foreach ($boletos as $clave=> $item)
+                    <br>
+                    <div class="ticket pl-2 py-2 sinDesborde">
+                        <div class="ticket-evento sinDesborde">
+                            <div class="datos-usuario sinDesborde py-1 px-2">
+                                @if (isset($nombreCliente))
+                                <span class="nombre-text left">{{ $nombreCliente }}</span>
+            
+                                @else
+                                <span class="nombre-text left">Global Promotions</span>
+            
+                                @endif
+                                <span class="precio-text right">Valor de boleto: <strong>${{round($precioBoleto,2) }}</strong> </span>
+                                <br>
+                                <span class="precio-text right">Localidad: <strong>{{ $nombreLocalidad }}</strong> </span>
+                            </div>
+            
+                            <div class="datos-evento sinDesborde px-2">
+                                <h5 id="titulo-evento">  {{ $evento->titulo_evento }} </h5>
+                                <span id="fecha-evento">{{ $fecha2 }}, {{ $evento->hora }}</span><br>
+                                <span id="lugar-evento">{{ $evento->lugar }}</span>
+                                <span class="sinDesborde text-center ">{{ $clave.$orderId }}</span>
+                            </div>
+                        </div>
+                        {{-- <div class="ticket-codigo sinDesborde">
+                            <p class="sinDesborde text-center p-cod2 ">Ticket ID serie</p><br>
+                        
+                        </div>
+                        <div class="ticket-codigo sinDesborde ">
+                            <span class="sinDesborde text-center p-cod1">{{ $clave.$orderId }}</span>
+                        </div> --}}
+                
+                        <div class="ticket-qr p-2 sinDesborde">
+                            <img  class="img-qr" src="data:image/svg+xml;base64,{{ base64_encode( $item->codigo_qr ) }}" alt="QR Code">
+                          
+            
+                        </div>
+                        
+                       
+                    </div>
+                @endforeach
+    
   
 @endsection
+
+
+
+
+
+@section('content2')
+        <h2 class="text-center texto-usuario"><b> {{ $nombreCliente }} </b></h2>
+        <h5 class="text-justify texto-compra">Agradecemos tu compra, ya puedes descargar tus tickets, de igual manera estarán disponibles en tu cuenta de Global Promotions</h5>
+            
+        
+
+        <a onclick="genPDF()" class="btn btn-primary">Descargar</a>
+        {{-- <a onclick="sendPDF()" class="btn btn-primary">enviar</a> --}}
+
+@endsection
+
+@section('scripts')
+    <script >
+
+            function sendPDF()
+            {
+            
+
+                html2canvas(document.getElementById('tickets'),{
+                onrendered:function(canvas){
+
+                    var img=canvas.toDataURL("image/png");
+                    var doc = new jsPDF();
+                    doc.addImage(img,'JPEG',20,20);
+                    var pdfData =     doc.output()
+                    var formData = new FormData();
+                    formData.append('pdf', new Blob([pdfData], { type: 'application/pdf' }), 'ticket.pdf');
+
+
+
+
+                    $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                    });
+                    
+                    $.ajax({
+                    url: '/tiquetera/sendPDF',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log('El archivo PDF se ha enviado correctamente al controlador.');
+                        // Puedes mostrar un mensaje de éxito o realizar cualquier otra acción deseada.
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Ha ocurrido un error al enviar el archivo PDF:', error);
+                        // Maneja el error de acuerdo a tus necesidades.
+                    }
+                    });
+
+                }
+
+                });
+
+            }
+        
+            function genPDF()
+            {
+                
+                html2canvas(document.getElementById('tickets'),{
+                onrendered:function(canvas){
+
+                    var img=canvas.toDataURL("image/png");
+                    var doc = new jsPDF();
+                    doc.addImage(img,'JPEG',20,20);
+                    doc.save('ticket.pdf');
+                }
+
+                });
+
+            }
+
+    </script>
+@endsection
+
+
 
 @section('styles')
 
     <style>
+        .img-qr{
+            margin-top: 4px;
+        }
+        .serie{
+           display: inline-block;
+        }
         .p-cod1{
-
-            width: 178px;
-            height: 185px;
+            position: relative;
+            top: 16px;
+            width: 198px;
+            height: 144px;
+            right: 28px;
             font-weight: bold;
+            font-size: 15px;
         }
     
         .ticket-codigo {
-        background: whitesmoke;
-     
-        width: 20px;
+             background: whitesmoke;
+            width: 20px;
             height: 100%;
             display: inline-block;
+            overflow: hidden;
+            position: relative;
+            
         }
 
         .ticket-codigo p {
-            -webkit-transform: rotate(-90deg); 
-            -moz-transform: rotate(-90deg);    
-
+            position: absolute;
+            height: 20px;
+            width: 182px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            transform-origin: center;
+        z-index: 999;
         }
         .nombre-text{
             font-size: 12px;
@@ -81,7 +187,7 @@
             font-size: 12px;
             margin-left: 35px;
         }
-        span,#titulo-evento,#lugar-evento, .p-cod1{    
+        span,#titulo-evento,#lugar-evento, .p-cod1, .texto-usuario, .texto-compra{    
             font-family: 'Poppins', sans-serif !important;
         }
         #titulo-evento{
@@ -97,19 +203,20 @@
             height: 100%;
         }
         .ticket-qr{
-            width: 198px;      
+            width: 195px;      
         }
         .datos-usuario,.datos-evento{
             width: 100%;
             height: 50%;
         }
-        .ticket-qr svg{
-            border: 5px white solid ;
+        .ticket-qr img{
+            border: 3px white solid ;
+            width: 100%;
         }
         .ticket{
             background: rgb(19, 21, 56);
-            height: 198px;
-            width: 655px;
+            height: 220px;
+            width: 610px;
 
         }
 
@@ -124,10 +231,17 @@
         .ticket {
             margin-top: 250px;
             transform: rotate(90deg);
-            /* width: 100px;
-            height: 200px;
-            line-height: 200px; */
+
         }
+        }
+
+
+        .left {
+        float: left;
+        }
+
+        .right {
+        float: right;
         }
         
     </style>

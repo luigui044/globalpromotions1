@@ -9,6 +9,9 @@
 <script type="text/javascript" src="{{ asset('js/mdb.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/html2canvas.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
+<script src="{{ asset('js/jspdf.min.js') }}"></script>
 
 <script src="{{ asset('js/minimap.min.js') }}"></script>
 
