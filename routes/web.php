@@ -8,6 +8,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\AsientosController;
 use App\Http\Controllers\PreRreservaController;
+use App\Http\Controllers\TicketsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,6 +64,8 @@ Route::view('/ws', 'ws');
 
 route::post('/tiquetera/sendPDF',[VentaController::class, 'sendPdfEmail'] )->name('sendPdfEmail');
 
+route::get('/pruebaPDF',[TicketsController::class, 'pruebaPDF'] )->name('pruebaPDF');
+route::get('/pruebaView',[TicketsController::class, 'pruebaView'] )->name('pruebaView');
 
 
 require __DIR__.'/auth.php';

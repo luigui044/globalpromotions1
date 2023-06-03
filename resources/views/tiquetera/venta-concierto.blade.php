@@ -112,7 +112,7 @@
     <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/zoom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/boletos.js') }}"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,funding-eligibility&currency=USD&locale=es_SV"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_SANDBOX_CLIENT_ID') }}&components=buttons,marks,funding-eligibility&currency=USD&locale=es_SV"></script>
     <script>
         paypal.Buttons({
             fundingSource: paypal.FUNDING.CARD,
@@ -123,16 +123,24 @@
                     },
                     payer: {
                         email_address:   '{{ auth()->user()->email }}',
+                        phone: {
+                            phone_type: "MOBILE",
+                            phone_number: {
+                                national_number: '{{ auth()->user()->telefono }}'
+                            }
+                        },
                         name:{
                         given_name: '{{ auth()->user()->first_name }}',
                         surname: '{{ auth()->user()->last_name }}'
+                        
                       }
-                    },
-                   
+                      
+                    },          
                     purchase_units: [{  
                         amount: {
                             value: $('#amount').val()
-                        }
+                        },
+                       
                     }],
                 });
             },
