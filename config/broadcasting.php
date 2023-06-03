@@ -39,8 +39,8 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => false,
                 'encrypted' => false,
-                'host' => env('PUSHER_HOST', '46.183.112.226'),
-                'port' => env('PUSHER_PORT', 8080),
+                'host' => env('PUSHER_HOST', 'globalpp.online'),
+                'port' => env('PUSHER_PORT', 6001),
                 'scheme' => 'http'
             ],
             'client_options' => [
