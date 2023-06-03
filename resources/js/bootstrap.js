@@ -26,6 +26,9 @@ window.Echo = new Echo({
     cluster: 'mt1',
     disableStats: true,
     forceTLS: false,
+    encrypted: true,
     wsHost: 'globalpp.online',
-    wsPort: 6001
+    wsPort: 6001,
+    wssPort: 6002,
+    enabledTransports: ["ws", "wss"],
 });
