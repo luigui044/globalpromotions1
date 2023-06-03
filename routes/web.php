@@ -10,6 +10,7 @@ use App\Http\Controllers\AsientosController;
 use App\Http\Controllers\PreRreservaController;
 use App\Http\Controllers\UsuarioController;
 
+use App\Http\Controllers\TicketsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,6 +66,8 @@ Route::view('/ws', 'ws');
 
 route::post('/tiquetera/sendPDF',[VentaController::class, 'sendPdfEmail'] )->name('sendPdfEmail');
 
+route::get('/pruebaPDF',[TicketsController::class, 'pruebaPDF'] )->name('pruebaPDF');
+route::get('/pruebaView',[TicketsController::class, 'pruebaView'] )->name('pruebaView');
 // Rutas para usuarios
 Route::get('/usuario/perfil', [UsuarioController::class, 'perfil'])->name('perfil');
 Route::get('/usuario/perfil/editar', [UsuarioController::class, 'editarPerfil'])->name('perfil.editar');
