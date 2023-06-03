@@ -8,7 +8,6 @@
 
 @section('content')
     <div class="container-fluid">
-
         @if (session('error'))
            {{ session('error') }}
         @endif

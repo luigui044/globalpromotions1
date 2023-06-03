@@ -130,8 +130,21 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'first_name' => [
+            'required' => 'Ingrese su primer nombre',
+        ],
+        'middle_name' => [
+            'required' => 'Ingrese su segundo nombre',
+        ],
+        'last_name' => [
+            'required' => 'Ingrese su primer apellido',
+        ],
+        'segundo_apellido' => [
+            'required' => 'Ingrese su segundo apellido'
+        ],
+        'telefono' => [
+            'required' => 'Ingrese su número de teléfono',
+            'regex' => 'Ingrese un teléfono válido'
         ],
     ],
 

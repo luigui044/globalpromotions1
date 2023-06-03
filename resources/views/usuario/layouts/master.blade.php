@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @yield('csrf')
-    <title>@yield('titulo') | Global Promotions</title>
-    @include('tiquetera.layouts.styles')
+    @include('usuario.layouts.styles')
+    <title>Global Promotions | @yield('titulo')</title>
 </head>
 <body>
     @include('tiquetera.components.navbar')
-    <header>
-        @include('tiquetera.layouts.header')
-    </header>
-        
-        @yield('content')
-        @include('variables')
-        @include('tiquetera.layouts.scripts')
-
+    <div class="container_fluid mt-menu">
+        @yield('contenido')
+    </div>
+    @include('usuario.layouts.scripts')
 </body>
 </html>

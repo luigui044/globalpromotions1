@@ -1,3 +1,12 @@
+/* Estilo de navbar */
+.navbar-brand img {
+    width: 75px;
+}
+
+.mt-menu {
+    margin-top: 71px;
+}
+
 .containerMesa {
     width: 100%;
 }
@@ -272,4 +281,63 @@ div.jarallax {
 
 .colored-toast .swal2-html-container {
     color: white;
+}
+
+/* Perfil de usuario  */
+.contenedor-perfil {
+    width: 100%;
+    height: auto;
+    min-height: calc(100vh - 71px);
+    max-width: 900px;
+    padding: 3rem;
+    background-color: #F0F3F5;
+}
+
+.informacion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin: 1rem 0;
+}
+
+.informacion .encabezado {
+    font-size: 1.3rem;
+    color: black;
+    font-weight: 500;
+}
+
+.informacion .valor {
+    font-size: 1rem;
+    color: #223373;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.icono-perfil {
+    width: 100%;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.icono-perfil i {
+    font-size: 4.5rem;
+    background-color: #223373;
+    color: whitesmoke;
+    padding: 1rem 1.3rem;
+    border-radius: 50%;
+}
+
+.bg-azul {
+    background-color: #223373 !important;
+}
+
+.contenedor-formulario {
+    padding: 2rem;
+    background-color: #F0F3F5;
+}
+
+.contenedor-formulario .card {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
 }
