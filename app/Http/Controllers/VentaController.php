@@ -13,8 +13,9 @@ use JavaScript;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
-use Mail;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendPdfEmail;
+use App\Mail\MailNotify;
 use Carbon\Carbon;
 use App\Models\TPrueba;
 use App\Models\TVenta;
@@ -69,16 +70,30 @@ class VentaController extends Controller
     }
 
     public function sendPdfEmail(Request $request)
-    {
-        if ($request->hasFile('pdf')) {
-           
-            $pdf = $request->file('pdf');
+    {   
+        try
 
-            Mail::to('luishumberto.043@gmail.com')->send(new SendPdfEmail($pdf));
+      {  
+            if ($request->hasFile('pdf')) {
+                $pdf = $request->file('pdf');
+                $email = Auth()->user()->email;
+                $pdfPath = public_path('pdfs/ticket.pdf');
+                $pdf->move(public_path('pdfs'), 'ticket.pdf');
+                Mail::to($email)->send(new SendPdfEmail($pdfPath));
+                unlink($pdfPath);
+                return response('El archivo PDF ha sido enviado correctamente.', 200);
+               
+            }
+     
 
-            return response('El archivo PDF ha sido recibido correctamente.', 200);
+  
         }
-        return response('No se ha enviado ningún archivo PDF.', 400);
+
+        catch (Exception $e) {
+            return response( 'Ha ocurrido un error inesperado'   , 400);
+        }
+
+
     }
 
 

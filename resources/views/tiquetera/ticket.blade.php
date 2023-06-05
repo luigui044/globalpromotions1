@@ -10,7 +10,7 @@
     
                 @foreach ($boletos as $clave=> $item)
                     <br>
-                    <div class="ticket pl-2 py-2 sinDesborde">
+                    <div class="ticket scaling-div  pl-2 py-2 sinDesborde">
                         <div class="ticket-evento sinDesborde">
                             <div class="datos-usuario sinDesborde py-1 px-2">
                                 @if (isset($nombreCliente))
@@ -58,6 +58,7 @@
 
 
 @section('content2')
+            
         <h2 class="text-center texto-usuario"><b> {{ $nombreCliente }} </b></h2>
         <h5 class="text-justify texto-compra">Agradecemos tu compra, ya puedes descargar tus tickets, de igual manera estarán disponibles en tu cuenta de Global Promotions</h5>
             
@@ -70,7 +71,11 @@
 
 @section('scripts')
     <script >
-
+        //se ejecuta cuando se carga la pagina para enviar el pdf
+        // $(document).ready(function(){
+        //     sendPDF();
+        // });
+            //funcion para generar pdf y enviarlo por correo automaticante
             function sendPDF()
             {
             
@@ -81,41 +86,42 @@
                     var img=canvas.toDataURL("image/png");
                     var doc = new jsPDF();
                     doc.addImage(img,'JPEG',20,20);
-                    var pdfData =     doc.output()
+
+
+                    var pdfData =     doc.output('blob')
                     var formData = new FormData();
-                    formData.append('pdf', new Blob([pdfData], { type: 'application/pdf' }), 'ticket.pdf');
-
-
-
-
-                    $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    });
+                    formData.append('pdf', pdfData, 'archivo.pdf');
+                
                     
-                    $.ajax({
-                    url: '/tiquetera/sendPDF',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        console.log('El archivo PDF se ha enviado correctamente al controlador.');
-                        // Puedes mostrar un mensaje de éxito o realizar cualquier otra acción deseada.
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Ha ocurrido un error al enviar el archivo PDF:', error);
-                        // Maneja el error de acuerdo a tus necesidades.
-                    }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                        });
+
+                    $.ajax({    
+                        url: "/tiquetera/sendPDF",
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (data) {
+                            console.log(data);
+                        }
                     });
 
+
+           
+                //fin de onrendered              
                 }
-
+                //fin de html2canvas
                 });
-
+                //fin de sendPDF
             }
-        
+            //funcion para generar pdf y descargarlo
             function genPDF()
             {
                 
@@ -140,6 +146,9 @@
 @section('styles')
 
     <style>
+        body,.ticket, #tickets {
+            background-color: white
+        }
         .img-qr{
             margin-top: 4px;
         }
@@ -228,11 +237,19 @@
 
 
          @media (max-width: 768px) { /* Ajusta el tamaño de pantalla según tus necesidades */
-        .ticket {
-            margin-top: 250px;
-            transform: rotate(90deg);
+            /* .ticket {
+                margin-top: 250px;
+                margin-bottom: 150px;
+                transform: rotate(90deg); */
 
-        }
+            /* } */
+
+            .scaling-div {
+            transform: scale(0.55); /* Escala el div al 80% de su tamaño original */
+            transform-origin: top left; /* Establece el punto de origen de la transformación */
+            }
+                /*necesito un css para reescalar el div con la clase ticket y por consiguiente su contenido como lo hago */
+       
         }
 
 

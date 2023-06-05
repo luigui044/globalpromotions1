@@ -769,6 +769,9 @@ select {
 .ml-auto {
   margin-left: auto;
 }
+.mr-1 {
+  margin-right: 0.25rem;
+}
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -801,9 +804,6 @@ select {
 }
 .mt-8 {
   margin-top: 2rem;
-}
-.mr-1 {
-  margin-right: 0.25rem;
 }
 .block {
   display: block;
@@ -1118,6 +1118,9 @@ select {
 .pr-4 {
   padding-right: 1rem;
 }
+.pt-0 {
+  padding-top: 0px;
+}
 .pt-1 {
   padding-top: 0.25rem;
 }
@@ -1135,9 +1138,6 @@ select {
 }
 .pt-8 {
   padding-top: 2rem;
-}
-.pt-0 {
-  padding-top: 0px;
 }
 .text-center {
   text-align: center;
