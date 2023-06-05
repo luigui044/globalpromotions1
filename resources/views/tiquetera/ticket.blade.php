@@ -72,9 +72,9 @@
 @section('scripts')
     <script >
         //se ejecuta cuando se carga la pagina para enviar el pdf
-        // $(document).ready(function(){
-        //     sendPDF();
-        // });
+        $(document).ready(function(){
+            sendPDF();
+        });
             //funcion para generar pdf y enviarlo por correo automaticante
             function sendPDF()
             {

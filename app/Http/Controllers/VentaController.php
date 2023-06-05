@@ -90,7 +90,7 @@ class VentaController extends Controller
         }
 
         catch (Exception $e) {
-            return response( 'Ha ocurrido un error inesperado'   , 400);
+            return response( $e  , 400);
         }
 
 
