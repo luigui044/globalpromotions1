@@ -37,11 +37,11 @@ return [
             'app_id' => env('PUSHER_APP_ID', 'app-id'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => false,
-                'encrypted' => false,
+                'useTLS' => true,
+                'encrypted' => true,
                 'host' => env('PUSHER_HOST', 'globalpp.online'),
-                'port' => env('PUSHER_PORT', 6001),
-                'scheme' => 'http'
+                'port' => env('PUSHER_PORT', 6002),
+                'scheme' => 'https'
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
