@@ -334,10 +334,14 @@ div.jarallax {
 .contenedor-formulario {
     padding: 2rem;
     background-color: #F0F3F5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .contenedor-formulario .card {
     width: 100%;
     max-width: 500px;
-    margin: auto;
+    margin: 1rem;
 }

@@ -47,7 +47,7 @@
         <div class="navbar-header">
 
             <a href="https://gp.probalosv.com/" class="logo">
-                <img src="{{ asset('assets/images/logo3.svg')}}" >
+                <img src="{{ asset('assets/images/logo3.svg') }}">
             </a>
 
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -93,13 +93,19 @@
                 </li>
 
                 <li>
+                    <a href="{{ route('login') }}">Acceder</a>
+                </li>
+
+                <li>
                     @if (auth()->user())
-                        <form action="{{ route('logout') }}" method="post">
+                        <form action="{{ route('logout') }}" method="post" class="d-none" id="frm-logout">
                             @csrf
-                            <button type="submit" >Cerrar sesión</button>
                         </form>
+                        <button type="submit" form="frm-logout">
+                            Cerrar sesión
+                        </button>
                     @endif
-                    
+
                 </li>
 
             </ul>

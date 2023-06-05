@@ -12,7 +12,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user"></i> Mi cuenta </a>
+                    <i class="fas fa-user"></i> {{ Auth::user()->first_name . " " . Auth::user()->last_name }} </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
                     <a class="dropdown-item" href="{{ route('perfil') }}">
                         <i class="fas fa-user mr-2"></i>

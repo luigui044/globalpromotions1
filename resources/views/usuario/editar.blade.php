@@ -97,5 +97,65 @@
                 <!-- Form -->
             </div>
         </div>
+        <div class="card">
+            <h5 class="bg-danger white-text text-center py-3">
+                <i class="fa-solid fa-key white-text mr-2"></i>
+                <strong>Cambiar contraseña</strong>
+            </h5>
+            <!--Card content-->
+            <div class="card-body px-lg-5 pt-0">
+                <form method="POST" action="{{ route('perfil.contrasena.actualizar') }}" id="frm-actualizar-password">
+                    @csrf
+                    <!-- Name -->
+                    <div class="md-form mt-3 input-with-post-icon">
+                        <label for="contrasena_actual">Contraseña actual</label>
+                        {{-- <i class="fa-solid fa-eye input-prefix icono-password"></i> --}}
+                        <input type="password" id="contrasena_actual" name="contrasena_actual"
+                            value="{{ old('contrasena_actual') }}"
+                            class="form-control @error('contrasena_actual') is-invalid @enderror" autofocus>
+                        <div class="invalid-feedback">
+                            @error('contrasena_actual')
+                                {{ $message }}
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="md-form mt-3 input-with-post-icon">
+                        <label for="contrasena_nueva">Contraseña nueva</label>
+                        {{-- <i class="fa-solid fa-eye input-prefix icono-password"></i> --}}
+                        <input type="password" id="contrasena_nueva" name="contrasena_nueva"
+                            class="form-control @error('contrasena_nueva') is-invalid @enderror">
+                        <div class="invalid-feedback">
+                            @error('contrasena_nueva')
+                                {{ $message }}
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="md-form mt-3 input-with-post-icon">
+                        <label for="confirmar_contrasena">Confirmar contraseña</label>
+                        {{-- <i class="fa-solid fa-eye input-prefix icono-password"></i> --}}
+                        <input type="password" id="confirmar_contrasena" name="confirmar_contrasena"
+                            class="form-control @error('confirmar_contrasena') is-invalid @enderror">
+                        <div class="invalid-feedback">
+                            @error('confirmar_contrasena')
+                                {{ $message }}
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Send button -->
+                    <button class="btn btn-danger btn-block" type="submit">
+                        <i class="fa-solid fa-key mr-2"></i>
+                        Actualizar
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript" src="{{ asset('js/validaciones.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/contrasena.js') }}"></script>
 @endsection

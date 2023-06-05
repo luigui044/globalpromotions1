@@ -146,6 +146,15 @@ return [
             'required' => 'Ingrese su número de teléfono',
             'regex' => 'Ingrese un teléfono válido'
         ],
+        'contrasena_actual' => [
+            'required' => 'Ingrese la contraseña actual de su cuenta',
+        ],
+        'contrasena_nueva' => [
+            'required' => 'Ingrese la nueva contraseña',
+        ],
+        'confirmar_contrasena' => [
+            'required' => 'Ingrese la confirmación de su contraseña',
+        ],
     ],
 
     /*

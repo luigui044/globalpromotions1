@@ -72,4 +72,6 @@ route::get('/pruebaView',[TicketsController::class, 'pruebaView'] )->name('prueb
 Route::get('/usuario/perfil', [UsuarioController::class, 'perfil'])->name('perfil');
 Route::get('/usuario/perfil/editar', [UsuarioController::class, 'editarPerfil'])->name('perfil.editar');
 Route::post('/usuario/perfil/editar', [UsuarioController::class, 'actualizarPerfil'])->name('perfil.actualizar');
+Route::post('/usuario/perfil/actualizar-contrasena', [UsuarioController::class, 'actualizarContrasena'])->name('perfil.contrasena.actualizar');
+
 require __DIR__.'/auth.php';

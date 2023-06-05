@@ -54,6 +54,14 @@ const minimoUno = (e) => {
     }
 }
 
+const longitudMinima = (cadena, longitud) => {
+    return parseInt(cadena.trim().length) >= parseInt(longitud);
+}
+
+const longitudExacta = (cadena, longitud) => {
+    return parseInt(cadena.trim().length) == parseInt(longitud);
+}
+
 const agregarError = (elemento, elementoMensaje, mensaje) => {
     elemento.classList.add("is-invalid");
     elementoMensaje.textContent = mensaje;
