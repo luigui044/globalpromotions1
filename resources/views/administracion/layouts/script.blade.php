@@ -1,3 +1,4 @@
+@routes
 <!-- jQuery -->
 <script type="text/javascript" src="{{ asset('mdb/js/jquery.min.js') }}"></script>
 

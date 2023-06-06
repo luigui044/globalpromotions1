@@ -19,6 +19,13 @@
     color: white !important;
 }
 
+#contenedor-loader {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
 @media (min-width: 1200px) {
     .fixed-sn main {
         margin-left: 20% !important;
