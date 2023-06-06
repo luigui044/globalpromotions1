@@ -65,36 +65,6 @@
                 </table>
                 <!-- Table  -->
             </div>
-            <h5 class="card-header text-white mt-3">
-                <strong>Por forma de pago</strong>
-            </h5>
-            <div class="table-responsive">
-                <!-- Table  -->
-                <table class="table">
-                    <!-- Table head -->
-                    <thead>
-                        <tr>
-                            <th><i class="fa-solid fa-money-bill mr-2 teal-text" aria-hidden="true"></i>Tipo pago</th>
-                            <th><i class="fa-solid fa-ticket mr-2 indigo-text" aria-hidden="true"></i>Cantidad de entradas
-                                vendidas</th>
-                            <th><i class="fa-solid fa-sack-dollar mr-2 teal-text" aria-hidden="true"></i>Total</th>
-                        </tr>
-                    </thead>
-                    <!-- Table head -->
-
-                    <!-- Table body -->
-                    <tbody>
-                        <tr>
-                            <td><i class="fa-solid fa-money-bill mr-2 teal-text" aria-hidden="true"></i>Tarjeta de crédito
-                            </td>
-                            <td><i class="fa-solid fa-ticket mr-2 indigo-text" aria-hidden="true"></i>10</td>
-                            <td><i class="fa-solid fa-dollar-sign mr-2 teal-text" aria-hidden="true"></i>1000.00</td>
-                        </tr>
-                    </tbody>
-                    <!-- Table body -->
-                </table>
-                <!-- Table  -->
-            </div>
         </div>
     </div>
 @endsection
