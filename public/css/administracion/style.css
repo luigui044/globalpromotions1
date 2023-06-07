@@ -19,6 +19,16 @@
     color: white !important;
 }
 
+/* Reportes */
+.detalle-icono {
+    width: 28px;
+    display: inline-flex;
+}
+
+.detalle-icono i {
+    margin: auto;
+}
+
 #contenedor-loader {
     width: 100%;
     padding: 2rem;

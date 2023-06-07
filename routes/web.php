@@ -79,5 +79,8 @@ Route::post('/usuario/perfil/actualizar-contrasena', [UsuarioController::class, 
 // Rutas para reportes
 Route::get('/administracion/reportes/ventas', [ReportesController::class, 'ventas'])->name('reporte.ventas');
 Route::post('/administracion/reportes/ventas-por-localidad', [ReportesController::class, 'ventasPorLocalidad'])->name('reporte.ventas.localidad');
+Route::get('/administracion/reportes/clientes', [ReportesController::class, 'clientes'])->name('reporte.clientes');
+Route::get('/administracion/reportes/clientes/{id}', [ReportesController::class, 'detallesCliente'])->name('reporte.cliente');
+Route::get('/administracion/reportes/clientes/{idCliente}/venta/{idVenta}', [ReportesController::class, 'detallesVentaCliente'])->name('reporte.cliente.venta');
 
 require __DIR__.'/auth.php';

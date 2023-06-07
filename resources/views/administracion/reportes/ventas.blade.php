@@ -8,7 +8,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb secondary-color">
             <li class="breadcrumb-item"><a class="white-text" href="#">Reportes</a></li>
-            <li class="breadcrumb-item"><a class="white-text" href="{{ route('reporte.ventas') }}">Reporte de ventas</a></li>
+            <li class="breadcrumb-item"><a class="white-text" href="{{ route('reporte.ventas') }}">Ventas</a></li>
         </ol>
     </nav>
     <div class="card">

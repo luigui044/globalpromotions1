@@ -30,14 +30,14 @@
                         Reportes<i class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{ route('reporte.ventas') }}" class="waves-effect">Reporte de ventas</a>
+                            <li><a href="{{ route('reporte.ventas') }}" class="waves-effect">Ventas</a>
                             </li>
-                            <li><a href="#" class="waves-effect">For authors</a>
+                            <li><a href="{{ route('reporte.clientes') }}" class="waves-effect">Clientes</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <li><a class="collapsible-header waves-effect arrow-r"><i class="far fa-eye"></i> About<i
+                <li><a class="collapsible-header waves-effect arrow-r"><i class="far fa-eye"></i> Catálogos<i
                             class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
