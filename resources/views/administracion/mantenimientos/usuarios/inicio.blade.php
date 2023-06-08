@@ -20,7 +20,7 @@
                     {{ $usuarios->links() }}
                 </div>
                 <!-- Table  -->
-                <table class="table table-hover">
+                <table class="table table-hover table-striped table-sm">
                     <!-- Table head -->
                     <thead>
                         <tr>
@@ -29,7 +29,7 @@
                             <th>Email</th>
                             <th>Teléfono</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <!-- Table head -->
@@ -44,9 +44,9 @@
                                 <td>{{ $usuario->telefono }}</td>
                                 <td>{{ $usuario->nombreestado->desc_estado }}</td>
                                 <td>
-                                    <div class="d-flex flex-wrap justify-content-center">
+                                    <div class="d-flex flex-wrap justify-content-center align-items-center">
                                         <a href="{{ route('administracion.usuarios.editar', $usuario->id) }}"
-                                            class="btn btn-info btn-sm mb-2">Editar</a>
+                                            class="btn btn-info btn-sm">Editar</a>
                                         <form action="{{ route('administracion.usuarios.eliminar', $usuario->id) }}"
                                             method="POST">
                                             @csrf
@@ -69,5 +69,6 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript" src="{{ asset('js/mantenimientos/usuarios/eliminar.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/mantenimientos/sweetmodal.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/mantenimientos/eliminar.js') }}"></script>
 @endsection

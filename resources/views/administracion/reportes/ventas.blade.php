@@ -45,7 +45,7 @@
             </h5>
             <div class="table-responsive">
                 <!-- Table  -->
-                <table class="table">
+                <table class="table table-striped table-hover table-sm">
                     <!-- Table head -->
                     <thead>
                         <tr>

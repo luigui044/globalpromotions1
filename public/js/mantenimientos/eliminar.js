@@ -1,13 +1,5 @@
 const btns = document.querySelectorAll('.btn-eliminar');
 
-const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: 'btn btn-success',
-      cancelButton: 'btn btn-danger'
-    },
-    buttonsStyling: false
-});
-
 btns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();

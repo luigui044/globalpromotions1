@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\mantenimientos;
 
 use App\Models\CEstadoUsuario;
 use App\Models\CRolesUsuario;
@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 
 class UsuarioSistemaController extends Controller
 {
