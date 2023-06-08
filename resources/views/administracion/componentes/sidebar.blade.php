@@ -11,9 +11,10 @@
         <!--/. Logo -->
         <li>
             <ul class="collapsible collapsible-accordion">
-                <li><a
-                        class="collapsible-header waves-effect arrow-r @isset($evento) {{ $evento }} @endisset"><i
-                            class="fas fa-chevron-right"></i> Eventos<i class="fas fa-angle-down rotate-icon"></i></a>
+                <li>
+                    <a
+                        class="collapsible-header waves-effect arrow-r @isset($evento) {{ $evento }} @endisset">
+                        <i class="fa-solid fa-star mr-2"></i> Eventos<i class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
                             <li><a href="{{ route('nuevoEvento') }}"
@@ -26,8 +27,10 @@
                         </ul>
                     </div>
                 </li>
-                <li><a class="collapsible-header waves-effect arrow-r"><i class="far fa-hand-pointer"></i>
-                        Reportes<i class="fas fa-angle-down rotate-icon"></i></a>
+                <li><a class="collapsible-header waves-effect arrow-r">
+                    <i class="fa-solid fa-chart-line mr-2"></i>
+                        Reportes
+                    <i class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
                             <li><a href="{{ route('reporte.ventas') }}" class="waves-effect">Ventas</a>
@@ -37,11 +40,14 @@
                         </ul>
                     </div>
                 </li>
-                <li><a class="collapsible-header waves-effect arrow-r"><i class="far fa-eye"></i> Catálogos<i
-                            class="fas fa-angle-down rotate-icon"></i></a>
+                <li><a class="collapsible-header waves-effect arrow-r">
+                    <i class="fa-solid fa-database mr-2"></i>
+                    Catálogos
+                    <i class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="{{ route('administracion.usuarios') }}" class="waves-effect">Usuarios</a>
+                            <li>
+                                <a href="{{ route('administracion.usuarios') }}" class="waves-effect">Usuarios</a>
                             </li>
                             <li><a href="{{ route('administracion.localidades') }}" class="waves-effect">Localidades</a>
                             </li>
