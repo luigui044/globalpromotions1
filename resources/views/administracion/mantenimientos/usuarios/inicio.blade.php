@@ -20,7 +20,7 @@
                     {{ $usuarios->links() }}
                 </div>
                 <!-- Table  -->
-                <table class="table table-hover">
+                <table class="table table-hover table-striped table-sm">
                     <!-- Table head -->
                     <thead>
                         <tr>

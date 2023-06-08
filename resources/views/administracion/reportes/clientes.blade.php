@@ -18,7 +18,7 @@
         <div class="card-body px-lg-5 pt-0">
             <div class="table-responsive">
                 <!-- Table  -->
-                <table class="table">
+                <table class="table table-striped table-hover table-sm">
                     <!-- Table head -->
                     <thead>
                         <tr>
