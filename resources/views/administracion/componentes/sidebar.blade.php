@@ -43,7 +43,7 @@
                         <ul>
                             <li><a href="{{ route('administracion.usuarios') }}" class="waves-effect">Usuarios</a>
                             </li>
-                            <li><a href="#" class="waves-effect">Monthly meetings</a>
+                            <li><a href="{{ route('administracion.localidades') }}" class="waves-effect">Localidades</a>
                             </li>
                         </ul>
                     </div>

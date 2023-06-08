@@ -69,5 +69,5 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript" src="{{ asset('js/mantenimientos/usuarios/eliminar.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/mantenimientos/eliminar.js') }}"></script>
 @endsection

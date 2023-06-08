@@ -7,12 +7,13 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\AsientosController;
+use App\Http\Controllers\mantenimientos\LocalidadesController;
 use App\Http\Controllers\PreRreservaController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\UsuarioController;
 
 use App\Http\Controllers\TicketsController;
-use App\Http\Controllers\UsuarioSistemaController;
+use App\Http\Controllers\mantenimientos\UsuarioSistemaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,5 +96,11 @@ Route::get('/administracion/usuarios/editar/{id}', [UsuarioSistemaController::cl
 Route::post('/administracion/usuarios/editar/{id}', [UsuarioSistemaController::class, 'update'])->name('administracion.usuarios.actualizar');
 Route::post('/administracion/usuarios/eliminar/{id}', [UsuarioSistemaController::class, 'destroy'])->name('administracion.usuarios.eliminar');
 Route::post('/administracion/usuarios/{id}/editar/password', [UsuarioSistemaController::class, 'actualizarPassword'])->name('usuario.contrasena.actualizar');
+
+// CRUD Tipos de localidades
+Route::get('/administracion/localidades', [LocalidadesController::class, 'index'])->name('administracion.localidades');
+Route::post('/administracion/localidades/crear', [LocalidadesController::class, 'store'])->name('administracion.localidades.guardar');
+Route::post('/administracion/localidades/editar/{id}', [LocalidadesController::class, 'update'])->name('administracion.localidades.actualizar');
+Route::post('/administracion/localidades/eliminar/{id}', [LocalidadesController::class, 'destroy'])->name('administracion.localidades.eliminar');
 
 require __DIR__.'/auth.php';
