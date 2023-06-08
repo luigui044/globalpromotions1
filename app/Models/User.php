@@ -46,4 +46,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function nombrerol()
+	{
+		return $this->belongsTo(CRolesUsuario::class, 'rol', 'id');
+	}
+
+    public function nombreestado()
+	{
+		return $this->belongsTo(CEstadoUsuario::class, 'estado', 'id');
+	}
 }

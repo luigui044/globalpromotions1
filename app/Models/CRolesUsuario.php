@@ -30,6 +30,6 @@ class CRolesUsuario extends Model
 
 	public function users()
 	{
-		return $this->hasMany(User::class, 'rol');
+		return $this->hasMany(User::class, 'rol', 'id');
 	}
 }

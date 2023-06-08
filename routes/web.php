@@ -12,6 +12,8 @@ use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\UsuarioController;
 
 use App\Http\Controllers\TicketsController;
+use App\Http\Controllers\UsuarioSistemaController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -82,5 +84,16 @@ Route::post('/administracion/reportes/ventas-por-localidad', [ReportesController
 Route::get('/administracion/reportes/clientes', [ReportesController::class, 'clientes'])->name('reporte.clientes');
 Route::get('/administracion/reportes/clientes/{id}', [ReportesController::class, 'detallesCliente'])->name('reporte.cliente');
 Route::get('/administracion/reportes/clientes/{idCliente}/venta/{idVenta}', [ReportesController::class, 'detallesVentaCliente'])->name('reporte.cliente.venta');
+
+// Rutas para mantenimiento de catálogos
+
+// CRUD usuarios
+Route::get('/administracion/usuarios', [UsuarioSistemaController::class, 'index'])->name('administracion.usuarios');
+Route::get('/administracion/usuarios/crear/', [UsuarioSistemaController::class, 'create'])->name('administracion.usuarios.crear');
+Route::post('/administracion/usuarios/crear/', [UsuarioSistemaController::class, 'store'])->name('administracion.usuarios.guardar');
+Route::get('/administracion/usuarios/editar/{id}', [UsuarioSistemaController::class, 'edit'])->name('administracion.usuarios.editar');
+Route::post('/administracion/usuarios/editar/{id}', [UsuarioSistemaController::class, 'update'])->name('administracion.usuarios.actualizar');
+Route::post('/administracion/usuarios/eliminar/{id}', [UsuarioSistemaController::class, 'destroy'])->name('administracion.usuarios.eliminar');
+Route::post('/administracion/usuarios/{id}/editar/password', [UsuarioSistemaController::class, 'actualizarPassword'])->name('usuario.contrasena.actualizar');
 
 require __DIR__.'/auth.php';

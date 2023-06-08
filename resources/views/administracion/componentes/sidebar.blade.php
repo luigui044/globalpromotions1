@@ -41,7 +41,7 @@
                             class="fas fa-angle-down rotate-icon"></i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="#" class="waves-effect">Introduction</a>
+                            <li><a href="{{ route('administracion.usuarios') }}" class="waves-effect">Usuarios</a>
                             </li>
                             <li><a href="#" class="waves-effect">Monthly meetings</a>
                             </li>
