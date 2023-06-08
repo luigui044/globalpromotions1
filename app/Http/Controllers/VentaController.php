@@ -165,7 +165,7 @@ class VentaController extends Controller
 
                 $boleto = $nuevoBoleto->id;
                 $localidad = $nuevoBoleto->id_localidad;
-                $evento1 =  $nuevoBoleto->evento; 
+                $evento1 =  $req->evento; 
                 $fechaStamp =$nuevoBoleto->fecha_stamp;
 
                  //codigo para genera el qr 
