@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\VwDetalleVentaCliente;
 use App\Models\VwVentasCliente;
+use App\Models\VwVentasPorLocalidadYFecha;
+use DB;
 
 class ReportesController extends Controller
 {
@@ -28,9 +30,34 @@ class ReportesController extends Controller
             'id_evento' => 'required'
         ]);
 
-        $ventas = VwVentasPorLocalidad::where('id_evento', $request->id_evento)
+        // Si el usuario especifica un rango de fechas se cambia la consulta
+        if ($request->fechas_reporte != '') {
+            $fechas = explode(';', $request->fechas_reporte);
+            $fechaInicial = $fechas[0];
+            $fechaFinal = $fechas[1];
+
+            $ventas = VwVentasPorLocalidadYFecha::select(
+                'localidad',
+                DB::raw('SUM(cantidad) as cantidad'),
+                'precio',
+                DB::raw('SUM(total) as total')
+            )
+            ->whereBetween(
+                'fecha_creacion', 
+                [
+                    $fechaInicial ,
+                    $fechaFinal
+                ]
+            )
+            ->groupby('id_localidad')
             ->orderby('total', 'desc')
             ->get();
+        } else {
+            $ventas = VwVentasPorLocalidad::where('id_evento', $request->id_evento)
+                ->orderby('total', 'desc')
+                ->get();
+        }
+
         return view('administracion.reportes.partials.ventas-localidad', compact('ventas'));
     }
 

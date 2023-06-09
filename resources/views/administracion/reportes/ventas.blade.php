@@ -26,6 +26,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="chk-fechas">
+                    <label class="custom-control-label" for="chk-fechas">Seleccionar rango de fechas y horas</label>
+                </div>
+                <div class="form-group mt-3" id="contenedor-fechas">
+                    <input type="text" id="fechas-reporte" class="form-control"
+                        placeholder="Rango de fechas y horas" readonly>
+                    <input type="hidden" name="fechas_reporte" id="submit-fechas" disabled>
+                </div>
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-check mr-2"></i>
                     Generar
